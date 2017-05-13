@@ -9,18 +9,21 @@ In this post I would like to describe the calculus involved in backpropogating g
 
 $$
 X = \left( \begin{array}{ccc}
-x_{11} & \ldots & \ x_{14}\\
-x_{21} & \ldots & \ x_{24}\\
+x_{1,1} & \ldots & \ x_{1,4}\\
+x_{2,1} & \ldots & \ x_{2,4}\\
 \vdots & \vdots & \vdots \\
-x_{51} & \ldots & \ x_{54}\\
+x_{5,1} & \ldots & \ x_{5,4}\\
 \end{array} \right)
 $$
 
-**Hidden Layer:** For the i^th^ training example, the j^th^ node in this hidden layer will first calculate the weighted sum of the four feature inputs and add some bias to the weighted sum, to calculate what is called z^1^~ij~. It will then apply the layer's activation function on z^1^~ij~ to calculate the output o^1^~ij~. The whole operation will look like the following.
-$$
-Z1 = XW1 + b1
+**Hidden Layer:** For the i<sup>th</sup> training example, the j<sup>th</sup> node in this hidden layer will first calculate the weighted sum of the four feature inputs and add some bias to the weighted sum, to calculate what is called Z1<sub>i,j</sub>. It will then apply the layer's activation function on Z1<sub>i,j</sub> to calculate the output O1<sub>ij</sub>. The whole operation will look like the following.
 
-O1 = f(Z1)
+$$
+\mathbf{Z1 = XW1 + b1}
+$$
+
+$$
+\mathbf{O1 = _f_(Z1)}
 $$
 
 where,
@@ -33,9 +36,18 @@ w_{4,1} & \ldots & \ w_{4,10}\\
 \end{array} \right)
 $$
 
+and
+
+$$
+b1 = \left( \begin{array}{c}
+b_{1} \\
+\vdots \\
+b_{10} \\
+\end{array} \right)
+$$
 
 
-**Output Layer:** This is the Softmax layer.
+**Output Layer:** This is the Softmax layer. For i<sup>th</sup> training example, it calculates a _score_ for each of the three classes.
 
 
 
