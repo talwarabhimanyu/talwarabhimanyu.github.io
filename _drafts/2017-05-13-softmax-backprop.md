@@ -47,7 +47,7 @@ b_{10} \\
 $$
 
 
-**Output Layer:** This is the Softmax layer. For i<sup>th</sup> training example, it calculates a _score_ for each of the three classes.
+**Output Layer:** This is the Softmax layer. For i<sup>th</sup> training example, the k<sup>th</sup> node in this output layer will first calculate the weighted sum of the 10 it calculates a _score_ for each of the three classes.
 
 
 
