@@ -16,12 +16,14 @@ x_{51} & \ldots & \ x_{54}\\
 \end{array} \right)
 $$
 
-**Hidden Layer:** For the i^th^ training example, the j^th^ node in this hidden layer will first calculate the weighted sum of the four feature inputs and add some bias to the weighted sum, to calculate what is called z^1^~ij~. It will then apply the layer's activation function on z^1^~ij~ to calculate the output o^1^~ij~. The whole operation will look like the following.
+**Hidden Layer:** For the i^th training example, the j^th node in this hidden layer will first calculate the weighted sum of the four feature inputs and add some bias to the weighted sum, to calculate what is called z^1_{ij}. It will then apply the layer's activation function on z^1^~ij~ to calculate the output o^1^~ij~. The whole operation will look like the following.
 
 $$
-\mathbb{Z~1~} = \mathbb{XW~1~ + b1}
+\mathbf{Z1 = XW1 + b1}
+$$
 
-O1 = f(Z1)
+$$
+\mathbf{O1 = f(Z1)}
 $$
 
 where,
