@@ -32,6 +32,6 @@ where $$\sigma()$$ refers to the Sigmoid function, defined as:
 $$\sigma(x) = \frac{1}{(1 + e^{-x})}$$
 
 **Outputs**
-* $$y^t$$ 
+* $$y^t$$ is a vector of dimensions $$\lvert V \rvert \times 1$$.
 
 ##
