@@ -32,6 +32,10 @@ where $$\sigma()$$ refers to the Sigmoid function, defined as:
 $$\sigma(x) = \frac{1}{(1 + e^{-x})}$$
 
 **Outputs**
-* $$y^t$$ is a vector of dimensions $$\lvert V \rvert \times 1$$.
+* $$\hat{y}^{t}$$ is a vector of dimensions $$\lvert V \rvert \times 1$$. The $$i^{th}$$ element of this vector represents the probability with which the output at time-step $$t$$ is equal to the word located at the $$i^{th}$$ index in Vocabulary $$V$$. This vector is computed as follows:
+$$\hat{y}^{t} = Softmax(Uh^{t} + b_2)$$
+
+**The Loss Function**
+At time-step $$t$$, we have a probability vector $$\hat{y}^{t}$$ which is the output of our model for this time-step. We also have with us the truth vector $$y^t$$ which is a one-hot vector with the same dimensions as that of $$\hat{y}^{t}$$.
 
 ##
