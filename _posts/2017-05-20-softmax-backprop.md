@@ -129,7 +129,7 @@ $$
 Combining the results of equations $$1$$, $$1.1$$, $$1.2.1$$, and $$1.2.2$$, we get:
 
 $$
-\frac{\partial L_i}{\partial S[i,k]} = 
+\frac{\partial L_i}{\partial S[i,k]} =  \tag{1.3}
 \begin{cases}
 (O_2[i,k] - 1), & \text{if k = y_i} \\[2ex]
 O_2[i,k], & \text{if k $\ne$ y_i}
