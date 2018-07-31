@@ -1,9 +1,11 @@
 ---
 layout: post
 title: Build an RNN from scratch (with derivations!)
-date: 2018-mm-dd
+date: 2018-07-31
 ---
-In this post I will show how to build a Recurrent Neural Network (RNN) from scratch. I will derive all the mathematical results we need for this task, and more importantly I will show how to implement all that math efficiently in Python.
+In this post I will (1) delve into the maths behins backpropogation through a Recurrent Neural Network (RNN), and (2) using the equations I derive, build an RNN in Python from scratch. All layers of an RNN use the same set of parameters (weights and biases are "tied together") - this is unlike a plain feedforward network where each layer has its own set of parameters. This aspect makes understanding backpropogation through an RNN a bit tricky. 
+
+Several other resources on the web have tackled the maths behind an RNN, however I have found them lacking in detail on how exactly gradients are "accumulated" during backprop to deal with "tied weights". Therefore, I will attempt to explain that aspect in a lot of detail in this post.
 
 ## Terminology
 To process a sequence of length $$T$$, an RNN uses $$T$$ copies of a Basic Unit (henceforth referred to as just a Unit). In the figure below, I have shown two Units of an RNN. The parameters used by each Unit are "tied together". That is, the weight matrices $$W_h$$, $$W_e$$ and biases $$b_1$$ and $$b_2$$, are the same for each Unit. Each Unit is also referred to as a "time step".
