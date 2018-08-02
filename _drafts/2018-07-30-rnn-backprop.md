@@ -89,7 +89,7 @@ Let's start by answering these two questions for gradients of loss from the $$t^
 
 $$
 \begin{align}
-\frac {\partial J^{(t)}} {\partial W_{h[i,j]}^{(k)}} &= \sum_{p=1}^{D_h} \underbrace{\frac {\partial J^{(t)}} {\partial h_{[p]}^{(k)}}}_{\gamma_t^k[p]} \times \underbrace{\frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} }_{Eq. \space xx}
+\frac {\partial J^{(t)}} {\partial W_{h[i,j]}^{(k)}} &= \sum_{p=1}^{D_h} \underbrace{\frac {\partial J^{(t)}} {\partial h_{[p]}^{(k)}}}_{\gamma_t^k[p]} \times \underbrace{\frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} }_{Eq. \space xx}  \tag{yy}
 \\
 \end{align}
 $$
@@ -121,7 +121,7 @@ $$
 \frac {\partial z_{[m]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} &=
 \begin{cases}
 0, & \text{m $\ne$ i} \\[2ex]
-h_{[j]}^{(t-1)}, & \text{m = i} \tag{xx2}
+h_{[j]}^{(k-1)}, & \text{m = i} \tag{xx2}
 \end{cases}
 \end{align}
 $$
@@ -133,12 +133,17 @@ $$
 \frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} &= 
 \begin{cases}
 0, & \text{p $\ne$ i} \\[2ex]
-\sigma' (z_{[i]}^{(k)}) \times h_{[j]}^{(t-1)}, & \text{p = i} 
+\sigma' (z_{[i]}^{(k)}) \times h_{[j]}^{(k-1)}, & \text{p = i} 
 \end{cases}
 \end{align}
 $$
 
+Substituting this result in $$Eq. yy$$ we get,
+
 Voila! We have all the information required to compute the expression above at time-step $$k$$. In matrix terms, we can now write the gradient as:
 
 $$
+\begin{align}
+\frac {\partial J^{(t)}} {\partial W_{h[i,j]}^{(k)}} &= \gamma_t^k[i] \times  \sigma' (z_{[i]}^{(k)}) \times h_{[j]}^{(k-1)}
+\end{align}
 $$
