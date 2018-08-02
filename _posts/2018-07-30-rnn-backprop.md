@@ -121,7 +121,6 @@ $$
 &= \theta
 \end{array}
 
-
 \end{array}
-
+$$
 
