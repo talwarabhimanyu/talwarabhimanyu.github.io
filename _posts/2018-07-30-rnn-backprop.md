@@ -118,7 +118,8 @@ $$
 \end{align}
 &
 \begin{align}
-\frac {\partial z_{[m]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} &=
+%\frac {\partial z_{[m]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} &=
+i &=
 \begin{cases}
 0, & \text{m $\ne$ i} \\[2ex]
 h_{[j]}^{(t-1)}, & \text{m = i}
