@@ -106,8 +106,8 @@ $$
 
 Test table:
 $$
-\begin{array}{c|c}
-
+\begin{array}{cc}
+\hline \\
 \begin{array}{cc}
 \gamma & \alpha \times \beta \\
 \space & \theta \\
@@ -116,7 +116,7 @@ $$
 \begin{array}{cc}
 \gamma & \alpha \times \beta \\
 \space & \theta \\
-\end{array}
+\end{array} \\
 
 \end{array}
 $$
