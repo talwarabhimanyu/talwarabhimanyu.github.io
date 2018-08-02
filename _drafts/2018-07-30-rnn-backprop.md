@@ -3,7 +3,9 @@ layout: post
 title: Build an RNN from scratch (with derivations!)
 date: 2018-07-31
 ---
-In this post I will (1) delve into the maths behins backpropogation through a Recurrent Neural Network (RNN), and (2) using the equations I derive, build an RNN in Python from scratch. I will assume that the reader is familiar with an RNN's structure and why they have become popular (this excellent [blog post](http://colah.github.io/posts/2015-08-Understanding-LSTMs/) explains key ideas). All layers of an RNN use the same set of parameters (weights and biases are "tied together") - this is unlike a plain feedforward network where each layer has its own set of parameters. This aspect makes understanding backpropogation through an RNN a bit tricky. 
+In this post I will derive all mathematical results used in backpropogation through a Recurrent Neural Network (RNN), also known as Backprop Through Time (BPTT). Further, I will use the equations I derive to build an RNN in Python from scratch, without using libraries such as Pytorch or Tensorflow. I will provide a correspondence between mathematical results and their implementation in Python.
+
+I will assume that the reader is familiar with an RNN's structure and why they have become popular (this excellent [blog post](http://colah.github.io/posts/2015-08-Understanding-LSTMs/) explains the key ideas). All layers of an RNN use the same set of parameters (weights and biases are "tied together") - this is unlike a plain feedforward network where each layer has its own set of parameters. This aspect makes understanding backpropogation through an RNN a bit tricky. 
 
 Several other resources on the web have tackled the maths behind an RNN, however I have found them lacking in detail on how exactly gradients are "accumulated" during backprop to deal with "tied weights". Therefore, I will attempt to explain that aspect in a lot of detail in this post.
 
@@ -47,6 +49,11 @@ $$
 J^{(t)} = -\sum_{i=0}^{V-1} y^{(t)}_{[i]} log \hat{y}^{(t)}_{[i]}
 $$
 
-The vector $$y^{(t)}$$ is a one-hot vector with the same dimensions as that of $$\hat{y}^{t}$$ - it contains a $$1$$ at the index of the 'true' next-word for time-step $$t$$.
+The vector $$y^{(t)}$$ is a one-hot vector with the same dimensions as that of $$\hat{y}^{t}$$ - it contains a $$1$$ at the index of the 'true' next-word for time-step $$t$$. And finally, the overall loss for our RNN is the sum of losses contributed by each time-step:
 
-##
+$$
+J = \sum_{t=1}_{T} J^{(t)}
+$$
+
+## The First BPTT Trick: Dummy Variables
+Parameters such as $$W_h$$ influence the loss for a single time-step $$J^{(t)}$$, not just 
