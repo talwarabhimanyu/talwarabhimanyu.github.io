@@ -59,11 +59,14 @@ $$
 ## The First BPTT Trick: Dummy Variables
 Parameters such as $$W_h$$ influence the loss for a single time-step $$J^{(t)}$$, not just through their direct role in computation of the hidden-state $$h^{(t)}$$ but also via their influence on all the previous hidden-states $$h^{[0:t-1]}$$. So if we use the chain-rule to write the partial derivative of $$J^{(t)}$$ with respect to $$W_h$$, we will end up with a complex expression which includes contributions from each time-step from time-step $$0$$ to $$t$$. That can be simmplified if we pretend that the $$W_h$$ used at each time step is a dummy variable, $$W_h^{(t)}$$, with each such dummy variable mapped to the original weight matrix $$W_h$$ by the simple identity mapping.
 
-Let's look at the gradient of loss for time-step $$t$$ with respect to the $$[i, j]^{th}$$ element of $$W_h$$:
+Use of these dummy variables allows us to break the gradient of loss $$J^{(t)}$$ with respect to the $$[i, j]^{th}$$ element of $$W_h$$, into a simpler sum of parts.
 
 $$
 \begin{align}
-\frac {\partial J^{(t)}} {\partial W_{h [i,j]}} =  \sum_{t=1}^{T} \frac {\partial J^{(t)}} {\partial W_{h [i,j]}^{(t)}} \underbrace{\frac {\partial W_{h [i,j]}^{(t)}} {\partial W_h}}_{This equals 1.} \\
+\frac {\partial J^{(t)}} {\partial W_{h [i,j]}} =  \sum_{k=1}^{T} \frac {\partial J^{(t)}} {\partial W_{h [i,j]}^{(k)}} \underbrace{\frac {\partial W_{h [i,j]}^{(k)}} {\partial W_h}}_{This equals 1.} \\
 \\
-&=  \sum_{t=1}^{T} \frac {\partial J^{(t)}} {\partial W_{h [i,j]}^{(t)}}
+&=  \sum_{k=1}^{T} \frac {\partial J^{(t)}} {\partial W_{h [i,j]}^{(k)}}
+\end{align}
 $$
+
+**How does this simplify our job?** To compute gradient with respect to $$W_h$$ in a single expression, we will need to factor in contributions from all time-steps. But if our task now is computing gradients w.r.t $$W_h^{(k)}$$, we only need to look at contributions from time-steps $$k, k+1, \cdots, t-1, t$$
