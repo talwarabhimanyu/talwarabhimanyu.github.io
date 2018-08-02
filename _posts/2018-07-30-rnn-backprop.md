@@ -109,13 +109,13 @@ $$
 \begin{array}{c|c}
 
 \begin{array}{cc}
-\gamma & =\alpha \times \beta \\
-\space & =\theta \\
+\gamma & \alpha \times \beta \\
+\space & \theta \\
 \end{array}
 &
 \begin{array}{cc}
-\gamma & =\alpha \times \beta \\
-\space & =\theta \\
+\gamma & \alpha \times \beta \\
+\space & \theta \\
 \end{array}
 
 \end{array}
