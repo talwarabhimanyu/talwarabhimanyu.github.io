@@ -100,7 +100,7 @@ Using the chain rule and the relationship between the hidden-state $$h$$ and int
 
 $$
 \begin{align}
-\frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} &= \sum_{m=1}^{D_h} \frac {\partial h_{[p]}^{(k)}} {\partial z_{[m]}^{(k)}} \times \frac {\partial z_{[m]}^{(k)}} {\partial W_{h[i,j]}^{(k)}}
+\frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} &= \sum_{m=1}^{D_h} \frac {\partial h_{[p]}^{(k)}} {\partial z_{[m]}^{(k)}} \times \frac {\partial z_{[m]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} \tag{xx}
 \end{align}
 $$
 
@@ -111,15 +111,34 @@ $$
 \frac {\partial h_{[p]}^{(k)}} {\partial z_{[m]}^{(k)}} &= 
 \begin{cases}
 0, & \text{p $\ne$ m} \\[2ex]
-\sigma' (z_{[p]}^{(k)}), & \text{p = m}
+\sigma' (z_{[p]}^{(k)}), & \text{p = m} \tag{xx1}
 \end{cases}
-
-\frac {\partial z_{[m]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} &=
-\begin{cases}
-0, & \text{m $\ne$ i} \\[2ex]
-\h_{[j]}^{(t-1)}, & \text{m = i}
-\end{cases}
-
 \end{align}
 $$
 
+$$
+\begin{align}
+\frac {\partial z_{[m]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} &=
+\begin{cases}
+0, & \text{m $\ne$ i} \\[2ex]
+h_{[j]}^{(t-1)}, & \text{m = i} \tag{xx2}
+\end{cases}
+\end{align}
+$$
+
+Substituting in $$Eq. xx$ we get,
+
+$$
+\begin{align}
+\frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} &= 
+\begin{cases}
+0, & \text{p $\ne$ i} \\[2ex]
+\sigma' (z_{[i]}^{(k)}) \times h_{[j]}^{(t-1)}, & \text{p = i} 
+\end{cases}
+\end{align}
+$$
+
+Voila! We have all the information required to compute the expression above at time-step $$k$$. In matrix terms, we can now write the gradient as:
+
+$$
+$$
