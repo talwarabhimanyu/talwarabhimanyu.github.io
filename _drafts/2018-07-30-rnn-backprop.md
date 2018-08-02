@@ -16,7 +16,7 @@ The parameters used by this RNN are the weight matrices $$W_h$$, $$W_e$$, and $$
 
 ### RNN Unit Computation
 The RNN Unit at time-step $$t$$ takes as inputs:
-* $$x^{(t)}$$, a vector of dimensions $$d \times 1$$, which represents the $$t^th$$ 'word' in a sequence of length $$T$$, and
+* $$x^{(t)}$$, a vector of dimensions $$d \times 1$$, which represents the $$t^{th}$$ 'word' in a sequence of length $$T$$, and
 * $$h^{(t-1)}$$, a vector of dimensions $$D_h \times 1$$, which is the output of the previous RNN Unit, and is referred to as a 'hidden-state' vector.
 
 The output of the RNN unit at time-step $$t$$ is its 'hidden-state vector' $$h^{(t)}$$. The equations governing a single unit are:
@@ -47,7 +47,6 @@ $$
 J^{(t)} = -\sum_{i=0}^{V-1} y^{(t)}_{[i]} log \hat{y}^{(t)}_{[i]}
 $$
 
-**The Loss Function**
-At time-step $$t$$, we have a probability vector $$\hat{y}^{t}$$ which is the output of our model for this time-step. We also have with us the truth vector $$y^t$$ which is a one-hot vector with the same dimensions as that of $$\hat{y}^{t}$$.
+The vector $$y^{(t)}$$ is a one-hot vector with the same dimensions as that of $$\hat{y}^{t}$$ - it contains a $$1$$ at the index of the 'true' next-word for time-step $$t$$.
 
 ##
