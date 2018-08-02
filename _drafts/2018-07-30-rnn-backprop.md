@@ -115,9 +115,8 @@ $$
 &
 \begin{array}{cc}
 3 & 6 \\
-4 & 5
+40 & 5
 \end{array}
-
 \end{array}
 $$
 
