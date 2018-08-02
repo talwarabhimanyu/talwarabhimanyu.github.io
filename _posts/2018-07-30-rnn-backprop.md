@@ -114,7 +114,7 @@ $$
 \end{array}
 &
 \begin{array}{cc}
-3 & 6 \\
+ & \alpha \times \beta \\
 40 & 5
 \end{array}
 \end{array}
