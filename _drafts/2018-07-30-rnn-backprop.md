@@ -63,10 +63,20 @@ Use of these dummy variables allows us to break the gradient of loss $$J^{(t)}$$
 
 $$
 \begin{align}
-\frac {\partial J^{(t)}} {\partial W_{h [i,j]}} &=  \sum_{k=1}^{T} \frac {\partial J^{(t)}} {\partial W_{h [i,j]}^{(k)}} \underbrace{\frac {\partial W_{h [i,j]}^{(k)}} {\partial W_h}}_{Equals \space 1.} \\
+\frac {\partial J^{(t)}} {\partial W_{h [i,j]}} &=  \sum_{k=1}^{T} \frac {\partial J^{(t)}} {\partial W_{h [i,j]}^{(k)}} \underbrace{\frac {\partial W_{h [i,j]}^{(k)}} {\partial W_{h[i,j]}}}_{Equals \space 1.} \\
 \\
 &=  \sum_{k=1}^{T} \frac {\partial J^{(t)}} {\partial W_{h [i,j]}^{(k)}} \\
 \end{align}
 $$
 
-**How does this simplify our job?** To compute gradient with respect to $$W_h$$ in a single expression, we will need to factor in contributions from all time-steps. But if our task now is computing gradients w.r.t $$W_h^{(k)}$$, we only need to look at contributions from time-steps $$k, k+1, \cdots, t-1, t$$
+**How does this simplify our job?** To compute gradient of $$J^{(t)}$$ with respect to $$W_h$$ in a single expression, we will need to factor in contributions from all time-steps. But if our task now is computing gradients w.r.t $$W_h^{(k)}$$, we only need to look at contributions from time-steps $$[k, k+1, \cdots, t-1, t]$$ (because $$W_h^{(k)}$$ does not influence any variables computed prior to time-step $$k$$. **In the spirit of backprop, we now rely only on values computed 'ahead' of us in the computational graph.**
+
+## Blueprint for Computing RNN Gradients
+Before delving into calculus, two big picture questions are: 
+* What information do we need at each time-step to compute gradients?
+* How do we pass that information efficiently between layers?
+
+Let's start by answering these two questions for gradients of loss from the $$t^{th}$$ step, $$J^{(t)}$$ w.r.t. $$W_{h[i,j]}^{(k)}$$. I'll make (and prove!) two claims below which will help us out.
+
+**Claim 1: At any given time-step $$k$$, if we know the value of \frac {\partial J^{(t)}} {\partial h^{{(k)}}, we can compute gradients w.r.t. the weight matrix $$\underline{for the k^{th} step}$$, i.e. \frac {\partial J^{(t)}} {\partial W_{h}^{k} }.**  
+
