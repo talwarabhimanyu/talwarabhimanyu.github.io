@@ -17,7 +17,7 @@ The parameters used by this RNN are the weight matrices $$W_h$$, $$W_e$$, and $$
 ### RNN Unit Computation
 The RNN Unit at time-step $$t$$ takes as inputs:
 * $$x^{(t)}$$, a vector of dimensions $$d \times 1$$, which represents the $$t^th$$ 'word' in a sequence of length $$T$$, and
-* $$h^{(t-1)}, a vector of dimensions $$D_h \times 1$$, which is the output of the previous RNN Unit, and is referred to as a 'hidden-state' vector.
+* $$h^{(t-1)}$$, a vector of dimensions $$D_h \times 1$$, which is the output of the previous RNN Unit, and is referred to as a 'hidden-state' vector.
 
 The output of the RNN unit at time-step $$t$$ is its 'hidden-state vector' $$h^{(t)}$$. The equations governing a single unit are:
 $$z^{(t)} = W_h h^{(t-1)} + W_x x^{(t)} + b_1 \tag{1.1}$$
