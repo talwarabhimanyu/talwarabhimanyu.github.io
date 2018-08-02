@@ -104,16 +104,19 @@ $$
 \end{align}
 $$
 
-Test table:
+Evaluating the two quantities on the right hand side:
 $$
 \begin{array}{c|c}
 \hline \\
-\begin{array}{cc}
-1 & 2 \\
-2 & 4
-\end{array}
+\begin{align}
+\frac {\partial h_{[p]}^{(k)}} {\partial z_{m}^{(k)}} &= 
+\begin{cases}
+0, & \text{if p \ne m} \\[2ex]
+\sigma' (z_{p}^{(k)}), & \text{if p = m}
+\end{cases}
+\end{align}
 &
-\begin{array}{cc}
+\begin{array}{ccc}
  & =\alpha \times \beta \\
 40 & 5
 \end{array}
