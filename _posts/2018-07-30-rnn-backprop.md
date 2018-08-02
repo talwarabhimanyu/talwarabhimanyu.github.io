@@ -107,31 +107,19 @@ $$
 Evaluating the two quantities on the right hand side:
 
 $$
-\begin{array}{c|c}
-{\begin{align}
-a &= b 
-\end{align}}
-& 
-{\begin{align}
-c &= e
-\end{align}}
-\end{array}
-$$
-
-$$
-\begin{array}{c|c}
-\hline \\
 \begin{align}
 \frac {\partial h_{[p]}^{(k)}} {\partial z_{[m]}^{(k)}} &= 
 \begin{cases}
 0, & \text{p $\ne$ m} \\[2ex]
 \sigma' (z_{[p]}^{(k)}), & \text{p = m}
 \end{cases}
+
+\frac {\partial z_{[m]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} &=
+\begin{cases}
+0, & \text{m $\ne$ i} \\[2ex]
+\h_{[j]}^{(t-1)}, & \text{m = i}
+\end{cases}
+
 \end{align}
-&
-\begin{align}
-a &= b
-\end{align}
-\end{array}
 $$
 
