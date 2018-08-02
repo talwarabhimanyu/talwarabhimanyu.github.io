@@ -112,11 +112,11 @@ $$
 \gamma & =\alpha \times \beta \\
  & = \theta \\
 \end{array}
-
+&
 % Second column
 \begin{array}{cc}
 \gamma & =\alpha \times \beta \\
-& =\theta \\
+ & =\theta \\
 \end{array}
 
 \end{array}
