@@ -106,16 +106,16 @@ $$
 
 Test table:
 $$
-\begin{array}{cc}
+\begin{array}{c|c}
 \hline \\
 \begin{array}{cc}
-\gamma & \alpha \times \beta \\
-\space & \theta \\
+1 & 2 \\
+2 & 4 \\
 \end{array}
 &
 \begin{array}{cc}
-\gamma & \alpha \times \beta \\
-\space & \theta \\
+3 & 6 \\
+4 & 5 \\
 \end{array} \\
 
 \end{array}
