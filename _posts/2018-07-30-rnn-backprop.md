@@ -44,7 +44,8 @@ $$
 \hat{y}^{(t)}_{[i]} = \frac {e^{\theta^{(t)}_{[i]}}} {\sum_{j=0}^{V-1} e^{\theta^{(t)}_{[i]}}}
 $$
 
-And finally the loss attributed to this time-step, $$J^{(t)}$$ is given by: <br/>
+And finally the loss attributed to this time-step, $$J^{(t)}$$ is given by:
+
 $$
 J^{(t)} = -\sum_{i=0}^{V-1} y^{(t)}_{[i]} log \hat{y}^{(t)}_{[i]}
 $$
@@ -52,14 +53,17 @@ $$
 The vector $$y^{(t)}$$ is a one-hot vector with the same dimensions as that of $$\hat{y}^{t}$$ - it contains a $$1$$ at the index of the 'true' next-word for time-step $$t$$. And finally, the overall loss for our RNN is the sum of losses contributed by each time-step:
 
 $$
-J = \sum_{t=1}_{T} J^{(t)}
+J = \sum_{t=1}^{T} J^{(t)}
 $$
 
 ## The First BPTT Trick: Dummy Variables
-Parameters such as $$W_h$$ influence the loss for a single time-step $$J^{(t)}$$, not just through their direct role in computation of the hidden-state $$h^{(t)}$$ but also via their influence on all the previous hidden-states $$h^{[0:t-1]}$$. So if we use the chain-rule to write the partial derivative of $$J^{(t)}$$ with respect to $$W_h$$, we will end up with a complex expression which includes contributions from each time-step from time-step $$0$$ to $$t$. That can be simmplified if we pretend that the $$W_h$$ used at each time step is a dummy variable, $$W_h^{(t)}$$, with each such dummy variable mapped to the original weight matrix $$W_h$$ by the simple identity mapping.
+Parameters such as $$W_h$$ influence the loss for a single time-step $$J^{(t)}$$, not just through their direct role in computation of the hidden-state $$h^{(t)}$$ but also via their influence on all the previous hidden-states $$h^{[0:t-1]}$$. So if we use the chain-rule to write the partial derivative of $$J^{(t)}$$ with respect to $$W_h$$, we will end up with a complex expression which includes contributions from each time-step from time-step $$0$$ to $$t$$. That can be simmplified if we pretend that the $$W_h$$ used at each time step is a dummy variable, $$W_h^{(t)}$$, with each such dummy variable mapped to the original weight matrix $$W_h$$ by the simple identity mapping.
 
 Let's look at the gradient of loss for time-step $$t$$ with respect to the $$[i, j]^{th}$$ element of $$W_h$$:
 
 $$
-\frac {\partial J^{(t)}} {\partial W_{h [i,j]}} =  \sum_{t=1}^{T} \frac {\partial J^{(t)}} {\partial W_{h [i,j]}^{(t)}} \underbrace{\frac {\partial W_{h [i,j]}^{(t)}} {\partial W_h}}_{This equals 1.}
+\begin{align}
+\frac {\partial J^{(t)}} {\partial W_{h [i,j]}} =  \sum_{t=1}^{T} \frac {\partial J^{(t)}} {\partial W_{h [i,j]}^{(t)}} \underbrace{\frac {\partial W_{h [i,j]}^{(t)}} {\partial W_h}}_{This equals 1.} \\
+\\
+&=  \sum_{t=1}^{T} \frac {\partial J^{(t)}} {\partial W_{h [i,j]}^{(t)}}
 $$
