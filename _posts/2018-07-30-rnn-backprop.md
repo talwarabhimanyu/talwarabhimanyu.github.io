@@ -100,26 +100,30 @@ Using the chain rule and the relationship between the hidden-state $$h$$ and int
 
 $$
 \begin{align}
-\frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} &= \sum_{m=1}^{D_h} \frac {\partial h_{[p]}^{(k)}} {\partial z_{m}^{(k)}} \times \frac {\partial z_{[m]}^{(k)}} {\partial W_{h[i,j]}^{(k)}}
+\frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} &= \sum_{m=1}^{D_h} \frac {\partial h_{[p]}^{(k)}} {\partial z_{[m]}^{(k)}} \times \frac {\partial z_{[m]}^{(k)}} {\partial W_{h[i,j]}^{(k)}}
 \end{align}
 $$
 
 Evaluating the two quantities on the right hand side:
+
 $$
 \begin{array}{c|c}
 \hline \\
 \begin{align}
-\frac {\partial h_{[p]}^{(k)}} {\partial z_{m}^{(k)}} &= 
+\frac {\partial h_{[p]}^{(k)}} {\partial z_{[m]}^{(k)}} &= 
 \begin{cases}
-0, & \text{if p \ne m} \\[2ex]
-\sigma' (z_{p}^{(k)}), & \text{if p = m}
+0, & \text{p $\ne$ m} \\[2ex]
+\sigma' (z_{[p]}^{(k)}), & \text{p = m}
 \end{cases}
 \end{align}
 &
-\begin{array}{ccc}
- & =\alpha \times \beta \\
-40 & 5
-\end{array}
+\begin{align}
+\frac {\partial z_{[m]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} &=
+\begin{cases}
+0, & \text{m $\ne$ i} \\ [2ex]
+h_{[j]}^{(t-1)}, & \text{m = i}
+\end{cases}
+\end{align}
 \end{array}
 $$
 
