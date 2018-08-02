@@ -110,13 +110,13 @@ $$
 \hline \\
 \begin{array}{cc}
 1 & 2 \\
-2 & 4 \\
+2 & 4
 \end{array}
 &
 \begin{array}{cc}
 3 & 6 \\
-4 & 5 \\
-\end{array} \\
+4 & 5
+\end{array}
 
 \end{array}
 $$
