@@ -84,6 +84,6 @@ Let's start by answering these two questions for gradients of loss from the $$t^
 
 $$
 \begin{align}
-\frac {} {} &= sum_{}^{} \frac {} {} \frac {} {}
+\frac {\partial J^{(t)}} {\partial W_{h[i,j]}^{(k)}} &= sum_{p=1}^{D_h} \frac {\partial J^{(t)}} {\partial h_{[p]}^{(k)}} \frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}}
 \end{align}
 $$
