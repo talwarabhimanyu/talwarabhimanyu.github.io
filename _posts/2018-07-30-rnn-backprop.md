@@ -63,9 +63,9 @@ Use of these dummy variables allows us to break the gradient of loss $$J^{(t)}$$
 
 $$
 \begin{align}
-\frac {\partial J^{(t)}} {\partial W_{h [i,j]}} =  \sum_{k=1}^{T} \frac {\partial J^{(t)}} {\partial W_{h [i,j]}^{(k)}} \underbrace{\frac {\partial W_{h [i,j]}^{(k)}} {\partial W_h}}_{This equals 1.} \\
+\frac {\partial J^{(t)}} {\partial W_{h [i,j]}} =  \sum_{k=1}^{T} \frac {\partial J^{(t)}} {\partial W_{h [i,j]}^{(k)}} \underbrace{\frac {\partial W_{h [i,j]}^{(k)}} {\partial W_h}}_{Equals \space 1.} \\
 \\
-&=  \sum_{k=1}^{T} \frac {\partial J^{(t)}} {\partial W_{h [i,j]}^{(k)}}
+&=  \sum_{k=1}^{T} \frac {\partial J^{(t)}} {\partial W_{h [i,j]}^{(k)}} \\
 \end{align}
 $$
 
