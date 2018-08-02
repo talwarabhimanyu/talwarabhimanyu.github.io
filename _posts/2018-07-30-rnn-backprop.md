@@ -96,5 +96,32 @@ $$
 
 As we have assumed we know $$ \gamma_t^k$$, the first quantity on the right hand side is taken care of. If we can show that at time-step $$k$$, we have adequate information to compute the second quantity, then we've proved this claim.
 
+Using the chain rule and the relationship between variable $$h$$ and $$z$$ from $$Eq. \space 1.2$$:
+
+$$
+\begin{align}
+\frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} &= \sum{m=1}^{D_h} \frac {\partial h_{[p]}^{(k)}} {\partial z_{m}^{(k)}} \times \frac {\partial z_{[m]}^{(k)}} {\partial W_{h[i,j]}^{(k)}}
+\end{align}
+$$
+
+Test table:
+$$
+\begin{array}{cc}
+% First column
+\begin{array}
+\gamma &= \alpha \times \beta
+\\
+&= \theta
+\end{array}
+
+% Second column
+\begin{array}
+\gamma &= \alpha \times \beta
+\\
+&= \theta
+\end{array}
+
+
+\end{array}
 
 
