@@ -106,17 +106,16 @@ $$
 
 Test table:
 $$
-\begin{array}{cc}
-% First column
+\begin{array}{c|c}
+
 \begin{array}{cc}
 \gamma & =\alpha \times \beta \\
- & = \theta \\
+\space & =\theta \\
 \end{array}
 &
-% Second column
 \begin{array}{cc}
 \gamma & =\alpha \times \beta \\
- & =\theta \\
+\space & =\theta \\
 \end{array}
 
 \end{array}
