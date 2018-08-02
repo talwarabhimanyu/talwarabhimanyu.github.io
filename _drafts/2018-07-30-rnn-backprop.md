@@ -114,7 +114,7 @@ $$
 \end{array}
 &
 \begin{array}{cc}
- & \alpha \times \beta \\
+ & =\alpha \times \beta \\
 40 & 5
 \end{array}
 \end{array}
