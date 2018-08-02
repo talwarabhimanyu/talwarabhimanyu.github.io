@@ -89,7 +89,7 @@ Let's start by answering these two questions for gradients of loss from the $$t^
 
 $$
 \begin{align}
-\frac {\partial J^{(t)}} {\partial W_{h[i,j]}^{(k)}} &= \sum_{p=1}^{D_h} \underbrace{\frac {\partial J^{(t)}} {\partial h_{[p]}^{(k)}}}_{\gamma_t^k[p]} \times \underbrace{\frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} }_{Eq. \space xx}  \tag{yy}
+\frac {\partial J^{(t)}} {\partial W_{h[i,j]}^{(k)}} &= \sum_{p=1}^{D_h} \underbrace{\frac {\partial J^{(t)}} {\partial h_{[p]}^{(k)}}}_{\gamma_{t[p]}^k} \times \underbrace{\frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} }_{Eq. \space xx}  \tag{yy}
 \\
 \end{align}
 $$
@@ -126,7 +126,7 @@ h_{[j]}^{(k-1)}, & \text{m = i} \tag{xx2}
 \end{align}
 $$
 
-Substituting in $$Eq. xx$ we get,
+Substituting in $$Eq. xx$$ we get,
 
 $$
 \begin{align}
@@ -144,6 +144,14 @@ Voila! We have all the information required to compute the expression above at t
 
 $$
 \begin{align}
-\frac {\partial J^{(t)}} {\partial W_{h[i,j]}^{(k)}} &= \gamma_t^k[i] \times  \sigma' (z_{[i]}^{(k)}) \times h_{[j]}^{(k-1)}
+\frac {\partial J^{(t)}} {\partial W_{h[i,j]}^{(k)}} &= \gamma_{t[i]}^k \times  \sigma' (z_{[i]}^{(k)}) \times h_{[j]}^{(k-1)}
+\end{align}
+$$
+
+Writing in matrix terms (with $$\circ$$ denoting elementwise multiplication of vectors),
+
+$$
+\begin{align}
+\frac {\partial J^{(t)}} {\partial W_{h}^{(k)}} &= (\gamma_{t}^k \circ  \sigma' (z^{(k)})) \times h^{(k-1)}
 \end{align}
 $$
