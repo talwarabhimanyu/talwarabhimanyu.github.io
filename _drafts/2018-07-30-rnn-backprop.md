@@ -108,7 +108,13 @@ Evaluating the two quantities on the right hand side:
 
 $$
 \begin{array}{c|c}
-a = b & c = d
+\begin{align}
+a &= b 
+\end{align}
+& 
+\begin{align}
+c &= e
+\end{align}
 \end{array}
 $$
 
