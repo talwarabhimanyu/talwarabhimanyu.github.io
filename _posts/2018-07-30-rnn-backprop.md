@@ -78,5 +78,5 @@ Before delving into calculus, two big picture questions are:
 
 Let's start by answering these two questions for gradients of loss from the $$t^{th}$$ step, $$J^{(t)}$$ w.r.t. $$W_{h[i,j]}^{(k)}$$. I'll make (and prove!) two claims below which will help us out.
 
-**Claim 1: At any given time-step $$k$$, if we know the value of \frac {\partial J^{(t)}} {\partial h^{{(k)}}, we can compute gradients w.r.t. the weight matrix $$\underline{for the k^{th} step}$$, i.e. \frac {\partial J^{(t)}} {\partial W_{h}^{k} }.**  
+**Claim 1: At any given time-step $$k$$, if we know the value of \frac {\partial J^{(t)}} {\partial h^{(k)}}, we can compute gradients w.r.t. the weight matrix $$\underline{for the k^{th} step}$$, i.e. \frac {\partial J^{(t)}} {\partial W_{h}^{k} }.**  
 
