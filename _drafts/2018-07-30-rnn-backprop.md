@@ -108,6 +108,12 @@ Evaluating the two quantities on the right hand side:
 
 $$
 \begin{array}{c|c}
+a = b & c = d
+\end{array}
+$$
+
+$$
+\begin{array}{c|c}
 \hline \\
 \begin{align}
 \frac {\partial h_{[p]}^{(k)}} {\partial z_{[m]}^{(k)}} &= 
