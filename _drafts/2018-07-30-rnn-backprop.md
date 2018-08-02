@@ -89,8 +89,12 @@ Let's start by answering these two questions for gradients of loss from the $$t^
 
 $$
 \begin{align}
-\frac {\partial J^{(t)}} {\partial W_{h[i,j]}^{(k)}} &= \sum_{p=1}^{D_h} \underbrace{\frac {\partial J^{(t)}} {\partial h_{[p]}^{(k)}}}_{\gamma_t^k[p]} \times \frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}}
+\frac {\partial J^{(t)}} {\partial W_{h[i,j]}^{(k)}} &= \sum_{p=1}^{D_h} \underbrace{\frac {\partial J^{(t)}} {\partial h_{[p]}^{(k)}}}_{\gamma_t^k[p]} \times \underbrace{\frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} }_{Eq. \space xx}
 \\
-&= 
 \end{align}
 $$
+
+As we have assumed we know $$ \gamma_t^k$$, the first quantity on the right hand side is taken care of. If we can show that at time-step $$k$$, we have adequate information to compute the second quantity, then we've proved this claim.
+
+
+
