@@ -108,13 +108,13 @@ Evaluating the two quantities on the right hand side:
 
 $$
 \begin{array}{c|c}
-\begin{align}
+{\begin{align}
 a &= b 
-\end{align}
+\end{align}}
 & 
-\begin{align}
+{\begin{align}
 c &= e
-\end{align}
+\end{align}}
 \end{array}
 $$
 
