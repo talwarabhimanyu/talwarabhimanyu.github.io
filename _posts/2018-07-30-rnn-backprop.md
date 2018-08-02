@@ -22,8 +22,13 @@ The RNN Unit at time-step $$t$$ takes as inputs:
 * $$h^{(t-1)}$$, a vector of dimensions $$D_h \times 1$$, which is the output of the previous RNN Unit, and is referred to as a 'hidden-state' vector.
 
 The output of the RNN unit at time-step $$t$$ is its 'hidden-state vector' $$h^{(t)}$$. The equations governing a single unit are:
-$$z^{(t)} = W_h h^{(t-1)} + W_x x^{(t)} + b_1 \tag{1.1}$$
-$$h^{(t)} = \sigma(z^{(t)}) \tag{1.2}$$
+$$
+\begin{align}
+z^{(t)} &= W_h h^{(t-1)} + W_x x^{(t)} + b_1 \tag{1.1}
+\\
+h^{(t)} &= \sigma(z^{(t)}) \tag{1.2}
+\end{align}
+$$
 
 where $$\sigma()$$ refers to the Sigmoid function, defined as:
 $$
@@ -78,12 +83,14 @@ Before delving into calculus, two big picture questions are:
 
 Let's start by answering these two questions for gradients of loss from the $$t^{th}$$ step, $$J^{(t)}$$ w.r.t. $$W_{h[i,j]}^{(k)}$$. I'll make (and prove!) two claims below which will help us out.
 
-**Claim 1: At any given time-step $$k$$, if we know the value of $$\frac {\partial J^{(t)}} {\partial h^{(k)}}$$, we can compute gradients w.r.t. the weight matrix $$\underline{for the k^{th} step}$$, i.e. $$\frac {\partial J^{(t)}} {\partial W_{h}^{k} }$$.**  
+**Claim 1: At any given time-step $$k$$, if we know the value of $$\frac {\partial J^{(t)}} {\partial h^{(k)}}$$, we can compute gradients w.r.t. the weight matrix $$\underline{for \space the \space k^{th} \space step}$$, i.e. $$\frac {\partial J^{(t)}} {\partial W_{h}^{k} }$$.**  
 
 **Proof:** Using the chain rule:
 
 $$
 \begin{align}
-\frac {\partial J^{(t)}} {\partial W_{h[i,j]}^{(k)}} &= sum_{p=1}^{D_h} \frac {\partial J^{(t)}} {\partial h_{[p]}^{(k)}} \frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}}
+\frac {\partial J^{(t)}} {\partial W_{h[i,j]}^{(k)}} &= \sum_{p=1}^{D_h} \frac {\partial J^{(t)}} {\partial h_{[p]}^{(k)}} \times \frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}}
+\\
+&= 
 \end{align}
 $$
