@@ -268,17 +268,17 @@ T-2 & \gamma_{T-2}^{(T-2)} & \gamma_{T-1}^{(T-2)} & \gamma_{T}^{(T-2)} & \gamma_
 \end{array}
 $$
 
-For each time-step $$k$$, the columne titled _Compute Current Time Step_ lists quantities which can either be computed locally (such as $$\gamma_k^{(k)}$$ or those which are received from time-step $$(k+1)$$. **The first observation is that at each time-step $$k$$, this columns lists quantities which will through $$Eq. 5.2$$, allow us to compute gradients of $$J^{(t)}$$ for all $$t \in [k, \space k+1, \cdots, T-1, \space T]$$ w.r.t $$W_h^{(k)}$$.** Finally, Claim 1 is proving useful! 
+For each time-step $$k$$, the columne titled _Compute Current Time Step_ lists quantities which can either be computed locally (such as $$\gamma_k^{(k)}$$) or those which are received from time-step $$(k+1)$$. **The first observation is that at each time-step $$k$$, this columns lists quantities which will through $$Eq. 5.2$$, allow us to compute gradients of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$ for all $$t \in [k, \space k+1, \cdots, T-1, \space T]$$.** Finally, Claim 1 is proving useful! 
 
 The column titled _To previous Time Step_ lists quantities which are passed on from this time-step to its previous time-step during backpropogation. For instance, at time-step $$T$$, we compute $$\gamma_T^{(T)}$$ (by a simple backprop of $$J^{(T)}$$ through Softmax and Affine layers), and then use it to compute $$\gamma_T^{(T-1)}$$ by employing $$Eq. 6.2$$ which we had derived above. We pass this quantity on to time-step $$T-1$$.
 
-Now it gets interesting - at time-step $$T-1$$, we've got the locally compute $$\gamma_{T-1}^{(T-1)}$$ and we've also received $$\gamma_T^{(T-1)}$$ from time-step $$T$$. We can again apply $$Eq. 6.2$$ to compute the 3^{rd} column of our table. **But now we have two values which we want to pass on to time-step $$T-2$$!!**
+Now it gets interesting - at time-step $$T-1$$, we've got the locally computed $$\gamma_{T-1}^{(T-1)}$$ and we've also received $$\gamma_T^{(T-1)}$$ from time-step $$T$$. We can again apply $$Eq. 6.2$$ on these two quantities to compute the $$3^{rd}$$ column of our table. **But now we have two values which we want to pass on to time-step $$(T-2)$$!! How do we do that?**
 
-It turns out that we can sum them up and pass the sum on to time-step $$T-2$$. This works simply because:
+It turns out that we can sum them up and pass the sum on to time-step $$T-2$$. At time-step $$(T-2)$$, consider the application of $$Eq. 6.2$$ to the sum of $$\gamma_{T-1}^{(T-2)}$$ and $$\gamma_{T}^{(T-2)}$$ received from time-step $$T-1$$:
 
 $$
 \begin{align}
-
+(W_{h}^{(k)})^{Tr} (\left[ gamma_{T-1}^{(T-2)} + \gamma_{T}^{(T-2)} \right] \circ \sigma'(z_{}^{(k)}))
 \end{align}
 $$
 
