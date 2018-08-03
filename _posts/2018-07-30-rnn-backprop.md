@@ -261,6 +261,7 @@ Following the train of thought above, to compute gradient of $$J^{(t)}$$ w.r.t $
 $$
 \begin{array}{c|ccc|ccc|c}
 \text{Time Step} & \text{Compute} & \text{Current} & \text{Time Step} & \text{To} & \text{Previous} & \text{Time Step} & \text{Comment} \\
+T & \gamma_T^{(T)} & & & \gamma_T^{(T-1)} & & & \text{c1}\\
 \end{array}
 $$
 
