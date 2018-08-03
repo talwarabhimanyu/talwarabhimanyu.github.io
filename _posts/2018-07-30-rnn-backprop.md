@@ -260,10 +260,10 @@ Following the train of thought above, to compute gradient of $$J^{(t)}$$ w.r.t $
 
 $$
 \begin{array}{c|ccc|ccc|c}
-\text{Time Step} & \text{Compute} & \text{Current} & \text{Time Step} & \text{To} & \text{Previous} & \text{Time Step} & \text{Comment} \\
+\bbox[yellow]{\text{Time Step} & \text{Compute} & \text{Current} & \text{Time Step} & \text{To} & \text{Previous} & \text{Time Step} & \text{Comment}} \\
 \hline
-T & \gamma_T^{(T)} & & & \gamma_T^{(T-1)} & & & \text{c1}\\
-T-1 & \gamma_{T-1}^{(T-1)} & \gamma_{T}^{(T-1)} & & \gamma_{T-1}^{(T-2)} & \gamma_{T}^{(T-2)} & & \text{c2}\\
+T & \gamma_T^{(T)} & & & \gamma_T^{(T-1)} & & & \text{c1}\\[2ex]
+T-1 & \gamma_{T-1}^{(T-1)} & \gamma_{T}^{(T-1)} & & \gamma_{T-1}^{(T-2)} & \gamma_{T}^{(T-2)} & & \text{c2}\\[2ex]
 T-2 & \gamma_{T-2}^{(T-2)} & \gamma_{T-1}^{(T-2)} & \gamma_{T}^{(T-2)} & \gamma_{T-2}^{(T-3)} & \gamma_{T-1}^{(T-3)} & \gamma_{T}^{(T-3)} & \text{c2}\\
 \end{array}
 $$
