@@ -19,8 +19,9 @@ The parameters used by this RNN are the weight matrices $$W_h$$, $$W_e$$, and $$
 ### Notation
 Throughout this blog post:
 * Superscript $$(t)$$, such as in $$h^{(t)}$$ refers to value of a variable (in this case $$h$$) at time-step $$t$$.
-* Subscript $$[i]$$ in square brackets, such as in $$h^{(t)}_{[i]}$$ refers to the $$i^{th}$$ component of the vector $$h^{(t)}_{[i]}$$.
-* The symbols $$\times$$ and $$\circ$$ refer to scalar and element-wise multiplication respectively. Where I have not explicitly provided a symbol, assume it implies matrix multiplication.
+* Subscript $$[i]$$ in square brackets, such as in $$h^{(t)}_{[i]}$$ refers to the $$i^{th}$$ component of the vector $$h^{(t)}$$.
+* The symbols $$\times$$ and $$\circ$$ refer to scalar and element-wise multiplication respectively. In absence of a symbol, assume matrix multiplication.
+* Superscript $$Tr$$, such as in $$W_h^{Tr}$$, implies Transpose of the matrix $$W_h$$.
 
 An entire RNN can be broken down into three parts - I discuss each of those below:
 
@@ -39,11 +40,18 @@ h^{(t)} &= \sigma(z^{(t)}) \tag{1.2}
 $$
 
 where $$\sigma()$$ refers to the Sigmoid function, defined as:
+
 $$
 \sigma(x) = \frac{1}{(1 + e^{-x})}
 $$
 
-An RNN comprises a sequence of a number of such single RNN Units. **It is evident from these equations that a perturbation to the weight matrix $$W_h$$ will impact the value of a hidden-state vector $$h^{(t)}$$ not just directly via its presence in $$Eq. 1.1$$, but also indirectly via its impact on all hidden-state vectors $$h^{[1:t-1]}$$.** This aspect of an RNN makes the gradient calculations seem tricky but we will see two clever work-arounds to tackle this.
+The derivate of $$\sigma(x)$$ (with respect to x) is straightforward to compute:
+
+$$
+\sigma'(x) = \sigma(x) \times (1 - \sigma(x))
+$$
+
+An RNN comprises a sequence of a number of such single RNN Units. **It is evident from these equations that a perturbation to the weight matrix $$W_h$$ will impact the value of a hidden-state vector $$h^{(t)}$$ not just directly via its presence in $$Eq. 1.1$$, but also indirectly via its impact on all hidden-state vectors $$h^{(1:t-1)}$$.** This aspect of an RNN makes the gradient calculations seem tricky but we will see two clever work-arounds to tackle this.
 
 ### (2) The Affine Layer
 The hidden-state vector $$h^{(t)}$$ of RNN Unit at time-step $$t$$ is fed into (1) the next RNN Unit, and (2) through an Affine Layer which produces the vector $$\theta^{(t)}$$ of dimensions $$V \times 1$$, where $$V$$ is the size of our Vocabulary (set of all 'words' in our training-set if you are passing a word vector as input $$x^{(t)}$$ at time-step $$t$$, or a set of all characters in our training set if we are working on a character level RNN Model). The equations governing this layer are:
@@ -97,7 +105,7 @@ Let's start by answering these two questions for gradients of loss from the $$t^
 
 $$
 \begin{align}
-\frac {\partial J^{(t)}} {\partial W_{h[i,j]}^{(k)}} &= \sum_{p=1}^{D_h} \underbrace{\frac {\partial J^{(t)}} {\partial h_{[p]}^{(k)}}}_{\gamma_{t[p]}^k} \times \underbrace{\frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} }_{Eq. \space xx}  \tag{yy}
+\frac {\partial J^{(t)}} {\partial W_{h[i,j]}^{(k)}} &= \sum_{p=1}^{D_h} \underbrace{\frac {\partial J^{(t)}} {\partial h_{[p]}^{(k)}}}_{\gamma_{t[p]}^{(k)}} \times \underbrace{\frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} }_{Eq. \space xx}  \tag{yy}
 \\
 \end{align}
 $$
@@ -121,7 +129,11 @@ $$
 0, & \text{p $\ne$ m} \\[2ex]
 \sigma' (z_{[p]}^{(k)}), & \text{p = m} \tag{xx1}
 \end{cases}
+\end{align}
+$$
 
+$$
+\begin{align}
 \frac {\partial z_{[m]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} &=
 \begin{cases}
 0, & \text{m $\ne$ i} \\[2ex]
@@ -156,6 +168,6 @@ Writing in matrix terms (with $$\circ$$ denoting elementwise multiplication of v
 
 $$
 \begin{align}
-\frac {\partial J^{(t)}} {\partial W_{h}^{(k)}} &= (\gamma_{t}^k \circ  \sigma' (z^{(k)})) \times h^{(k-1)}
+\frac {\partial J^{(t)}} {\partial W_{h}^{(k)}} &= (\gamma_{t}^{(k)} \circ  \sigma' (z^{(k)})) \times (h^{(k-1)})^{Tr}
 \end{align}
 $$
