@@ -7,7 +7,7 @@ In this post I will derive all mathematical results used in backpropogation thro
 
 I will assume that the reader is familiar with an RNN's structure and why they have become popular (this excellent [blog post](http://colah.github.io/posts/2015-08-Understanding-LSTMs/) explains the key ideas). All layers of an RNN use the same set of parameters (weights and biases are "tied together") - this is unlike a plain feedforward network where each layer has its own set of parameters. This aspect makes understanding backpropogation through an RNN a bit tricky. 
 
-Several other resources on the web have tackled the maths behind an RNN, however I have found them lacking in detail on how exactly gradients are "accumulated" during backprop to deal with "tied weights". Therefore, I will attempt to explain that aspect in a lot of detail in this post.
+**Several other resources on the web have tackled the maths behind an RNN, however I have found them lacking in detail on how exactly gradients are "accumulated" during backprop to deal with "tied weights". Therefore, I will attempt to explain that aspect in a LOT of detail in this post.**
 
 ## Terminology
 To process a sequence of length $$T$$, an RNN uses $$T$$ copies of a Basic Unit (henceforth referred to as just a Unit). In the figure below, I have shown two Units of an RNN. The parameters used by each Unit are "tied together". That is, the weight matrices $$W_h$$, $$W_e$$ and biases $$b_1$$ and $$b_2$$, are the same for each Unit. Each Unit is also referred to as a "time step".
@@ -233,11 +233,15 @@ $$
 
 In matrix terms:
 
-$$ \bbox[yellow,border:2px solid red]
+$$ \bbox[yellow,5px,border:2px solid red]
 {
 \gamma_{t}^{(k-1)} = (W_{h}^{(k)})^{Tr} (\gamma_{t}^{(k)} \circ \sigma'(z_{}^{(k)}))
 \qquad (z07)
 }
 $$
 
-**This proves Claim 2!** Phew! Let us take a moment to understand why this equation, $$Eq. z07$$, is useful for our task.
+**This proves Claim 2!** Phew! Let us take a moment to understand why this equation, $$Eq. z07$$, is useful for our task. 
+
+Given $$\gamma_{t}^{(k)}$$ at time-step $$k$$, we have already proved in Claim 1 (see $$Eq. x07$$) that we can compute gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$. In Claim 2, We have further proved that using $$\gamma_{t}^{(k)}$$, we can also compute $$\gamma_{t}^{(k-1)}$$, which can be used by time-step $$(k-1)$$ to compute gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k-1)}$$. **We are getting closer to our goal of computing gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$ for all values of $$t$$ and for $$k \in [0, \cdots, t]$$.
+
+
