@@ -177,9 +177,26 @@ Two out of three quantities required to compute this gradient are available loca
 **How do we pass all this information to time-step $$k$$?** This is where our second Claim wil rescue us. To state the problem we have at hand clearly, at time-step $$k$$, we need values of each of $$\gamma_{k}^{(k)}, \gamma_{k+1}^{(k)}, \cdots, \gamma_{T-1}^{(k)}, \gamma_{T}^{(k)} $$ to compute full-gradient of loss of the RNN w.r.t $$W_h^{(k)}$$
 
 **Claim 2: At time-step $$k$$, given $$\gamma_{t}^{(k)}$$, we can compute $$\gamma_{t}^{(k-1)}$$ using only locally available information (i.e. information which was cached during the forward-pass through time-step $$k$$).**
+
 **Proof:** Using chain rule:
 
+$$
 \begin{align}
-\gamma_{t[j]}^{(k-1)} &= \frac {\partial J^{(t)}} {\partial h_{[j]}^{(k-1)}}
-&= \sum_{i=1}^{D_h} \frac {\partial J^{(t)}} {\partial h_{[i]}^{(k)}} \times \frac {\partial h_{[i]}^{(k)}} {\partial h_{[j]}^{(k-1)}}
+\gamma_{t[j]}^{(k-1)} &= \frac {\partial J^{(t)}} {\partial h_{[j]}^{(k-1)}} \\
+&= \sum_{i=1}^{D_h} \underbrace{\frac {\partial J^{(t)}} {\partial h_{[i]}^{(k)}}}_{\gamma_{t}^{(k)}} \times \frac {\partial h_{[i]}^{(k)}} {\partial h_{[j]}^{(k-1)}}
 \end{align}
+$$
+
+Let's calculate the second quantity on the right hand side. Using the chain rule:
+
+$$
+\begin{align}
+\frac {\partial h_{[i]}^{(k)}} {\partial h_{[j]}^{(k-1)}} &= \sum_{p=1}^{D_h} \frac {\partial h_{[i]}^{(k)}} {\partial z_{[p]}^{(k)}} \times \frac {\partial z_{[p]}^{(k)}} {\partial h_{[j]}^{(k-1)}}
+
+\frac {\partial h_{[i]}^{(k)}} {\partial z_{[p]}^{(k)}} &=
+\begin{cases}
+0, & \text{i $\ne$ p} \\[2ex]
+\sigma'(z_{[i]}^{(k)}, & \text{i = p}
+\end{cases}
+\end{align}
+$$
