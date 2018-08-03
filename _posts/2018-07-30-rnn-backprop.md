@@ -278,7 +278,30 @@ It turns out that we can sum them up and pass the sum on to time-step $$T-2$$. A
 
 $$
 \begin{align}
-(W_{h}^{(k)})^{Tr} (\left[ gamma_{T-1}^{(T-2)} + \gamma_{T}^{(T-2)} \right] \circ \sigma'(z_{}^{(k)}))
+(W_{h}^{(k)})^{Tr} (\left[ \gamma_{T-1}^{(T-2)} + \gamma_{T}^{(T-2)} \right] \circ \sigma'(z_{}^{(k)}))
 \end{align}
 $$
+
+Now both element-wise multiplication and matrix multiplication are **Distributive**, i.e. given vectors $$a$$, $$b$$, and $$c$$:
+
+$$
+a \circ (b + c) = (a \circ b) + (a \circ c)
+$$
+
+And given matrices $$A$$, $$B$$, and $$C$$:
+
+$$
+A(B + C) = AB + AC
+$$
+
+Therefore we have:
+
+$$
+\begin{align}
+(W_{h}^{(k)})^{Tr} (\left[ \gamma_{T-1}^{(T-2)} + \gamma_{T}^{(T-2)} \right] \circ \sigma'(z_{}^{(k)})) &= (W_{h}^{(k)})^{Tr} (\gamma_{T-1}^{(T-2)} \circ \sigma'(z_{}^{(k)})) + (W_{h}^{(k)})^{Tr} (\gamma_{T}^{(T-2)} \circ \sigma'(z_{}^{(k)}))  \\
+&= \gamma_{T-1}^{(T-3)} + \gamma_{T}^{(T-3)} 
+\end{align}
+$$
+
+
 
