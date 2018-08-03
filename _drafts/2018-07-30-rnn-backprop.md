@@ -233,11 +233,9 @@ $$
 
 In matrix terms:
 
-$$ \bbox[yellow]
+$$ \bbox[yellow,border:2px solid red]
 {
-\begin{align}
-\gamma_{t}^{(k-1)} &= (W_{h}^{(k)})^{Tr} (\gamma_{t}^{(k)} \circ  \sigma'(z_{}^{(k)})) \tag{z07}
-\end{align}
+\gamma_{t}^{(k-1)} = (W_{h}^{(k)})^{Tr} (\gamma_{t}^{(k)} \circ \sigma'(z_{}^{(k)})) \tag{z07}
 }
 $$
 
