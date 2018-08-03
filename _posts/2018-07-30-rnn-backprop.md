@@ -172,7 +172,7 @@ $$
 \end{align}
 $$
 
-Two out of three quantities required to compute this gradient are available locally (they were cached during our forward-pass for time-step $$k$$). But how do we get $$\gamma_{t}^{(k)}$$? Moreover, here we've just computed the gradient w.r.t $$J^{(t)}$$ - in order to complete our backprop, we will need gradient of each of $$J^{(k)}, \cdots, J^{(t)}, \cdots, J^{(T)}$$ w.r.t. to $$W_h^{(k)}$$. Looks like we will need a lot of values of $$\gamma$$ to compute the full gradient for loss w.r.t $$W_h^{(k)}$$.
+Two out of three quantities required to compute this gradient are available locally (they were cached during our forward-pass for time-step $$k$$). But how do we get $$\gamma_{t}^{(k)}$$? Moreover, here we've just computed the gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$ - in order to complete our backprop, we will need gradient of each of $$J^{(k)}, \cdots, J^{(t)}, \cdots, J^{(T)}$$ w.r.t. to $$W_h^{(k)}$$. Looks like we will need a lot of values of $$\gamma$$ to compute the full gradient for loss w.r.t $$W_h^{(k)}$$.
 
 **How do we pass all this information to time-step $$k$$?** This is where our second Claim wil rescue us. To state the problem we have at hand clearly, at time-step $$k$$, we need values of each of $$\gamma_{k}^{(k)}, \gamma_{k+1}^{(k)}, \cdots, \gamma_{T-1}^{(k)}, \gamma_{T}^{(k)} $$ to compute full-gradient of loss of the RNN w.r.t $$W_h^{(k)}$$
 
@@ -233,8 +233,12 @@ $$
 
 In matrix terms:
 
-$$
+$$ \bbox[yellow]
+{
 \begin{align}
-\gamma_{t}^{(k-1)} &= (W_{h}^{(k)})^{Tr} (\gamma_{t}^{(k)} \circ  \sigma'(z_{}^{(k)})) 
+\gamma_{t}^{(k-1)} &= (W_{h}^{(k)})^{Tr} (\gamma_{t}^{(k)} \circ  \sigma'(z_{}^{(k)})) \tag{z07}
 \end{align}
+}
 $$
+
+**This proves Claim 2!** Phew! Let us take a moment to understand why this equation, $$Eq. z07$$, is useful for our task.
