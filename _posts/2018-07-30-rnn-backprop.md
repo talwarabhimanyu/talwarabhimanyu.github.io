@@ -174,7 +174,7 @@ Writing in matrix terms (with $$\circ$$ denoting elementwise multiplication of v
 
 $$ \bbox[yellow,5px,border:2px solid red]
 {
-\frac {\partial J^{(t)}} {\partial W_{h}^{(k)}} &= (\underbrace{\gamma_{t}^{(k)}}_{\text{???}} \circ  \underbrace{\sigma' (z^{(k)})}_{\text{Local}}) \times (\underbrace{h^{(k-1)}}_{\text{Local}})^{Tr}
+\frac {\partial J^{(t)}} {\partial W_{h}^{(k)}} = (\underbrace{\gamma_{t}^{(k)}}_{\text{???}} \circ  \underbrace{\sigma' (z^{(k)})}_{\text{Local}}) \times (\underbrace{h^{(k-1)}}_{\text{Local}})^{Tr}
 \qquad (x07)
 }
 $$
