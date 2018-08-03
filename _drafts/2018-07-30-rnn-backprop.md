@@ -183,7 +183,7 @@ Two out of three quantities required to compute this gradient are available loca
 $$
 \begin{align}
 \gamma_{t[j]}^{(k-1)} &= \frac {\partial J^{(t)}} {\partial h_{[j]}^{(k-1)}} \\
-&= \sum_{i=1}^{D_h} \underbrace{\frac {\partial J^{(t)}} {\partial h_{[i]}^{(k)}}}_{\gamma_{t}^{(k)}} \times \frac {\partial h_{[i]}^{(k)}} {\partial h_{[j]}^{(k-1)}}
+&= \sum_{i=1}^{D_h} \underbrace{\frac {\partial J^{(t)}} {\partial h_{[i]}^{(k)}}}_{\gamma_{t[i]}^{(k)}} \times \frac {\partial h_{[i]}^{(k)}} {\partial h_{[j]}^{(k-1)}}
 \end{align}
 $$
 
@@ -196,12 +196,12 @@ $$
 \frac {\partial h_{[i]}^{(k)}} {\partial z_{[p]}^{(k)}} &=
 \begin{cases}
 0, & \text{i $\ne$ p} \\[2ex]
-\sigma'(z_{[i]}^{(k)}, & \text{i = p}  \tag{zz1} \\
+\sigma'(z_{[i]}^{(k)}, & \text{i = p}  \tag{zz1}
 \end{cases}
 
 \text{and using $Eq. 1.1$}
 
-\frac {\partial z_{[p]}^{(k)}} {\partial h_{[j]}^{(k-1)}} &= W_{h[p,j]}^{(k)} \tag{zz2} \\
+\frac {\partial z_{[p]}^{(k)}} {\partial h_{[j]}^{(k-1)}} &= W_{h[p,j]}^{(k)} \tag{zz2}
 \text{Using $Eq. zz1$ and $Eq. zz2$, we get:}
 \frac {\partial h_{[i]}^{(k)}} {\partial h_{[j]}^{(k-1)}} &= \sigma'(z_{[i]}^{(k)}) \times W_{h[i,j]}^{(k)})
 \end{align}
