@@ -92,11 +92,11 @@ $$
 \begin{align}
 \frac {\partial J^{(t)}} {\partial W_{h [i,j]}} &=  \sum_{k=1}^{T} \frac {\partial J^{(t)}} {\partial W_{h [i,j]}^{(k)}} \times \underbrace{\frac {\partial W_{h [i,j]}^{(k)}} {\partial W_{h[i,j]}}}_{Equals \space 1.} \\
 \\
-&=  \sum_{k=1}^{T} \frac {\partial J^{(t)}} {\partial W_{h [i,j]}^{(k)}} \\
+&=  \sum_{k=1}^{T} \frac {\partial J^{(t)}} {\partial W_{h [i,j]}^{(k)}} \tag{4.1}\\
 \end{align}
 $$
 
-**How does this simplify our job?** To compute gradient of $$J^{(t)}$$ with respect to $$W_h$$ in a single expression, we will need to factor in contributions from all time-steps. But if our task now is computing gradients w.r.t $$W_h^{(k)}$$, we only need to look at contributions from time-steps $$[k, k+1, \cdots, t-1, t]$$ (because $$W_h^{(k)}$$ does not influence any variables computed prior to time-step $$k$$. **In the spirit of backprop, we now rely only on values computed 'ahead' of us in the computational graph.**
+**How does this simplify our job?** To compute gradient of $$J^{(t)}$$ with respect to $$W_h$$ in a single expression, we will need to factor in contributions from all time-steps. But if our task now is computing gradients w.r.t $$W_h^{(k)}$$, we only need to look at contributions from time-steps $$[k, k+1, \cdots, t-1, t]$$ (because $$W_h^{(k)}$$ does not influence any variables computed prior to time-step $$k$$). **In the spirit of backprop, we now rely only on values computed 'ahead' of us in the computational graph.**
 
 ## Blueprint for Computing RNN Gradients
 Before delving into calculus, two big picture questions are: 
@@ -111,7 +111,7 @@ Let's start by answering these two questions for gradients of loss from the $$t^
 
 $$
 \begin{align}
-\frac {\partial J^{(t)}} {\partial W_{h[i,j]}^{(k)}} &= \sum_{p=1}^{D_h} \underbrace{\frac {\partial J^{(t)}} {\partial h_{[p]}^{(k)}}}_{\gamma_{t[p]}^{(k)}} \times \underbrace{\frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} }_{Eq. \space xx}  \tag{yy}
+\frac {\partial J^{(t)}} {\partial W_{h[i,j]}^{(k)}} &= \sum_{p=1}^{D_h} \underbrace{\frac {\partial J^{(t)}} {\partial h_{[p]}^{(k)}}}_{\gamma_{t[p]}^{(k)}} \times \underbrace{\frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} }_{Eq. \space xx}  \tag{5.0}
 \\
 \end{align}
 $$
@@ -122,7 +122,7 @@ Using the chain rule and the relationship between the hidden-state $$h$$ and int
 
 $$
 \begin{align}
-\frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} &= \sum_{m=1}^{D_h} \frac {\partial h_{[p]}^{(k)}} {\partial z_{[m]}^{(k)}} \times \frac {\partial z_{[m]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} \tag{xx}
+\frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} &= \sum_{m=1}^{D_h} \frac {\partial h_{[p]}^{(k)}} {\partial z_{[m]}^{(k)}} \times \frac {\partial z_{[m]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} \tag{5.1}
 \end{align}
 $$
 
@@ -133,7 +133,7 @@ $$
 \frac {\partial h_{[p]}^{(k)}} {\partial z_{[m]}^{(k)}} &= 
 \begin{cases}
 0, & \text{p $\ne$ m} \\[2ex]
-\sigma' (z_{[p]}^{(k)}), & \text{p = m} \tag{xx1}
+\sigma' (z_{[p]}^{(k)}), & \text{p = m} \tag{5.1.1}
 \end{cases}
 \end{align}
 $$
@@ -143,12 +143,12 @@ $$
 \frac {\partial z_{[m]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} &=
 \begin{cases}
 0, & \text{m $\ne$ i} \\[2ex]
-h_{[j]}^{(k-1)}, & \text{m = i} \tag{xx2}
+h_{[j]}^{(k-1)}, & \text{m = i} \tag{5.1.2}
 \end{cases}
 \end{align}
 $$
 
-Substituting in $$Eq. xx$$ we get,
+Substituting in $$Eq. 5.1$$ we get,
 
 $$
 \begin{align}
@@ -160,7 +160,7 @@ $$
 \end{align}
 $$
 
-Substituting this result in $$Eq. yy$$ we get,
+Substituting this result in $$Eq. 5.0$$ we get,
 
 Voila! We have all the information required to compute the expression above at time-step $$k$$ (each of the vectors $$z^{(k)}$$ and $$h^{(k-1)}$$ can be cached during a forward pass). In matrix terms, we can now write the gradient as:
 
@@ -175,7 +175,7 @@ Writing in matrix terms (with $$\circ$$ denoting elementwise multiplication of v
 $$ \bbox[yellow,5px,border:2px solid red]
 {
 \frac {\partial J^{(t)}} {\partial W_{h}^{(k)}} = (\underbrace{\gamma_{t}^{(k)}}_{\text{???}} \circ  \underbrace{\sigma' (z^{(k)})}_{\text{Local}}) \times (\underbrace{h^{(k-1)}}_{\text{Local}})^{Tr}
-\qquad (x07)
+\qquad (5.2)
 }
 $$
 
@@ -249,7 +249,7 @@ $$
 
 **This proves Claim 2!** Phew! Let us take a moment to understand why this equation, $$Eq. z07$$, is useful for our task. 
 
-Given $$\gamma_{t}^{(k)}$$ at time-step $$k$$, we have already proved in Claim 1 (see $$Eq. x07$$) that we can compute gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$. In Claim 2, We have further proved that using $$\gamma_{t}^{(k)}$$, we can also compute $$\gamma_{t}^{(k-1)}$$, which can be used by time-step $$(k-1)$$ to compute gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k-1)}$$.
+Given $$\gamma_{t}^{(k)}$$ at time-step $$k$$, we have already proved in Claim 1 (see $$Eq. 5.2$$) that we can compute gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$. In Claim 2, We have further proved that using $$\gamma_{t}^{(k)}$$, we can also compute $$\gamma_{t}^{(k-1)}$$, which can be used by time-step $$(k-1)$$ to compute gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k-1)}$$.
 
 Now if we start at time-step $$t$$ with $$\gamma_{t}^{(t)}$$ (which is straightforward to calculate - backprop through the Softmax and Affine Layers), we can successively calculate $$\gamma_{t}^{(t-1)}, \space \gamma_{t}^{(t-2)}, \cdots, \gamma_{t}^{(2)}, \space \gamma_{t}^{(1)}$$, and using Claim 1, at each step, compute gradients of $$J^{(t)}$$ w.r.t $$W_h^{(t-1)}, \space W_h^{(t-2)}, \cdots, W_h^{(2)}, \space W_h^{(1)}$$.
 
