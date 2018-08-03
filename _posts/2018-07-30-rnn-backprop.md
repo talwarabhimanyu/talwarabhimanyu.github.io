@@ -198,9 +198,10 @@ $$
 0, & \text{i $\ne$ p} \\[2ex]
 \sigma'(z_{[i]}^{(k)}, & \text{i = p}  \tag{zz1}
 \end{cases}
+\end{align}
 
-\text{and using $Eq. 1.1$}
-
+Using $$Eq. 1.1$$
+\begin{align}
 \frac {\partial z_{[p]}^{(k)}} {\partial h_{[j]}^{(k-1)}} &= W_{h[p,j]}^{(k)} \tag{zz2}
 \text{Using $Eq. zz1$ and $Eq. zz2$, we get:}
 \frac {\partial h_{[i]}^{(k)}} {\partial h_{[j]}^{(k-1)}} &= \sigma'(z_{[i]}^{(k)}) \times W_{h[i,j]}^{(k)})
