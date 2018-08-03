@@ -168,10 +168,18 @@ Writing in matrix terms (with $$\circ$$ denoting elementwise multiplication of v
 
 $$
 \begin{align}
-\frac {\partial J^{(t)}} {\partial W_{h}^{(k)}} &= (\underbrace{\gamma_{t}^{(k)}}_{\text{???}} \circ  \underbrace{\sigma' (z^{(k)}))}_{\text{Local}} \times (\underbrace{h^{(k-1)}}_{\text{Local}})^{Tr}
+\frac {\partial J^{(t)}} {\partial W_{h}^{(k)}} &= (\underbrace{\gamma_{t}^{(k)}}_{\text{???}} \circ  \underbrace{\sigma' (z^{(k)})}_{\text{Local}}) \times (\underbrace{h^{(k-1)}}_{\text{Local}})^{Tr}
 \end{align}
 $$
 
-Two out of three quantities required to compute this gradient are available locally (they were cached during our forward-pass for time-step $$k$$). But how do we get $$\gamma_{t}^{(k)}$$? Moreover, here we've just computed the gradient w.r.t $$J^{(t)}$$ - in order to complete our backprop, we will need gradient of each of $$J^{(k)}, \cdot, J^{(t)}, \cdot, J^{(T)}$$ w.r.t. to $$W_h^{(k)}$$. Looks like we will need a lot of values of $$\gamma$$ to compute the full gradient for loss w.r.t $$W_h^{(k)}$$. **How do we pass all this information to time-step $$k$$?** This is where our second Claim wil rescue us. To state the problem we have at hand clearly, at time-step $$k$$, we need values of each of $$\gamma_{k}^{(k)}, \gamma_{k+1}^{(k)}, \cdot, \gamma_{T-1}^{(k)}, \gamma_{T}^{(k)} $$ to compute full-gradient of loss of the RNN w.r.t $$W_h^{(k)}$$
+Two out of three quantities required to compute this gradient are available locally (they were cached during our forward-pass for time-step $$k$$). But how do we get $$\gamma_{t}^{(k)}$$? Moreover, here we've just computed the gradient w.r.t $$J^{(t)}$$ - in order to complete our backprop, we will need gradient of each of $$J^{(k)}, \cdots, J^{(t)}, \cdots, J^{(T)}$$ w.r.t. to $$W_h^{(k)}$$. Looks like we will need a lot of values of $$\gamma$$ to compute the full gradient for loss w.r.t $$W_h^{(k)}$$.
 
-**Claim 2: At time-step $$k$$, given $$\gamma_{t}^{(k)}$$, we can compute $$\gamma_{t}^{(k-1)}$$ using only locally available information (i.e. information which was cached during the forward-pass through time-step $$k$$**  
+**How do we pass all this information to time-step $$k$$?** This is where our second Claim wil rescue us. To state the problem we have at hand clearly, at time-step $$k$$, we need values of each of $$\gamma_{k}^{(k)}, \gamma_{k+1}^{(k)}, \cdots, \gamma_{T-1}^{(k)}, \gamma_{T}^{(k)} $$ to compute full-gradient of loss of the RNN w.r.t $$W_h^{(k)}$$
+
+**Claim 2: At time-step $$k$$, given $$\gamma_{t}^{(k)}$$, we can compute $$\gamma_{t}^{(k-1)}$$ using only locally available information (i.e. information which was cached during the forward-pass through time-step $$k$$).**
+**Proof:** Using chain rule:
+
+\begin{align}
+\gamma_{t[j]}^{(k-1)} &= \frac {\partial J^{(t)}} {\partial h_{[j]}^{(k-1)}}
+&= \sum_{i=1}^{D_h} \frac {\partial J^{(t)}} {\partial h_{[i]}^{(k)}} \times \frac {\partial h_{[i]}^{(k)}} {\partial h_{[j]}^{(k-1)}}
+\end{align}
