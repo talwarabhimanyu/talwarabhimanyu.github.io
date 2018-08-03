@@ -190,7 +190,7 @@ Two out of three quantities required to compute this gradient are available loca
 $$
 \begin{align}
 \gamma_{t[j]}^{(k-1)} &= \frac {\partial J^{(t)}} {\partial h_{[j]}^{(k-1)}} \\
-&= \sum_{i=1}^{D_h} \underbrace{\frac {\partial J^{(t)}} {\partial h_{[i]}^{(k)}}}_{\gamma_{t[i]}^{(k)}} \times \frac {\partial h_{[i]}^{(k)}} {\partial h_{[j]}^{(k-1)}} \tag{z0}
+&= \sum_{i=1}^{D_h} \underbrace{\frac {\partial J^{(t)}} {\partial h_{[i]}^{(k)}}}_{\gamma_{t[i]}^{(k)}} \times \frac {\partial h_{[i]}^{(k)}} {\partial h_{[j]}^{(k-1)}} \tag{6.0}
 \end{align}
 $$
 
@@ -198,7 +198,7 @@ Let's calculate the second quantity on the right hand side. Using the chain rule
 
 $$
 \begin{align}
-\frac {\partial h_{[i]}^{(k)}} {\partial h_{[j]}^{(k-1)}} &= \sum_{p=1}^{D_h} \frac {\partial h_{[i]}^{(k)}} {\partial z_{[p]}^{(k)}} \times \frac {\partial z_{[p]}^{(k)}} {\partial h_{[j]}^{(k-1)}} \tag{zz}
+\frac {\partial h_{[i]}^{(k)}} {\partial h_{[j]}^{(k-1)}} &= \sum_{p=1}^{D_h} \frac {\partial h_{[i]}^{(k)}} {\partial z_{[p]}^{(k)}} \times \frac {\partial z_{[p]}^{(k)}} {\partial h_{[j]}^{(k-1)}} \tag{6.1}
 \end{align}
 $$
 
@@ -209,7 +209,7 @@ $$
 \frac {\partial h_{[i]}^{(k)}} {\partial z_{[p]}^{(k)}} &=
 \begin{cases}
 0, & \text{i $\ne$ p} \\[2ex]
-\sigma'(z_{[i]}^{(k)}, & \text{i = p}  \tag{zz1}
+\sigma'(z_{[i]}^{(k)}, & \text{i = p}  \tag{6.1.1}
 \end{cases}
 \end{align}
 $$
@@ -218,11 +218,11 @@ And using $$Eq. 1.1$$, we have:
 
 $$
 \begin{align}
-\frac {\partial z_{[p]}^{(k)}} {\partial h_{[j]}^{(k-1)}} &= W_{h[p,j]}^{(k)} \tag{zz2} \\
+\frac {\partial z_{[p]}^{(k)}} {\partial h_{[j]}^{(k-1)}} &= W_{h[p,j]}^{(k)} \tag{6.1.2} \\
 \end{align}
 $$
 
-Using $$Eq. zz1$$ and $$Eq. zz2$$ in $$Eq. zz$$, we get:
+Using $$Eq. 6.1.1$$ and $$Eq. 6.1.2$$ in $$Eq. 6.1$$, we get:
 
 $$
 \begin{align}
@@ -230,7 +230,7 @@ $$
 \end{align}
 $$
 
-Now using these results in $$Eq. z0$$, we get:
+Now using these results in $$Eq. 6.0$$, we get:
 
 $$
 \begin{align}
@@ -243,7 +243,7 @@ In matrix terms:
 $$ \bbox[yellow,5px,border:2px solid red]
 {
 \gamma_{t}^{(k-1)} = (W_{h}^{(k)})^{Tr} (\gamma_{t}^{(k)} \circ \sigma'(z_{}^{(k)}))
-\qquad (z07)
+\qquad (6.2)
 }
 $$
 
@@ -256,7 +256,7 @@ Now if we start at time-step $$t$$ with $$\gamma_{t}^{(t)}$$ (which is straightf
 **We have now managed to computie gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$ for all $$k \in [0, \cdots, t]$$! But we are not done yet! We need to do this for all values of $$t \in [0, \cdots, T]$$. Does that mean we need to run backprop (which involved a pass through $$T$$ RNN units), $$T$$ times? As we will see, that is not required, and a single backprop run will be enough.**
 
 ## BPTT Trick 2: Accumulating Gradients
-Following the train of thought above, to compute gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$ for all values of $$t \in [k, \cdots, T]$$, the time-step k should receive $$\gamma_{t}^{(k)}$$ for all values of $$t \in [k, \cdots, T]$$.
+Following the train of thought above, to compute gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$ for all values of $$t \in [k, \cdots, T]$$, the time-step k should receive $$\gamma_{t}^{(k)}$$ for all values of $$t \in [k, \cdots, T]$$. And the answer lies in the table below!
 
 $$
 \begin{array}{c|ccc|ccc|c}
@@ -266,5 +266,19 @@ T & \gamma_T^{(T)} & & & \gamma_T^{(T-1)} & & & \text{c1}\\[2ex]
 T-1 & \gamma_{T-1}^{(T-1)} & \gamma_{T}^{(T-1)} & & \gamma_{T-1}^{(T-2)} & \gamma_{T}^{(T-2)} & & \text{c2}\\[2ex]
 T-2 & \gamma_{T-2}^{(T-2)} & \gamma_{T-1}^{(T-2)} & \gamma_{T}^{(T-2)} & \gamma_{T-2}^{(T-3)} & \gamma_{T-1}^{(T-3)} & \gamma_{T}^{(T-3)} & \text{c2}\\
 \end{array}
+$$
+
+For each time-step $$k$$, the columne titled _Compute Current Time Step_ lists quantities which can either be computed locally (such as $$\gamma_k^{(k)}$$ or those which are received from time-step $$(k+1)$$. **The first observation is that at each time-step $$k$$, this columns lists quantities which will through $$Eq. 5.2$$, allow us to compute gradients of $$J^{(t)}$$ for all $$t \in [k, \space k+1, \cdots, T-1, \space T]$$ w.r.t $$W_h^{(k)}$$.** Finally, Claim 1 is proving useful! 
+
+The column titled _To previous Time Step_ lists quantities which are passed on from this time-step to its previous time-step during backpropogation. For instance, at time-step $$T$$, we compute $$\gamma_T^{(T)}$$ (by a simple backprop of $$J^{(T)}$$ through Softmax and Affine layers), and then use it to compute $$\gamma_T^{(T-1)}$$ by employing $$Eq. 6.2$$ which we had derived above. We pass this quantity on to time-step $$T-1$$.
+
+Now it gets interesting - at time-step $$T-1$$, we've got the locally compute $$\gamma_{T-1}^{(T-1)}$$ and we've also received $$\gamma_T^{(T-1)}$$ from time-step $$T$$. We can again apply $$Eq. 6.2$$ to compute the 3^{rd} column of our table. **But now we have two values which we want to pass on to time-step $$T-2$$!!**
+
+It turns out that we can sum them up and pass the sum on to time-step $$T-2$$. This works simply because:
+
+$$
+\begin{align}
+
+\end{align}
 $$
 
