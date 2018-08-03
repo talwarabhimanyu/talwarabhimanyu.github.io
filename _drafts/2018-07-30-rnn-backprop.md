@@ -3,9 +3,9 @@ layout: post
 title: Build an RNN from scratch (with derivations!)
 date: 2018-07-31
 ---
-In this post I will derive all mathematical results used in backpropogation through a Recurrent Neural Network (RNN), also known as Backprop Through Time (BPTT). Further, I will use the equations I derive to build an RNN in Python from scratch, without using libraries such as Pytorch or Tensorflow. I will provide a correspondence between mathematical results and their implementation in Python.
+In this post I will derive all mathematical results used in backpropogation through a Recurrent Neural Network (RNN), also known as Backprop Through Time (BPTT). Further, I will use the equations I derive to build an RNN in Python from scratch ([check it out](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning/RNN%20from%20Scratch.ipynb)), without using libraries such as Pytorch or Tensorflow. I will provide a correspondence between mathematical results and their implementation in Python.
 
-I will assume that the reader is familiar with an RNN's structure and why they have become popular (this excellent [blog post](http://colah.github.io/posts/2015-08-Understanding-LSTMs/) explains the key ideas). All layers of an RNN use the same set of parameters (weights and biases are "tied together") - this is unlike a plain feedforward network where each layer has its own set of parameters. This aspect makes understanding backpropogation through an RNN a bit tricky. 
+I will assume that the reader is familiar with an RNN's structure and why they have become popular (this [blog post](http://colah.github.io/posts/2015-08-Understanding-LSTMs/) explains the key ideas). All layers of an RNN use the same set of parameters (weights and biases are "tied together") - this is unlike a plain feedforward network where each layer has its own set of parameters. This aspect makes understanding backpropogation through an RNN a bit tricky. 
 
 **Several other resources on the web have tackled the maths behind an RNN, however I have found them lacking in detail on how exactly gradients are "accumulated" during backprop to deal with "tied weights". Therefore, I will attempt to explain that aspect in a LOT of detail in this post.**
 
@@ -51,7 +51,7 @@ $$
 \sigma(x) = \frac{1}{(1 + e^{-x})}
 $$
 
-The derivate of $$\sigma(x)$$ (with respect to x) is straightforward to compute:
+The derivative of $$\sigma(x)$$ (with respect to x) is straightforward to compute:
 
 $$
 \sigma'(x) = \sigma(x) \times (1 - \sigma(x))
@@ -253,7 +253,14 @@ Given $$\gamma_{t}^{(k)}$$ at time-step $$k$$, we have already proved in Claim 1
 
 Now if we start at time-step $$t$$ with $$\gamma_{t}^{(t)}$$ (which is straightforward to calculate - backprop through the Softmax and Affine Layers), we can successively calculate $$\gamma_{t}^{(t-1)}, \space \gamma_{t}^{(t-2)}, \cdots, \gamma_{t}^{(2)}, \space \gamma_{t}^{(1)}$$, and using Claim 1, at each step, compute gradients of $$J^{(t)}$$ w.r.t $$W_h^{(t-1)}, \space W_h^{(t-2)}, \cdots, W_h^{(2)}, \space W_h^{(1)}$$.
 
-**Thus, we are getting closer to our goal of computing gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$ for all values of $$t$$ and for $$k \in [0, \cdots, t]$$! But we are not done yet! We need to do this for all values of $$t \in [0, \cdots, T]$$. Does that mean we need to run backprop (which involved a pass throguh $$T$$ RNN units), $$T$$ times? As we will see, that is not required, and a single backprop run will be enough.**
+**We have now managed to computie gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$ for all $$k \in [0, \cdots, t]$$! But we are not done yet! We need to do this for all values of $$t \in [0, \cdots, T]$$. Does that mean we need to run backprop (which involved a pass through $$T$$ RNN units), $$T$$ times? As we will see, that is not required, and a single backprop run will be enough.**
 
-## Restating the Problem
+## BPTT Trick 2: Accumulating Gradients
 Following the train of thought above, to compute gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$ for all values of $$t \in [k, \cdots, T]$$, the time-step k should receive $$\gamma_{t}^{(k)}$$ for all values of $$t \in [k, \cdots, T]$$.
+
+$$
+\begin{array}{c|ccc|ccc|c}
+\text{Time Step} & \text{Compute} & \text{Current} & \text{Time Step} & \text{To} & \text{Previous} & \text{Time Step} & \text{Comment} \\
+\end{array}
+$$
+
