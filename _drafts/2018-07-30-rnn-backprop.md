@@ -253,6 +253,7 @@ Given $$\gamma_{t}^{(k)}$$ at time-step $$k$$, we have already proved in Claim 1
 
 Now if we start at time-step $$t$$ with $$\gamma_{t}^{(t)}$$ (which is straightforward to calculate - backprop through the Softmax and Affine Layers), we can successively calculate $$\gamma_{t}^{(t-1)}, \space \gamma_{t}^{(t-2)}, \cdots, \gamma_{t}^{(2)}, \space \gamma_{t}^{(1)}$$, and using Claim 1, at each step, compute gradients of $$J^{(t)}$$ w.r.t $$W_h^{(t-1)}, \space W_h^{(t-2)}, \cdots, W_h^{(2)}, \space W_h^{(1)}$$.
 
-**Thus, we are getting closer to our goal of computing gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$ for all values of $$t$$ and for $$k \in [0, \cdots, t]$$! But we are not done yet!** 
+**Thus, we are getting closer to our goal of computing gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$ for all values of $$t$$ and for $$k \in [0, \cdots, t]$$! But we are not done yet! We need to do this for all values of $$t \in [0, \cdots, T]$$. Does that mean we need to run backprop (which involved a pass throguh $$T$$ RNN units), $$T$$ times? As we will see, that is not required, and a single backprop run will be enough.**
 
-We've shown that for a fiven time-step $$t$$, we can compute gradient of $$J^{(t)}$$ w.r.t all weight matrices $$W_h^{(k)}$$ (for $$k \in [0, \cdots, t]$$). But we need to do this for all values of $$t \in [0, \cdots, T]$$!
+## Restating the Problem
+Following the train of thought above, to compute gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$ for all values of $$t \in [k, \cdots, T]$$, the time-step k should receive $$\gamma_{t}^{(k)}$$ for all values of $$t \in [k, \cdots, T]$$.
