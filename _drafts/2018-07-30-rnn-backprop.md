@@ -191,7 +191,12 @@ Let's calculate the second quantity on the right hand side. Using the chain rule
 
 $$
 \begin{align}
-\frac {\partial h_{[i]}^{(k)}} {\partial h_{[j]}^{(k-1)}} &= \sum_{p=1}^{D_h} \frac {\partial h_{[i]}^{(k)}} {\partial z_{[p]}^{(k)}} \times \frac {\partial z_{[p]}^{(k)}} {\partial h_{[j]}^{(k-1)}} \\
+\frac {\partial h_{[i]}^{(k)}} {\partial h_{[j]}^{(k-1)}} &= \sum_{p=1}^{D_h} \frac {\partial h_{[i]}^{(k)}} {\partial z_{[p]}^{(k)}} \times \frac {\partial z_{[p]}^{(k)}} {\partial h_{[j]}^{(k-1)}} \tag{zz}
+\end{align}
+$$
+
+$$
+\begin{align}
 \frac {\partial h_{[i]}^{(k)}} {\partial z_{[p]}^{(k)}} &=
 \begin{cases}
 0, & \text{i $\ne$ p} \\[2ex]
@@ -205,7 +210,12 @@ Using $$Eq. 1.1$$
 $$
 \begin{align}
 \frac {\partial z_{[p]}^{(k)}} {\partial h_{[j]}^{(k-1)}} &= W_{h[p,j]}^{(k)} \tag{zz2} \\
-\text{Using $Eq. zz1$ and $Eq. zz2$, we get:} \\
+\end{align}
+$$
+
+Using $$Eq. zz1$$ and $$Eq. zz2$$, we get:
+$$
+\begin{align}
 \frac {\partial h_{[i]}^{(k)}} {\partial h_{[j]}^{(k-1)}} &= \sigma'(z_{[i]}^{(k)}) \times W_{h[i,j]}^{(k)})
 \end{align}
 $$
