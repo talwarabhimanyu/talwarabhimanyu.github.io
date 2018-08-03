@@ -183,7 +183,7 @@ Two out of three quantities required to compute this gradient are available loca
 $$
 \begin{align}
 \gamma_{t[j]}^{(k-1)} &= \frac {\partial J^{(t)}} {\partial h_{[j]}^{(k-1)}} \\
-&= \sum_{i=1}^{D_h} \underbrace{\frac {\partial J^{(t)}} {\partial h_{[i]}^{(k)}}}_{\gamma_{t[i]}^{(k)}} \times \frac {\partial h_{[i]}^{(k)}} {\partial h_{[j]}^{(k-1)}}
+&= \sum_{i=1}^{D_h} \underbrace{\frac {\partial J^{(t)}} {\partial h_{[i]}^{(k)}}}_{\gamma_{t[i]}^{(k)}} \times \frac {\partial h_{[i]}^{(k)}} {\partial h_{[j]}^{(k-1)}} \tag{z0}
 \end{align}
 $$
 
@@ -195,6 +195,8 @@ $$
 \end{align}
 $$
 
+So we have this straightforward Sigmoid derivative:
+
 $$
 \begin{align}
 \frac {\partial h_{[i]}^{(k)}} {\partial z_{[p]}^{(k)}} &=
@@ -205,7 +207,7 @@ $$
 \end{align}
 $$
 
-Using $$Eq. 1.1$$
+And using $$Eq. 1.1$$, we have:
 
 $$
 \begin{align}
@@ -213,9 +215,26 @@ $$
 \end{align}
 $$
 
-Using $$Eq. zz1$$ and $$Eq. zz2$$, we get:
+Using $$Eq. zz1$$ and $$Eq. zz2$$ in $$Eq. zz$$, we get:
+
 $$
 \begin{align}
 \frac {\partial h_{[i]}^{(k)}} {\partial h_{[j]}^{(k-1)}} &= \sigma'(z_{[i]}^{(k)}) \times W_{h[i,j]}^{(k)})
+\end{align}
+$$
+
+Now using these results in $$Eq. z0$$, we get:
+
+$$
+\begin{align}
+\gamma_{t[j]}^{(k-1)} &= \sum_{i=1}^{D_h} \gamma_{t[i]}^{(k)} \times  \sigma'(z_{[i]}^{(k)}) \times W_{h[i,j]}^{(k)})
+\end{align}
+$$
+
+In matrix terms:
+
+$$
+\begin{align}
+\gamma_{t}^{(k-1)} &= (W_{h}^{(k)})^{Tr} (\gamma_{t}^{(k)} \circ  \sigma'(z_{}^{(k)})) 
 \end{align}
 $$
