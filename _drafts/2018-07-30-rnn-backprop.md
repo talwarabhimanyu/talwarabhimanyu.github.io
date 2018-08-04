@@ -39,7 +39,7 @@ The RNN Unit at time-step $$t$$ takes as inputs:
 * $$x^{(t)}$$, a vector of dimensions $$d \times 1$$, which represents the $$t^{th}$$ 'word' in a sequence of length $$T$$, and
 * $$h^{(t-1)}$$, a vector of dimensions $$D_h \times 1$$, which is the output of the previous RNN Unit, and is referred to as a 'hidden-state' vector.
 
-_Note: The numbers $$D_h$$ and $$d$$, which are said to represent the number of hidden units and the length of input embeddings, respectively, are 'hyperparamters'. That is, it is up to us to choose values for these numbers._
+_Note: The numbers $$D_h$$ and $$d$$, which represent the lengths of the 'hidden-state' and the input embedding vectors, respectively, are 'hyperparamters'. That is, it is up to us to choose values for these numbers._
 
 The output of the RNN unit at time-step $$t$$ is its 'hidden-state vector' $$h^{(t)}$$. The equations governing a single unit are:
 $$
@@ -90,7 +90,7 @@ $$
 J = \sum_{t=1}^{T} J^{(t)} \tag{3.3}
 $$
 
-**GOAL:** We want to find the gradient of $$J$$ with respect to each and every element of parameter matrices and vectors $$W_h$$, $$W_x$$, $$b_1$$, $$U$$, and $$b_2$$. For the sake of length of this post, I will only demonstrate all the maths required to calculate gradients w.r.t $$W_h$$, but I believe that after reading this the reader will be able to apply the same concepts for other parameters.
+**GOAL:** We want to find the gradient of $$J$$ with respect to each and every element of parameter matrices and vectors $$W_h$$, $$W_x$$, $$b_1$$, $$U$$, and $$b_2$$. For the sake of length of this post, I will only demonstrate all the maths required to calculate gradients w.r.t $$W_h$$, but I believe that after reading this, you will be able to apply the same concepts for other parameters.
 
 ## The First BPTT Trick: Dummy Variables
 Parameters such as $$W_h$$ influence the loss for a single time-step $$J^{(t)}$$, not just through their direct role in computation of the hidden-state $$h^{(t)}$$ (see $$Eq. 1.1$$ and $$Eq. 1.2$$) but also via their influence on all the previous hidden-states $$h^{(0:t-1)}$$. So if we use the chain-rule to write the partial derivative of $$J^{(t)}$$ with respect to $$W_h$$, we will end up with a complex expression which includes contributions from each time-step from time-step $$0$$ to $$t$$. 
@@ -116,7 +116,7 @@ Before delving into calculus, two big picture questions are:
 
 Let's start by answering these two questions for gradients of loss from the $$t^{th}$$ step, $$J^{(t)}$$ w.r.t. $$W_{h[i,j]}^{(k)}$$. I'll make (and prove!) two claims below which will help us out.
 
-**Claim 1: At any given time-step $$k$$, if we know the value of $$\frac {\partial J^{(t)}} {\partial h^{(k)}}$$ (denoted by $$\gamma_t^k$$ from here on), we can compute gradients w.r.t. the weight matrix $$\underline{for \space the \space k^{th} \space step}$$, i.e. $$\frac {\partial J^{(t)}} {\partial W_{h}^{k} }$$.**  
+**Claim 1: At any given time-step $$k$$, if we know the value of $$\frac {\partial J^{(t)}} {\partial h^{(k)}}$$ (denoted by $$\gamma_t^{(k)}$$ from here on), we can compute gradients w.r.t. the weight matrix $$\underline{for \space the \space k^{th} \space step}$$, i.e. $$\frac {\partial J^{(t)}} {\partial W_{h}^{(k)} }$$.**  
 
 **Proof:** Using the chain rule:
 
