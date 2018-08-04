@@ -127,13 +127,13 @@ $$
 \end{align}
 $$
 
-As we have assumed we know $$ \gamma_t^k$$, the first quantity on the right hand side is taken care of. If we can show that at time-step $$k$$, we have adequate information to compute the second quantity, then we've proved this claim.
+As we have assumed we know $$ \gamma_t^{(k)}$$, the first quantity on the right hand side is taken care of. If we can show that at time-step $$k$$, we have adequate information to compute the second quantity, then we've proved this claim.
 
-Using the chain rule and the relationship between the hidden-state $$h$$ and interim variable $$z$$ from $$Eq. \space 1.2$$:
+Using the chain rule and the relationship between the hidden-state $$h^{(k)}$$ and interim variable $$z^{(k)}$$ from $$Eq. \space 1.2$$:
 
 $$
 \begin{align}
-\frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} &= \sum_{m=1}^{D_h} \frac {\partial h_{[p]}^{(k)}} {\partial z_{[m]}^{(k)}} \times \frac {\partial z_{[m]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} \tag{5.1}
+\frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} &= \sum_{m=1}^{D_h} \underbrace{\frac {\partial h_{[p]}^{(k)}} {\partial z_{[m]}^{(k)}}}_{\text{Eq. 5.1.1}} \times \underbrace{\frac {\partial z_{[m]}^{(k)}} {\partial W_{h[i,j]}^{(k)}}}_{\text{Eq. 5.1.2}} \tag{5.1}
 \end{align}
 $$
 
@@ -173,15 +173,15 @@ $$
 
 Substituting this result in $$Eq. 5.0$$ we get,
 
-Voila! We have all the information required to compute the expression above at time-step $$k$$ (each of the vectors $$z^{(k)}$$ and $$h^{(k-1)}$$ can be cached during a forward pass). In matrix terms, we can now write the gradient as:
-
 $$
 \begin{align}
 \frac {\partial J^{(t)}} {\partial W_{h[i,j]}^{(k)}} &= \gamma_{t[i]}^k \times  \sigma' (z_{[i]}^{(k)}) \times h_{[j]}^{(k-1)}
 \end{align}
 $$
 
-Writing in matrix terms (with $$\circ$$ denoting elementwise multiplication of vectors),
+Voila! We have all the information required to compute the expression above at time-step $$k$$ (each of the vectors $$z^{(k)}$$ and $$h^{(k-1)}$$ can be cached during a forward pass). In matrix terms, we can now write the gradient as:
+
+Writing the final result in matrix terms (with $$\circ$$ denoting elementwise multiplication of vectors),
 
 $$ \bbox[yellow,5px,border:2px solid red]
 {
@@ -258,34 +258,36 @@ $$ \bbox[yellow,5px,border:2px solid red]
 }
 $$
 
-**This proves Claim 2!** Phew! Let us take a moment to understand why this equation, $$Eq. z07$$, is useful for our task. 
+**This proves Claim 2!** Phew! Let us take a moment to understand why this equation, $$Eq. 6.2$$, is useful for our task. 
 
-Given $$\gamma_{t}^{(k)}$$ at time-step $$k$$, we have already proved in Claim 1 (see $$Eq. 5.2$$) that we can compute gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$. In Claim 2, We have further proved that using $$\gamma_{t}^{(k)}$$, we can also compute $$\gamma_{t}^{(k-1)}$$, which can be used by time-step $$(k-1)$$ to compute gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k-1)}$$.
+Given $$\gamma_{t}^{(k)}$$ at time-step $$k$$, we have already proved in Claim 1 (see $$Eq. 5.2$$) that we can compute gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$. In Claim 2, we have now proved that using $$\gamma_{t}^{(k)}$$, we can also compute $$\gamma_{t}^{(k-1)}$$, which can be used by time-step $$(k-1)$$ to compute gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k-1)}$$.
 
-Now if we start at time-step $$t$$ with $$\gamma_{t}^{(t)}$$ (which is straightforward to calculate - backprop through the Softmax and Affine Layers), we can successively calculate $$\gamma_{t}^{(t-1)}, \space \gamma_{t}^{(t-2)}, \cdots, \gamma_{t}^{(2)}, \space \gamma_{t}^{(1)}$$, and using Claim 1, at each step, compute gradients of $$J^{(t)}$$ w.r.t $$W_h^{(t-1)}, \space W_h^{(t-2)}, \cdots, W_h^{(2)}, \space W_h^{(1)}$$.
+Now if we start at time-step $$t$$ with $$\gamma_{t}^{(t)}$$ (which is straightforward to calculate - just backprop through the Softmax and Affine Layers), we can successively calculate $$\gamma_{t}^{(t-1)}, \space \gamma_{t}^{(t-2)}, \cdots, \gamma_{t}^{(2)}, \space \gamma_{t}^{(1)}$$ through applications of $$Eq. 6.2$$, and at each step, compute gradients of $$J^{(t)}$$ w.r.t $$W_h^{(t-1)}, \space W_h^{(t-2)}, \cdots, W_h^{(2)}, \space W_h^{(1)}$$ through applications of $$Eq. 5.2$$.
 
-**We have now managed to computie gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$ for all $$k \in [0, \cdots, t]$$! But we are not done yet! We need to do this for all values of $$t \in [0, \cdots, T]$$. Does that mean we need to run backprop (which involved a pass through $$T$$ RNN units), $$T$$ times? As we will see, that is not required, and a single backprop run will be enough.**
+**We have now managed to computie gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$ for all $$k \in [1, \cdots, t]$$! But we are not done yet! We need to do this for all values of $$t \in [0, \cdots, T]$$. Does that mean we need to run backprop (which involves a pass through $$T$$ RNN units), $$T$$ times? As we will see, that is not required, and a single backprop run will be enough.**
 
 ## BPTT Trick 2: Accumulating Gradients
-Following the train of thought above, to compute gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$ for all values of $$t \in [k, \cdots, T]$$, the time-step k should receive $$\gamma_{t}^{(k)}$$ for all values of $$t \in [k, \cdots, T]$$. And the answer lies in the table below!
+Following the train of thought above, to compute gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$ for all values of $$t \in [k, \cdots, T]$$, the time-step k should receive $$\gamma_{t}^{(k)}$$ for all values of $$t \in [k, \cdots, T]$$ so that we can apply $$Eq. 5.2$$ to compute the required gradients. And the table below shows how time-step $$k$$ can receive this information!
 
 $$
-\begin{array}{c|ccc|ccc|c}
-\text{Time Step} & \text{Compute} & \text{Current} & \text{Time Step} & \text{To} & \text{Previous} & \text{Time Step} & \text{Comment} \\
+\begin{array}{c|ccc|ccc|ccc}
+\text{Time Step} & \text{Compute} & \text{Current} & \text{Time Step} & \text{To} & \text{Previous} & \text{Time Step} & \text{Gradients} & & \text{Accumulated}\\
 \hline
-T & \gamma_T^{(T)} & & & \gamma_T^{(T-1)} & & & \text{c1}\\[2ex]
-T-1 & \gamma_{T-1}^{(T-1)} & \gamma_{T}^{(T-1)} & & \gamma_{T-1}^{(T-2)} & \gamma_{T}^{(T-2)} & & \text{c2}\\[2ex]
-T-2 & \gamma_{T-2}^{(T-2)} & \gamma_{T-1}^{(T-2)} & \gamma_{T}^{(T-2)} & \gamma_{T-2}^{(T-3)} & \gamma_{T-1}^{(T-3)} & \gamma_{T}^{(T-3)} & \text{c2}\\
+T & \gamma_T^{(T)} & & & \gamma_T^{(T-1)} & & & \frac {\partial J^{(T)}} {\partial W_h^{(T)}} & & \\[2ex]
+T-1 & \gamma_{T-1}^{(T-1)} & \gamma_{T}^{(T-1)} & & \gamma_{T-1}^{(T-2)} & \gamma_{T}^{(T-2)} & & \frac {\partial J^{(T-1)}} {\partial W_h^{(T-1)}}  & \frac {\partial J^{(T)}} {\partial W_h^{(T-1)}} & \\[2ex]
+T-2 & \gamma_{T-2}^{(T-2)} & \gamma_{T-1}^{(T-2)} & \gamma_{T}^{(T-2)} & \gamma_{T-2}^{(T-3)} & \gamma_{T-1}^{(T-3)} & \gamma_{T}^{(T-3)} & \frac {\partial J^{(T-2)}} {\partial W_h^{(T-2)}} & \frac {\partial J^{(T-1)}} {\partial W_h^{(T-2)}} & \frac {\partial J^{(T)}} {\partial W_h^{(T-2)}} \\
 \end{array}
 $$
 
-For each time-step $$k$$, the columne titled _Compute Current Time Step_ lists quantities which can either be computed locally (such as $$\gamma_k^{(k)}$$) or those which are received from time-step $$(k+1)$$. **The first observation is that at each time-step $$k$$, this columns lists quantities which will through $$Eq. 5.2$$, allow us to compute gradients of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$ for all $$t \in [k, \space k+1, \cdots, T-1, \space T]$$.** Finally, Claim 1 is proving useful! 
+For each time-step $$k$$, the columne titled _Compute Current Time Step_ lists quantities which can either be computed locally (such as $$\gamma_k^{(k)}$$) or those which are received from time-step $$(k+1)$$ during backpropogation. **The first observation is that at each time-step $$k$$, this columns lists quantities which will through $$Eq. 5.2$$, allow us to compute gradients of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$ for all $$t \in [k, \space k+1, \cdots, T-1, \space T]$$.** Go back to $$Eq. 5.2$$ to convince yourself! 
+
+The last column, titled _Gradients Accumulated_, shows the gradients which are calculated at this time-step through application of $$Eq. 5.2$$ on values in the $$2^{nd}$$ column.
 
 The column titled _To previous Time Step_ lists quantities which are passed on from this time-step to its previous time-step during backpropogation. For instance, at time-step $$T$$, we compute $$\gamma_T^{(T)}$$ (by a simple backprop of $$J^{(T)}$$ through Softmax and Affine layers), and then use it to compute $$\gamma_T^{(T-1)}$$ by employing $$Eq. 6.2$$ which we had derived above. We pass this quantity on to time-step $$T-1$$.
 
 Now it gets interesting - at time-step $$T-1$$, we've got the locally computed $$\gamma_{T-1}^{(T-1)}$$ and we've also received $$\gamma_T^{(T-1)}$$ from time-step $$T$$. We can again apply $$Eq. 6.2$$ on these two quantities to compute the $$3^{rd}$$ column of our table. **But now we have two values which we want to pass on to time-step $$(T-2)$$!! How do we do that?**
 
-It turns out that we can sum them up and pass the sum on to time-step $$T-2$$. At time-step $$(T-2)$$, consider the application of $$Eq. 6.2$$ to the sum of $$\gamma_{T-1}^{(T-2)}$$ and $$\gamma_{T}^{(T-2)}$$ received from time-step $$T-1$$:
+It turns out that we can sum them up and pass that _sum_ (instead of two individual values) on to time-step $$T-2$$. At time-step $$(T-2)$$, consider the application of $$Eq. 6.2$$ to the sum of $$\gamma_{T-1}^{(T-2)}$$ and $$\gamma_{T}^{(T-2)}$$ received from time-step $$T-1$$:
 
 $$
 \begin{align}
