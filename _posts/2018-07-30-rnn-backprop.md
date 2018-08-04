@@ -3,7 +3,7 @@ layout: post
 title: Build an RNN from scratch (with derivations!)
 date: 2018-07-31
 ---
-### Introduction
+## Introduction
 In this post I will derive the key mathematical results used in backpropogation through a Recurrent Neural Network (RNN), popularly known as Backpropogation Through Time (BPTT). Further, I will use the equations I derive to build an RNN in Python from scratch ([check out my notebook](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning/RNN%20from%20Scratch.ipynb)), without using libraries such as Pytorch or Tensorflow.
 
 **Several other resources on the web have tackled the maths behind an RNN, however I have found them lacking in detail on how exactly gradients are "accumulated" during backprop to deal with "tied weights". Therefore, I will attempt to explain that aspect in a LOT of detail in this post.**
@@ -20,7 +20,7 @@ I will also use the RNN model I build, to train a simple character-level model o
 ## Terminology
 To process a sequence of length $$T$$, an RNN uses $$T$$ copies of a Basic Unit (henceforth referred to as just a Unit). In the figure below, I have shown two Units of an RNN. The parameters used by each Unit are "tied together". That is, the weight matrices $$W_h$$, $$W_e$$ and biases $$b_1$$ and $$b_2$$, are the same for each Unit. Each Unit is also referred to as a "time step".
 
-**Figure: Structure of a Recurrent Neural Network**
+**Figure: Structure of a Recurrent Neural Network (showing two 'time-steps')**
 ![RNN Diagram](/images/RNN Diagram.png)
 
 The parameters used by this RNN are the weight matrices $$W_h$$, $$W_e$$, and $$U$$, and the bias vectors $$b_1$$ and $$b_2$$. During backprop, we need to calculated gradients of the training loss with respect to all of these parameters.
@@ -32,12 +32,14 @@ Throughout this blog post:
 * The symbols $$\times$$ and $$\circ$$ refer to scalar and element-wise multiplication respectively. In absence of a symbol, assume matrix multiplication.
 * Superscript $$Tr$$, such as in $$W_h^{Tr}$$, implies Transpose of the matrix $$W_h$$.
 
-An entire RNN can be broken down into three parts - I discuss each of those below:
+An entire RNN can be broken down into three parts - I discuss each of those below. I recommend referring to the diagram of an RNN's structure above while reading about the three parts below:
 
 ### (1) RNN Unit Computation
 The RNN Unit at time-step $$t$$ takes as inputs:
 * $$x^{(t)}$$, a vector of dimensions $$d \times 1$$, which represents the $$t^{th}$$ 'word' in a sequence of length $$T$$, and
 * $$h^{(t-1)}$$, a vector of dimensions $$D_h \times 1$$, which is the output of the previous RNN Unit, and is referred to as a 'hidden-state' vector.
+
+_Note: The numbers $$D_h$$ and $$d$$, which are said to represent the number of hidden units and the length of input embeddings, respectively, are 'hyperparamters'. That is, it is up to us to choose values for these numbers._
 
 The output of the RNN unit at time-step $$t$$ is its 'hidden-state vector' $$h^{(t)}$$. The equations governing a single unit are:
 $$
@@ -48,7 +50,9 @@ h^{(t)} &= \sigma(z^{(t)}) \tag{1.2}
 \end{align}
 $$
 
-where $$\sigma()$$ refers to the Sigmoid function, defined as:
+_Note: $$W_h$$ is a square matrix of dimensions $$D_h \times D_h$$. The matrix $$W_x$$ has dimensions $$D_h \times d$$._
+
+The symbol $$\sigma()$$ refers to the Sigmoid function, defined as:
 
 $$
 \sigma(x) = \frac{1}{(1 + e^{-x})}
@@ -86,10 +90,14 @@ $$
 J = \sum_{t=1}^{T} J^{(t)} \tag{3.3}
 $$
 
-## The First BPTT Trick: Dummy Variables
-Parameters such as $$W_h$$ influence the loss for a single time-step $$J^{(t)}$$, not just through their direct role in computation of the hidden-state $$h^{(t)}$$ but also via their influence on all the previous hidden-states $$h^{[0:t-1]}$$. So if we use the chain-rule to write the partial derivative of $$J^{(t)}$$ with respect to $$W_h$$, we will end up with a complex expression which includes contributions from each time-step from time-step $$0$$ to $$t$$. That can be simmplified if we pretend that the $$W_h$$ used at each time step is a dummy variable, $$W_h^{(t)}$$, with each such dummy variable mapped to the original weight matrix $$W_h$$ by the simple identity mapping.
+**GOAL:** We want to find the gradient of $$J$$ with respect to each and every element of parameter matrices and vectors $$W_h$$, $$W_x$$, $$b_1$$, $$U$$, and $$b_2$$. For the sake of length of this post, I will only demonstrate all the maths required to calculate gradients w.r.t $$W_h$$, but I believe that after reading this the reader will be able to apply the same concepts for other parameters.
 
-Use of these dummy variables allows us to break the gradient of loss $$J^{(t)}$$ with respect to the $$[i, j]^{th}$$ element of $$W_h$$, into a simpler sum of parts.
+## The First BPTT Trick: Dummy Variables
+Parameters such as $$W_h$$ influence the loss for a single time-step $$J^{(t)}$$, not just through their direct role in computation of the hidden-state $$h^{(t)}$$ (see $$Eq. 1.1$$ and $$Eq. 1.2$$) but also via their influence on all the previous hidden-states $$h^{(0:t-1)}$$. So if we use the chain-rule to write the partial derivative of $$J^{(t)}$$ with respect to $$W_h$$, we will end up with a complex expression which includes contributions from each time-step from time-step $$0$$ to $$t$$. 
+
+**That can be simplified (I'll explain this below) if we pretend that the $$W_h$$ used at each time step is a dummy variable, $$W_h^{(t)}$$,** with each such dummy variable mapped to the original weight matrix $$W_h$$ by the simple identity mapping (that's basically just saying $$W_h^{(t)} = W_h$$).
+
+Using dummy variables allows us to break the gradient of loss $$J^{(t)}$$ with respect to the $$[i, j]^{th}$$ element of $$W_h$$, into a simpler sum of parts.
 
 $$
 \begin{align}
