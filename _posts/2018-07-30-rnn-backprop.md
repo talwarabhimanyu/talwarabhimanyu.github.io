@@ -3,9 +3,11 @@ layout: post
 title: Build an RNN from scratch (with derivations!)
 date: 2018-07-31
 ---
-In this post I will derive all mathematical results used in backpropogation through a Recurrent Neural Network (RNN), also known as Backprop Through Time (BPTT). Further, I will use the equations I derive to build an RNN in Python from scratch ([check it out](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning/RNN%20from%20Scratch.ipynb)), without using libraries such as Pytorch or Tensorflow. I will provide a correspondence between mathematical results and their implementation in Python.
+In this post I will derive the key mathematical results used in backpropogation through a Recurrent Neural Network (RNN), popularly known as Backpropogation Through Time (BPTT). Further, I will use the equations I derive to build an RNN in Python from scratch ([check it out](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning/RNN%20from%20Scratch.ipynb)), without using libraries such as Pytorch or Tensorflow. I will provide a correspondence between mathematical results and their implementation in Python.
 
-I will assume that the reader is familiar with an RNN's structure and why they have become popular (this [blog post](http://colah.github.io/posts/2015-08-Understanding-LSTMs/) explains the key ideas). All layers of an RNN use the same set of parameters (weights and biases are "tied together") - this is unlike a plain feedforward network where each layer has its own set of parameters. This aspect makes understanding backpropogation through an RNN a bit tricky. 
+I will assume that the reader is familiar with an RNN's structure and their utility (this [blog post](http://colah.github.io/posts/2015-08-Understanding-LSTMs/) explains the key ideas). Fast.AI's [lectures 6 & 7](http://course.fast.ai/lessons/lesson6.html) also provide a great introduction to RNNs (including some useful implementation tips). 
+
+Each layer of an RNN uses the same copy of parameters (in RNN parlance, weights and biases are "tied together") - this is unlike a plain feedforward network where each layer has its own set of parameters. This aspect makes understanding backpropogation through an RNN a bit tricky. 
 
 **Several other resources on the web have tackled the maths behind an RNN, however I have found them lacking in detail on how exactly gradients are "accumulated" during backprop to deal with "tied weights". Therefore, I will attempt to explain that aspect in a LOT of detail in this post.**
 
@@ -111,7 +113,7 @@ Let's start by answering these two questions for gradients of loss from the $$t^
 
 $$
 \begin{align}
-\frac {\partial J^{(t)}} {\partial W_{h[i,j]}^{(k)}} &= \sum_{p=1}^{D_h} \underbrace{\frac {\partial J^{(t)}} {\partial h_{[p]}^{(k)}}}_{\gamma_{t[p]}^{(k)}} \times \underbrace{\frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} }_{Eq. \space xx}  \tag{5.0}
+\frac {\partial J^{(t)}} {\partial W_{h[i,j]}^{(k)}} &= \sum_{p=1}^{D_h} \underbrace{\frac {\partial J^{(t)}} {\partial h_{[p]}^{(k)}}}_{\gamma_{t[p]}^{(k)}} \times \underbrace{\frac {\partial h_{[p]}^{(k)}} {\partial W_{h[i,j]}^{(k)}} }_{\text{See Eq. 5.1}}  \tag{5.0}
 \\
 \end{align}
 $$
