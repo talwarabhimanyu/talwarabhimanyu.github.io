@@ -258,6 +258,8 @@ $$ \bbox[yellow,5px,border:2px solid red]
 }
 $$
 
+_Note: Just a reminder for notation - $$A^{Tr}$$ stands for Transpose of the matrix $$A$$._
+
 **This proves Claim 2!** Phew! Let us take a moment to understand why this equation, $$Eq. 6.2$$, is useful for our task. 
 
 Given $$\gamma_{t}^{(k)}$$ at time-step $$k$$, we have already proved in Claim 1 (see $$Eq. 5.2$$) that we can compute gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$. In Claim 2, we have now proved that using $$\gamma_{t}^{(k)}$$, we can also compute $$\gamma_{t}^{(k-1)}$$, which can be used by time-step $$(k-1)$$ to compute gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k-1)}$$.
