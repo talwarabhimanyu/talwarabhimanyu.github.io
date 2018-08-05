@@ -201,7 +201,7 @@ Two out of three quantities required to compute this gradient are available loca
 $$
 \begin{align}
 \gamma_{t[j]}^{(k-1)} &= \frac {\partial J^{(t)}} {\partial h_{[j]}^{(k-1)}} \\
-&= \sum_{i=1}^{D_h} \underbrace{\frac {\partial J^{(t)}} {\partial h_{[i]}^{(k)}}}_{\gamma_{t[i]}^{(k)}} \times \frac {\partial h_{[i]}^{(k)}} {\partial h_{[j]}^{(k-1)}} \tag{6.0}
+&= \sum_{i=1}^{D_h} \underbrace{\frac {\partial J^{(t)}} {\partial h_{[i]}^{(k)}}}_{\gamma_{t[i]}^{(k)}} \times \underbrace{\frac {\partial h_{[i]}^{(k)}} {\partial h_{[j]}^{(k-1)}}}_{\text{Eq. 6.1}} \tag{6.0}
 \end{align}
 $$
 
@@ -209,7 +209,7 @@ Let's calculate the second quantity on the right hand side. Using the chain rule
 
 $$
 \begin{align}
-\frac {\partial h_{[i]}^{(k)}} {\partial h_{[j]}^{(k-1)}} &= \sum_{p=1}^{D_h} \frac {\partial h_{[i]}^{(k)}} {\partial z_{[p]}^{(k)}} \times \frac {\partial z_{[p]}^{(k)}} {\partial h_{[j]}^{(k-1)}} \tag{6.1}
+\frac {\partial h_{[i]}^{(k)}} {\partial h_{[j]}^{(k-1)}} &= \sum_{p=1}^{D_h} \underbrace{\frac {\partial h_{[i]}^{(k)}} {\partial z_{[p]}^{(k)}}}_{\text{Eq. 6.1.1}} \times \underbrace{\frac {\partial z_{[p]}^{(k)}} {\partial h_{[j]}^{(k-1)}}}_{\text{Eq. 6.1.2}} \tag{6.1}
 \end{align}
 $$
 
