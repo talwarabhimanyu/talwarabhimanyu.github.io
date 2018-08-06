@@ -2,6 +2,7 @@
 layout: post
 title: Build an RNN from scratch (with derivations!)
 date: 2018-07-31
+tags: rnn backprop-maths 
 ---
 ## Introduction
 In this post I will derive the key mathematical results used in backpropogation through a Recurrent Neural Network (RNN), popularly known as Backpropogation Through Time (BPTT). Further, I will use the equations I derive to build an RNN in Python from scratch ([check out my notebook](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning/RNN%20from%20Scratch/RNN%20from%20Scratch.ipynb), without using libraries such as Pytorch or Tensorflow.
