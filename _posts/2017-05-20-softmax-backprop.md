@@ -2,6 +2,7 @@
 layout: post
 title: Backpropogating Softmax Layer of a Neural Network
 date: 2017-05-20
+tags: backprop-maths
 ---
 In this post I attempt to describe the calculus involved in backpropogating gradients for the Softmax layer of a neural network. I will use a sample network with the following architecture (this is same as the toy neural-net trained in CS231n's Winter 2016 Session, [Assignment 1](http://cs231n.github.io/assignments2016/assignment1/)). This is a fully-connected network - the output of each node in _Layer t_ goes as input into each node in _Layer t+1_.
 

@@ -2,6 +2,7 @@
 layout: post
 title: Calculus for Batch Normalization
 date: 2017-06-01
+tags: backprop-maths
 ---
 In this post I will attempt to describe the calculus required for a backward pass through a Batch Normalization layer of a Neural Network. For the sake of simplifying presentation, I will assume that we are working with inputs which have a single feature, i.e. <code>x<sub>i</sub></code> which is the input vector into the BatchNorm layer, has a single element.
 
