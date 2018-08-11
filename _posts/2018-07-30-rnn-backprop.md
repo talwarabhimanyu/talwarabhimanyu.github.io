@@ -238,7 +238,7 @@ Using $$Eq. 6.1.1$$ and $$Eq. 6.1.2$$ in $$Eq. 6.1$$, we get:
 
 $$
 \begin{align}
-\frac {\partial h_{[i]}^{(k)}} {\partial h_{[j]}^{(k-1)}} &= \sigma'(z_{[i]}^{(k)}) \times W_{h[i,j]}^{(k)})
+\frac {\partial h_{[i]}^{(k)}} {\partial h_{[j]}^{(k-1)}} &= \sigma'(z_{[i]}^{(k)}) \times W_{h[i,j]}^{(k)}
 \end{align}
 $$
 
