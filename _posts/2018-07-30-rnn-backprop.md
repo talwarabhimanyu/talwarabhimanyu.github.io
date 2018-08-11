@@ -221,7 +221,7 @@ $$
 \frac {\partial h_{[i]}^{(k)}} {\partial z_{[p]}^{(k)}} &=
 \begin{cases}
 0, & \text{i $\ne$ p} \\[2ex]
-\sigma'(z_{[i]}^{(k)}, & \text{i = p}  \tag{6.1.1}
+\sigma'(z_{[i]}^{(k)}), & \text{i = p}  \tag{6.1.1}
 \end{cases}
 \end{align}
 $$
