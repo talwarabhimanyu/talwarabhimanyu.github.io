@@ -2,10 +2,10 @@
 layout: post
 title: Build an RNN from scratch (with derivations!)
 date: 2018-07-31
-tags: rnn backprop-maths sequence-modeling 
+tags: sequence-modeling rnn backprop-maths 
 ---
 ## Introduction
-In this post I will derive the key mathematical results used in backpropogation through a Recurrent Neural Network (RNN), popularly known as Backpropogation Through Time (BPTT). Further, I will use the equations I derive to build an RNN in Python from scratch ([check out my notebook](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning%20from%20Scratch/RNN%20from%20Scratch/RNN%20from%20Scratch.ipynb), without using libraries such as Pytorch or Tensorflow.
+In this post I will derive the key mathematical results used in backpropogation through a Recurrent Neural Network (RNN), popularly known as Backpropogation Through Time (BPTT). Further, I will use the equations I derive to build an RNN in Python from scratch ([check out my notebook](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning%20from%20Scratch/RNN%20from%20Scratch/RNN%20from%20Scratch.ipynb)), without using libraries such as Pytorch or Tensorflow.
 
 **Several other resources on the web have tackled the maths behind an RNN, however I have found them lacking in detail on how exactly gradients are "accumulated" during backprop to deal with "tied weights". Therefore, I will attempt to explain that aspect in a LOT of detail in this post.**
 
