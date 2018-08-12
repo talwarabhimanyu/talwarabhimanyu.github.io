@@ -5,11 +5,11 @@ date: 2018-07-31
 tags: rnn backprop-maths sequence-modeling 
 ---
 ## Introduction
-In this post I will derive the key mathematical results used in backpropogation through a Recurrent Neural Network (RNN), popularly known as Backpropogation Through Time (BPTT). Further, I will use the equations I derive to build an RNN in Python from scratch ([check out my notebook](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning/RNN%20from%20Scratch/RNN%20from%20Scratch.ipynb), without using libraries such as Pytorch or Tensorflow.
+In this post I will derive the key mathematical results used in backpropogation through a Recurrent Neural Network (RNN), popularly known as Backpropogation Through Time (BPTT). Further, I will use the equations I derive to build an RNN in Python from scratch ([check out my notebook](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning%20from%20Scratch/RNN%20from%20Scratch/RNN%20from%20Scratch.ipynb), without using libraries such as Pytorch or Tensorflow.
 
 **Several other resources on the web have tackled the maths behind an RNN, however I have found them lacking in detail on how exactly gradients are "accumulated" during backprop to deal with "tied weights". Therefore, I will attempt to explain that aspect in a LOT of detail in this post.**
 
-I will assume that the reader is familiar with an RNN's structure and their utility (this [blog post](http://colah.github.io/posts/2015-08-Understanding-LSTMs/) explains the key ideas). Fast.AI's [lectures 6 & 7](http://course.fast.ai/lessons/lesson6.html) also provide a great introduction to RNNs (including some useful implementation tips). 
+I will assume that the reader is familiar with an RNN's structure and their utility. I highly recommend reading Chapter 10 on 'Sequence Modelling' from the book [_Deep Learning_](https://www.deeplearningbook.org/) by Goodfellow, Bengio, and Courville.  
 
 Each layer of an RNN uses the same copy of parameters (in RNN parlance, weights and biases are "tied together") - this is unlike a plain feedforward network where each layer has its own set of parameters. This aspect makes understanding backpropogation through an RNN a bit tricky. 
 
@@ -324,7 +324,7 @@ There we go! By passing on the sum of quantities we wanted to pass to time-step 
 In order to compute gradients, we will apply $$Eq. 5.2$$ - and the expression for $$Eq. 5.2$$ tells us that all operations in it are also Distributive! So the application of $$Eq. 5.2$$ to sum of _gammas_ will give us the sum of the gradients we want. This efficient method of backpropogating by passing _sums_ is referred to as **"accumulating gradients"**. While this doesn't allow us to compute $$\frac {\partial J^{(t)}} {\partial W_h^{(k)}}$$ individually for values of $$t$$ and $$k$$, that doesn't matter - because what ultimately matters is gradient of the total loss $$\frac {\partial J} {\partial W_h}$$. And we are able to compute that by accumulating gradients in this manner.
 
 ## Conclusion
-This turned into a longer blog post than I had initially imagined. While I've only shown computation of gradients w.r.t. one parameter matrix $$W_h$$, I hope this post clarifies the bigger picture concepts of "dummy variables" and "accumulation of gradients". Using these, you should be able to compute gradients w.r.t other parameters of an RNN as well. If you're stuck, you may check out the [accompanying Python notebook](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning/RNN%20from%20Scratch/RNN%20from%20Scratch.ipynb) to understand the calculations behind other gradients.
+This turned into a longer blog post than I had initially imagined. While I've only shown computation of gradients w.r.t. one parameter matrix $$W_h$$, I hope this post clarifies the bigger picture concepts of "dummy variables" and "accumulation of gradients". Using these, you should be able to compute gradients w.r.t other parameters of an RNN as well. If you're stuck, you may check out the [accompanying Python notebook](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning%20from%20Scratch/RNN%20from%20Scratch/RNN%20from%20Scratch.ipynb) to understand the calculations behind other gradients.
 
 If you find any errors in this post, or have any feedback, I request you to reach out to me on [LinkedIn](https://sg.linkedin.com/in/abhimanyu-talwar-7353519).
 
