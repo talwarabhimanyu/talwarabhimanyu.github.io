@@ -4,6 +4,11 @@ title: Build an LSTM from scratch in Python (+ backprop derivations!)
 date: 2018-08-12
 tags: sequence-modeling lstm backprop-maths
 ---
+## TL;DR
+This blog post:
+* Derives equations used for backpropogation through an LSTM
+* Creates an LSTM model in Python (without using Pytorch or Tensorflow)
+
 ## Introduction
 In my [last post on Sequence Modelling](https://talwarabhimanyu.github.io/blog/2018/07/31/rnn-backprop), I derived the equations required for backpropogation through an RNN, and used those equations to implement [an RNN in Python](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning%20from%20Scratch/RNN%20from%20Scratch/RNN%20from%20Scratch.ipynb) (without using PyTorch or Tensorflow). Through that post I demonstrated two tricks which make backprop through a network with 'tied up weights' easier to comprehend - use of 'dummy variables' and 'accumulation of gradients'. **In this post I intend to look at another neural network architecture known as an LSTM (Long Short-Term Memory), which builds upon RNNs, and manages to avoid the issue of vanishing gradients faced by RNNs.**
 
@@ -14,13 +19,16 @@ I will assume that the reader is familiar with LSTMs. Chris Olah's [blog post](h
 ## Terminology
 To process a sequence of length $$T$$, an LSTM uses T copies of a Basic Unit. Each Unit uses the same set of parameters (weights and biases). E.g. say there is a 'root' version of a weight matrix $$W$$, then each LSTM Unit uses this same version, and any changes to the 'root' are reflected in the weights uses by each Unit. We say the parameters are 'tied together' across Units.
 
+**Figure: Structure of an LSTM Network (showing a single LSTM Unit)**
+![LSTM Diagram](/images/LSTM Diagram.png)
+
 ### Notation
 I have tried to use the same alphabets to denote various parameters as used in Chapter 10 (Sequence Modelling) of the [_Deep Learning_](https://www.deeplearningbook.org/) book by Goodfellow, Bengio, and Courville. I will use the same notation as I used for my blog post on RNNs:
 
 * Superscript $$(t)$$, such as in $$h^{(t)}$$ refers to value of a variable (in this case $$h$$) at time-step $$t$$.
 * Subscript $$[i]$$ in square brackets, such as in $$h^{(t)}_{[i]}$$ refers to the $$i^{th}$$ component of the vector $$h^{(t)}$$.
 * The symbols $$\times$$ and $$\circ$$ refer to scalar and element-wise multiplication respectively. In absence of a symbol, assume matrix multiplication.
-* Superscript $$Tr$$, such as in $$W_h^{Tr}$$, implies Transpose of the matrix $$W_h$$.
+* Superscript $$Tr$$, such as in $$W_f^{Tr}$$, implies Transpose of the matrix $$W_f$$.
 
 Similar to the case of RNNs, I will break down the computation inside an LSTM into three parts:
 
