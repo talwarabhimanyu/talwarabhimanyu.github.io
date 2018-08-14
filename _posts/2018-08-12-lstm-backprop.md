@@ -37,15 +37,34 @@ I have tried to use the same alphabets to denote various parameters as used in C
 * Superscript $$Tr$$, such as in $$W_f^{Tr}$$, implies Transpose of the matrix $$W_f$$.
 
 Similar to the case of RNNs, I will break down the computation inside an LSTM into three parts:
-1. **Computation inside LSTM Units:** I will cover this in detail in this post.
-2. **Computatoin at the Affine Layer:** This layer applies an Affine Transformation to the 'hidden-state' $$h^{(t)}$$ at each time-step $$t$$, to produce a vector $$\theta^{(t)}$$ of length $$V$$ (the size of our Vocabulary). The formula below describes the computation:
+1. **LSTM Units:** I will cover this in detail in this post.
+2. **Affine Layer:** This layer applies an Affine Transformation to the 'hidden-state' $$h^{(t)}$$ at each time-step $$t$$, to produce a vector $$\theta^{(t)}$$ of length $$V$$ (the size of our Vocabulary). The formula below describes the computation ($$U$$ and $$b$$ are model parameters):
 
 $$
+\theta^{(t)} = Uh^{(t)} + b
 $$
 
-3. **Computation at the Softmax Layer:** At each time-step, the vector $$\theta^{(t)}$$ is used to compute a probability distribution over our Vocabulary of $$V$$ words.
+3. **Softmax Layer:** At each time-step, the vector $$\theta^{(t)}$$ is used to compute a probability distribution over our Vocabulary of $$V$$ words. The formula below describes this:
+
+$$
+\hat{y}^{(t)}_{[i]} = \frac {e^{\theta^{(t)}_{[i]}}} {\sum_{j=0}^{V-1} e^{\theta^{(t)}_{[i]}}} \tag{3.1}
+$$
 
 I have discussed the Affine and Softmax computations in my blog post on RNNs. The same discussion holds for LSTMs as well and so I will not be talking about those layers here. 
+
+The loss attributed to this time-step, $$J^{(t)}$$ is given by:
+
+$$
+J^{(t)} = -\sum_{i=0}^{V-1} y^{(t)}_{[i]} log \hat{y}^{(t)}_{[i]} \tag{3.2}
+$$
+
+The vector $$y^{(t)}$$ is a one-hot vector with the same dimensions as that of $$\hat{y}^{t}$$ - it contains a $$1$$ at the index of the 'true' next-word for time-step $$t$$. And finally, the overall loss for our LSTM is the sum of losses contributed by each time-step:
+
+$$
+J = \sum_{t=1}^{T} J^{(t)} \tag{3.3}
+$$
+
+**GOAL:** We want to find the gradient of $$J$$ with respect to each and every element of parameter matrices and vectors. For the sake of length of this post, I will only demonstrate all the maths required to calculate gradients w.r.t $$W_f$$, but I believe that after reading this, you will be able to apply the same concepts for other parameters. You can always refer to my [Jupyter Notebook](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning%20from%20Scratch/LSTM%20from%20Scratch/LSTM%20from%20Scratch.ipynb) to understand how rest of the gradients should be calculated.
 
 ### LSTM Unit Computation
 The LSTM Unit at time-step $$t$$ takes as inputs:
@@ -55,29 +74,29 @@ The LSTM Unit at time-step $$t$$ takes as inputs:
 
 _Note: The numbers $$D$$ and $$d$$ are hyperparameters._
 
-A feature which distinguishes LSTMs from RNNs is the presence of three 'Gates' - $$g^{(t)}$$ (_input_), $$f^{(t)}$$ (_forget_) and $$q^{(t)}$$ (_output_). The value of each of these Gates lies in the range $$[0, \space 1]$$. In an LSTM Unit, we multiply these Gate values with the input feature vector ($$e^{(t)}$$), previous internal state ($$s^{(t-1)}$$), and $$tanh$$ of the next internal state ($$tanh(s^{(t)})$$), to determine how much these three items will contribute towards our computation.
+**A feature which distinguishes LSTMs from RNNs is the presence of three 'Gates' - $$g^{(t)}$$ (_input_), $$f^{(t)}$$ (_forget_) and $$q^{(t)}$$ (_output_).** The value of each of these Gates lies in the range $$[0, \space 1]$$, and it determines how much the input $$x^{(t)}}$$, the previous internal-state $$s^{(t-1)}$$ and the next internal-state $$s^{(t)}$$ will contribute towards our computation. **These Gates act like knobs, where 0 implies no contribution from the variable controlled by a knob, and 1 implies full contribution.** The equations below will make this clearer.
 
-Let's first look at how the hidden-state $$h$$ and internal-state $$s$$ are computed at time-step $$t$$:
-
-$$
-\underbrace{h^{(t)}}_{\substack{\text{hidden} \\ \text{state}}} = \underbrace{q^{(t)}}_{\substack{\text{output} \\ \text{gate}}} \circ tanh(\underbrace{s^{(t)}}_{\substack{\text{internal} \\ \text{state}}})
-$$
+Let's look at how the hidden-state $$h$$ and internal-state $$s$$ are computed at time-step $$t$$:
 
 $$
-s^{(t)} = \underbrace{f^{(t)}}_{\substack{\text{forget} \\ \text{gate}}} \circ s^{(t-1)} + \underbrace{g^{(t)}}_{\substack{\text{input} \\ \text{gate}}} \circ \underbrace{e^{(t)}}_{\substack{\text{input} \\ \text{feature} \\ \text{vector}}}
+\underbrace{h^{(t)}}_{\substack{\text{hidden} \\ \text{state}}} = \underbrace{q^{(t)}}_{\substack{\text{output} \\ \text{gate}}} \circ tanh(\underbrace{s^{(t)}}_{\substack{\text{internal} \\ \text{state}}}) \tag{(1.1)}
+$$
+
+$$
+s^{(t)} = \underbrace{f^{(t)}}_{\substack{\text{forget} \\ \text{gate}}} \circ s^{(t-1)} + \underbrace{g^{(t)}}_{\substack{\text{input} \\ \text{gate}}} \circ \underbrace{e^{(t)}}_{\substack{\text{input} \\ \text{feature} \\ \text{vector}}} \tag{(1.2)}
 $$
 
 Now let's look at how the input feature vector $$e^{(t)}$$ and the three gates are computed:
 
 $$
 \begin{align}
-\text{(Forget Gate) } f^{(t)} &= \sigma \left( b_{f} + U_{f}x^{(t)} + W_{f}h^{(t-1)} \right)
+\text{(Forget Gate) } f^{(t)} &= \sigma \left( b_{f} + U_{f}x^{(t)} + W_{f}h^{(t-1)} \right) \tag{(2.1)}
 \\
-\text{(Input Gate) } g^{(t)} &= \sigma \left( b_{g} + U_{g}x^{(t)} + W_{g}h^{(t-1)} \right)
+\text{(Input Gate) } g^{(t)} &= \sigma \left( b_{g} + U_{g}x^{(t)} + W_{g}h^{(t-1)} \right) \tag{(2.2)}
 \\
-\text{(Output Gate) } q^{(t)} &= \sigma \left( b_{q} + U_{q}x^{(t)} + W_{q}h^{(t-1)} \right)
+\text{(Output Gate) } q^{(t)} &= \sigma \left( b_{q} + U_{q}x^{(t)} + W_{q}h^{(t-1)} \right) \tag{(2.3)}
 \\
-\text{(Input Feature Vector) } e^{(t)} &= \sigma \left( b_{e} + U_{e}x^{(t)} + W_{e}h^{(t-1)} \right)
+\text{(Input Feature Vector) } e^{(t)} &= \sigma \left( b_{e} + U_{e}x^{(t)} + W_{e}h^{(t-1)} \right) \tag{(2.4)}
 \end{align}
 $$
 
@@ -91,5 +110,34 @@ Its derivative with respect to $$x$$ at a point, can be computed in terms of the
 
 $$
 tanh'(x) = (1 \space - \space tanh^{2}(x))
+$$
+
+## Applying the Two BPTT Tricks
+We will make use of the two Backpropogation-Through-Time (BPTT) tricks that I had described in detail in my blog post on RNNs. Using the 'Dummy Variables' trick, we will pretend that the LSTM Unit at time-step $$k$$ has its own copy of parameters. For example instead of the matrices $$W_f$$ and $$U_f$$, we will pretend that this Unit uses parameters $$W_f^{(k)}$$ and $$U_f^{(k)}$$. We can say:
+
+$$
+\begin{align}
+\frac {\partial J^{(t)}} {\partial W_{f [i,j]}} &=  \sum_{k=1}^{T} \frac {\partial J^{(t)}} {\partial W_{f [i,j]}^{(k)}} \times \underbrace{\frac {\partial W_{f [i,j]}^{(k)}} {\partial W_{f[i,j]}}}_{Equals \space 1.} \\
+\\
+&=  \sum_{k=1}^{T} \frac {\partial J^{(t)}} {\partial W_{f [i,j]}^{(k)}} \tag{xx}\\
+\end{align}
+$$
+
+## Blueprint for Computing Gradients
+We ask ourselves the same big picture questions which we had asked for RNNs:
+* What information do we need at each time-step to compute gradients?
+* How do we pass that information efficiently between layers?
+
+To answer the first question, notice in the equations above that our parameter of interest, $$W_f$$ appears only in one of them, that is $$Eq. 2.1$$. Focussing on the version of $$W_f$$ used by the Unit at time-step $$k$$, i.e. $$W_f^{(k)}$$, we observe that a change in the value of $$W_f^{(k)}$$ will impact our loss computation through its impact on the value of $$f^{(k)}$$. 
+
+**If we know the gradient of loss w.r.t. $$f^{(k)}$$, maybe we will be able to compute the gradient of loss w.r.t. $$W_f^{(k)}$$. You see how we are tracing the path through which 'influence' of a variable flows, to guide our backpropogation calculation!** In this case, we've discovered that there is a path from $$W_f^{(k)}$$ to the loss quantity $$J^{(t)}$$, via $$f^{(k)}$$. Moreover, we have observed that there is NO PATH between $$W_f^{(k)}$$ and $$J^{(t)}$$ which avoids $$f^{(k)}$$.
+
+Utilizing our knowledge of this one-and-only path, we can now say:
+
+$$
+\begin{align}
+\frac {\partial J^{(t)}} {\partial W_{f[i,j]}^{(k)}} &= \sum_{p=1}^{D} \underbrace{\frac {\partial J^{(t)}} {\partial f_{[p]}^{(k)}}}_{\text{Eq. xx1}} \times \underbrace{\frac {\partial f_{[p]}^{(k)}} {\partial W_{f[i,j]}^{(k)}} }_{\text{Eq. xx2}}  \tag{xx}
+\\
+\end{align}
 $$
 
