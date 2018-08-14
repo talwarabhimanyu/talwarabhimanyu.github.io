@@ -176,7 +176,7 @@ This can be expressed in matrix notation as follows:
 
 $$ \bbox[yellow,5px,border:2px solid red]
 {
-\frac {\partial J^{(t)}} {\partial W_{f}^{(k)}} &= \left( \frac {\partial J^{(t)}} {\partial s^{(k)}} \circ \sigma'(z_{f}^{(k)}) \circ s^{(k-1)} \right) h_{[j]}^{(k-1) \space Tr}
+\frac {\partial J^{(t)}} {\partial W_{f}^{(k)}} = \left( \frac {\partial J^{(t)}} {\partial s^{(k)}} \circ \sigma'(z_{f}^{(k)}) \circ s^{(k-1)} \right) h_{[j]}^{(k-1) \space Tr}
 \qquad (yy)
 }
 $$
