@@ -91,13 +91,13 @@ Now let's look at how the input feature vector $$e^{(t)}$$ and the three gates a
 
 $$
 \begin{align}
-\text{(Forget Gate) } f^{(t)} &= \sigma \left( \underbrace{b_{f} + U_{f}x^{(t)} + W_{f}h^{(t-1)}}_{z_f} \right) \tag{2.1}
+\text{(Forget Gate) } f^{(t)} &= \sigma \underbrace{\left( b_{f} + U_{f}x^{(t)} + W_{f}h^{(t-1)} \right)}_{z_f} \tag{2.1}
 \\
-\text{(Input Gate) } g^{(t)} &= \sigma \left( \underbrace{b_{g} + U_{g}x^{(t)} + W_{g}h^{(t-1)}}_{z_g} \right) \tag{2.2}
+\text{(Input Gate) } g^{(t)} &= \sigma \underbrace{\left( b_{g} + U_{g}x^{(t)} + W_{g}h^{(t-1)} \right)}_{z_g} \tag{2.2}
 \\
-\text{(Output Gate) } q^{(t)} &= \sigma \left( \underbrace{b_{q} + U_{q}x^{(t)} + W_{q}h^{(t-1)}}_{z_q} \right) \tag{2.3}
+\text{(Output Gate) } q^{(t)} &= \sigma \underbrace{\left( b_{q} + U_{q}x^{(t)} + W_{q}h^{(t-1)} \right)}_{z_q} \tag{2.3}
 \\
-\text{(Input Feature Vector) } e^{(t)} &= \sigma \left( \underbrace{b_{e} + U_{e}x^{(t)} + W_{e}h^{(t-1)}}_{z_e} \right) \tag{2.4}
+\text{(Input Feature Vector) } e^{(t)} &= \sigma \underbrace{\left( b_{e} + U_{e}x^{(t)} + W_{e}h^{(t-1)} \right)}_{z_e} \tag{2.4}
 \end{align}
 $$
 
@@ -154,4 +154,14 @@ $$
 \end{cases}
 \end{align}
 $$
+
+To compute the first quantity on the right-hand-side of $$Eq. xx$$, we trace paths of influence from $$f^{(k)}$$ towards loss $$J^{(t)}$$, and observe from $$Eq. 1.2$$ that such a path MUST pass through $$s^{(k)}$$. We use this insight to say:
+
+$$
+\begin{align}
+\frac {\partial J^{(t)}} {\partial f_{[p]}^{(k)}} &= \sum_{m=1}^{D} \frac {\partial J^{(t)}} {\partial s_{[m]}^{(k)}} \times \frac {\partial s_{[m]}^{(k)}} {\partial f_{[p]}^{(k)}} \\[2ex]
+&= \frac {\partial J^{(t)}} {\partial s_{[p]}^{(k)}} \times s_{[p]}^{(k-1)} 
+\end{align}
+$$
+
 
