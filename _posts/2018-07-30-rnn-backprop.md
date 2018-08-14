@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Build an RNN from scratch (+ backprop derivations!)
+title: Build an RNN from scratch in Python (+ backprop derivations!)
 date: 2018-07-31
 tags: sequence-modeling rnn backprop-maths 
 ---
