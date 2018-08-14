@@ -7,7 +7,8 @@ tags: sequence-modeling lstm backprop-maths
 ## TL;DR
 In this blog post:
 1. I derive equations for backpropogation-through-time for an LSTM.
-2. I create an LSTM model in Python (without using Pytorch or Tensorflow).
+2. I illustrate how NOT considering all paths of flow of influence in an LSTM, can botch up our chain-rule application. 
+3. I create an LSTM model in Python (without using Pytorch or Tensorflow).
 
 ## Introduction
 In my [last post on Sequence Modelling](https://talwarabhimanyu.github.io/blog/2018/07/31/rnn-backprop), I derived the equations required for backpropogation through an RNN, and used those equations to implement [an RNN in Python](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning%20from%20Scratch/RNN%20from%20Scratch/RNN%20from%20Scratch.ipynb) (without using PyTorch or Tensorflow). Through that post I demonstrated two tricks which make backprop through a network with 'tied up weights' easier to comprehend - use of 'dummy variables' and 'accumulation of gradients'. **In this post I intend to look at another neural network architecture known as an LSTM (Long Short-Term Memory), which builds upon RNNs, and overcomes the issue of vanishing gradients faced by RNNs.**
@@ -79,24 +80,24 @@ _Note: The numbers $$D$$ and $$d$$ are hyperparameters._
 Let's look at how the hidden-state $$h$$ and internal-state $$s$$ are computed at time-step $$t$$:
 
 $$
-\underbrace{h^{(t)}}_{\substack{\text{hidden} \\ \text{state}}} = \underbrace{q^{(t)}}_{\substack{\text{output} \\ \text{gate}}} \circ tanh(\underbrace{s^{(t)}}_{\substack{\text{internal} \\ \text{state}}}) \tag{(1.1)}
+\underbrace{h^{(t)}}_{\substack{\text{hidden} \\ \text{state}}} = \underbrace{q^{(t)}}_{\substack{\text{output} \\ \text{gate}}} \circ tanh(\underbrace{s^{(t)}}_{\substack{\text{internal} \\ \text{state}}}) \tag{1.1}
 $$
 
 $$
-s^{(t)} = \underbrace{f^{(t)}}_{\substack{\text{forget} \\ \text{gate}}} \circ s^{(t-1)} + \underbrace{g^{(t)}}_{\substack{\text{input} \\ \text{gate}}} \circ \underbrace{e^{(t)}}_{\substack{\text{input} \\ \text{feature} \\ \text{vector}}} \tag{(1.2)}
+s^{(t)} = \underbrace{f^{(t)}}_{\substack{\text{forget} \\ \text{gate}}} \circ s^{(t-1)} + \underbrace{g^{(t)}}_{\substack{\text{input} \\ \text{gate}}} \circ \underbrace{e^{(t)}}_{\substack{\text{input} \\ \text{feature} \\ \text{vector}}} \tag{1.2}
 $$
 
 Now let's look at how the input feature vector $$e^{(t)}$$ and the three gates are computed:
 
 $$
 \begin{align}
-\text{(Forget Gate) } f^{(t)} &= \sigma \left( b_{f} + U_{f}x^{(t)} + W_{f}h^{(t-1)} \right) \tag{(2.1)}
+\text{(Forget Gate) } f^{(t)} &= \sigma \left( b_{f} + U_{f}x^{(t)} + W_{f}h^{(t-1)} \right) \tag{2.1}
 \\
-\text{(Input Gate) } g^{(t)} &= \sigma \left( b_{g} + U_{g}x^{(t)} + W_{g}h^{(t-1)} \right) \tag{(2.2)}
+\text{(Input Gate) } g^{(t)} &= \sigma \left( b_{g} + U_{g}x^{(t)} + W_{g}h^{(t-1)} \right) \tag{2.2}
 \\
-\text{(Output Gate) } q^{(t)} &= \sigma \left( b_{q} + U_{q}x^{(t)} + W_{q}h^{(t-1)} \right) \tag{(2.3)}
+\text{(Output Gate) } q^{(t)} &= \sigma \left( b_{q} + U_{q}x^{(t)} + W_{q}h^{(t-1)} \right) \tag{2.3}
 \\
-\text{(Input Feature Vector) } e^{(t)} &= \sigma \left( b_{e} + U_{e}x^{(t)} + W_{e}h^{(t-1)} \right) \tag{(2.4)}
+\text{(Input Feature Vector) } e^{(t)} &= \sigma \left( b_{e} + U_{e}x^{(t)} + W_{e}h^{(t-1)} \right) \tag{2.4}
 \end{align}
 $$
 
@@ -128,11 +129,12 @@ We ask ourselves the same big picture questions which we had asked for RNNs:
 * What information do we need at each time-step to compute gradients?
 * How do we pass that information efficiently between layers?
 
-To answer the first question, notice in the equations above that our parameter of interest, $$W_f$$ appears only in one of them, that is $$Eq. 2.1$$. Focussing on the version of $$W_f$$ used by the Unit at time-step $$k$$, i.e. $$W_f^{(k)}$$, we observe that a change in the value of $$W_f^{(k)}$$ will impact our loss computation through its impact on the value of $$f^{(k)}$$. 
+### Tracing Paths of Influence
+To answer the first question, observe that our parameter of interest, $$W_f$$ appears only in one of the equations, that is $$Eq. 2.1$$. Focussing on the version of $$W_f$$ used by the Unit at time-step $$k$$, i.e. $$W_f^{(k)}$$, we observe that a change in the value of $$W_f^{(k)}$$ will only impact our loss computation through its impact on the value of $$f^{(k)}$$. 
 
-**If we know the gradient of loss w.r.t. $$f^{(k)}$$, maybe we will be able to compute the gradient of loss w.r.t. $$W_f^{(k)}$$. You see how we are tracing the path through which 'influence' of a variable flows, to guide our backpropogation calculation!** In this case, we've discovered that there is a path from $$W_f^{(k)}$$ to the loss quantity $$J^{(t)}$$, via $$f^{(k)}$$. Moreover, we have observed that there is NO PATH between $$W_f^{(k)}$$ and $$J^{(t)}$$ which avoids $$f^{(k)}$$.
+**You see how we are tracing the path through which 'influence' of a variable flows, to guide our backpropogation calculation! In this case, we've discovered that there is a path from $$W_f^{(k)}$$ to the loss quantity $$J^{(t)}$$, via $$f^{(k)}$$. Moreover, we have observed that there is NO PATH between $$W_f^{(k)}$$ and $$J^{(t)}$$ which avoids $$f^{(k)}$$.** Therefore, if we know the gradient of loss w.r.t. $$f^{(k)}$$, we can just restrict our task to understanding how 'influence' flows from $$W_f^{(k)}$$ to $$f^{(k)}$$, and we should be able to compute the gradient of loss w.r.t. $$W_f^{(k)}$$.
 
-Utilizing our knowledge of this one-and-only path, we can now say:
+Utilizing our knowledge of this one-and-only path (and chain-rule!), we can now say:
 
 $$
 \begin{align}
@@ -140,4 +142,6 @@ $$
 \\
 \end{align}
 $$
+
+The second quantity in this expression is straighforward to compute using $$Eq. 2.1$$:
 
