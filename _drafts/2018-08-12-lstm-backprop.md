@@ -126,15 +126,16 @@ $$
 
 ## Blueprint for Computing Gradients
 We ask ourselves the same big picture questions which we had asked for RNNs:
-* What information do we need at each time-step to compute gradients?
-* How do we pass that information efficiently between layers?
+1. What information do we need at each time-step to compute gradients?
+2. How do we pass that information efficiently between layers?
+We will find answers to these below.
 
 ### Tracing Paths of Influence
-To answer the first question, observe that our parameter of interest, $$W_f$$ appears only in one of the equations, that is $$Eq. 2.1$$. Focussing on the version of $$W_f$$ used by the Unit at time-step $$k$$, i.e. $$W_f^{(k)}$$, we observe that a change in the value of $$W_f^{(k)}$$ will only impact our loss computation through its impact on the value of $$f^{(k)}$$. 
+Observe that our parameter of interest, $$W_f$$ appears only in one of the equations, $$Eq. 2.1$$. Focussing on the version of $$W_f$$ used by the Unit at time-step $$k$$, i.e. $$W_f^{(k)}$$, we can see that a change in the value of $$W_f^{(k)}$$ will cause a change in the value of $$f^{(k)}$$, which in turn will impact the value of loss for our LSTM. 
 
-**You see how we are tracing the path through which 'influence' of a variable flows, to guide our backpropogation calculation! In this case, we've discovered that there is a path from $$W_f^{(k)}$$ to the loss quantity $$J^{(t)}$$, via $$f^{(k)}$$. Moreover, we have observed that there is NO PATH between $$W_f^{(k)}$$ and $$J^{(t)}$$ which avoids $$f^{(k)}$$.** Therefore, if we know the gradient of loss w.r.t. $$f^{(k)}$$, we can just restrict our task to understanding how 'influence' flows from $$W_f^{(k)}$$ to $$f^{(k)}$$, and we should be able to compute the gradient of loss w.r.t. $$W_f^{(k)}$$.
+**We are basically tracing paths through which 'influence' could flow from our variable of interest to the value of loss for our LSTM! In this case, we've discovered that there is a path from $$W_f^{(k)}$$ to the loss quantity $$J^{(t)}$$, via $$f^{(k)}$$. Moreover, we have observed that there is NO PATH between $$W_f^{(k)}$$ and $$J^{(t)}$$ which avoids $$f^{(k)}$$.** Therefore, if we know the gradient of loss w.r.t. $$f^{(k)}$$, we can just restrict our task to understanding how 'influence' flows from $$W_f^{(k)}$$ to $$f^{(k)}$$, and we should be able to compute the gradient of loss w.r.t. $$W_f^{(k)}$$.
 
-Utilizing our knowledge of this one-and-only path (and chain-rule!), we can now say:
+Utilizing our knowledge of this one-and-only path (and using chain-rule to 'traverse' this path), we can now say:
 
 $$
 \begin{align}
@@ -176,10 +177,10 @@ This can be expressed in matrix notation as follows:
 
 $$ \bbox[yellow,5px,border:2px solid red]
 {
-\frac {\partial J^{(t)}} {\partial W_{f}^{(k)}} = \left( \frac {\partial J^{(t)}} {\partial s^{(k)}} \circ \sigma'(z_{f}^{(k)}) \circ s^{(k-1)} \right) h^{(k-1) \space Tr}
+\frac {\partial J^{(t)}} {\partial W_{f}^{(k)}} = \left( \underbrace{\frac {\partial J^{(t)}} {\partial s^{(k)}}}_{\delta_{t}^{k}} \circ \underbrace{\sigma'(z_{f}^{(k)})}_{\text{Local}} \circ \underbrace{s^{(k-1)}}_{\text{Local}} \right) \underbrace{h^{(k-1)}_{\text{Local}} \space Tr}
 \qquad (yy)
 }
 $$
 
-
+We have now kind of answered the first big picture question - from $$Eq. yy$$, we can tell which quantities are required at time-step $$k$$ to compute gradients of loss w.r.t $$W_f^{(k)}$$. All quantities marked as 'Local' in the expression are available from the cache stored for time-step $$k$$ during the forward pass.
 
