@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Build an RNN from scratch (with derivations!)
+title: Build an RNN from scratch (+ backprop derivations!)
 date: 2018-07-31
 tags: sequence-modeling rnn backprop-maths 
 ---
@@ -269,7 +269,7 @@ Now if we start at time-step $$t$$ with $$\gamma_{t}^{(t)}$$ (which is straightf
 
 **We have now managed to computie gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$ for all $$k \in [1, \cdots, t]$$! But we are not done yet! We need to do this for all values of $$t \in [0, \cdots, T]$$. Does that mean we need to run backprop (which involves a pass through $$T$$ RNN units), $$T$$ times? As we will see, that is not required, and a single backprop run will be enough.**
 
-## BPTT Trick 2: Accumulating Gradients
+## The Second BPTT Trick: Accumulating Gradients
 Following the train of thought above, to compute gradient of $$J^{(t)}$$ w.r.t $$W_h^{(k)}$$ for all values of $$t \in [k, \cdots, T]$$, the time-step k should receive $$\gamma_{t}^{(k)}$$ for all values of $$t \in [k, \cdots, T]$$ so that we can apply $$Eq. 5.2$$ to compute the required gradients. And the table below shows how time-step $$k$$ can receive this information!
 
 $$
