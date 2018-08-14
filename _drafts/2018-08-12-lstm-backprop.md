@@ -150,7 +150,7 @@ $$
 \frac {\partial f_{[p]}^{(k)}} {\partial W_{f[i,j]}^{(k)}} &=
 \begin{cases}
 0, & \text{p $\ne$ i} \\[2ex]
-\sigma'(z_{f[i]}^{(k)}) h_{[j]}^{(k-1)}, & \text{p = i} \tag{xx2}
+\sigma'(z_{f[i]}^{(k)}) \times h_{[j]}^{(k-1)}, & \text{p = i} \tag{xx2}
 \end{cases}
 \end{align}
 $$
@@ -160,8 +160,26 @@ To compute the first quantity on the right-hand-side of $$Eq. xx$$, we trace pat
 $$
 \begin{align}
 \frac {\partial J^{(t)}} {\partial f_{[p]}^{(k)}} &= \sum_{m=1}^{D} \frac {\partial J^{(t)}} {\partial s_{[m]}^{(k)}} \times \frac {\partial s_{[m]}^{(k)}} {\partial f_{[p]}^{(k)}} \\[2ex]
-&= \frac {\partial J^{(t)}} {\partial s_{[p]}^{(k)}} \times s_{[p]}^{(k-1)} 
+&= \frac {\partial J^{(t)}} {\partial s_{[p]}^{(k)}} \times s_{[p]}^{(k-1)} \tag{xx1} 
 \end{align}
 $$
+
+Substitute $$Eq. xx1$$ and $$Eq. xx2$$ in $$Eq. xx$$ to get:
+
+$$
+\begin{align}
+\frac {\partial J^{(t)}} {\partial W_{f[i,j]}^{(k)}} &= \frac {\partial J^{(t)}} {\partial s_{[i]}^{(k)}} \times \sigma'(z_{f[i]}^{(k)}) \times s_{[i]}^{(k-1)} \times h_{[j]}^{(k-1)}
+\end{align}
+$$
+
+This can be expressed in matrix notation as follows:
+
+$$ \bbox[yellow,5px,border:2px solid red]
+{
+\frac {\partial J^{(t)}} {\partial W_{f}^{(k)}} &= \left( \frac {\partial J^{(t)}} {\partial s^{(k)}} \circ \sigma'(z_{f}^{(k)}) \circ s^{(k-1)} \right) \times (h_{[j]}^{(k-1)})^{Tr}
+\qquad (yy)
+}
+$$
+
 
 
