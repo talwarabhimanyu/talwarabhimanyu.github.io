@@ -54,6 +54,6 @@ $$
 \\
 \text{(Output Gate) } q^{(t)} &= \sigma \left( b_{q} + U_{q}x^{(t)} + W_{q}h^{(t-1)} \right)
 \\
-\text{(Input Feature Vector) } e^{(t)} = \sigma \left( b_{e} + U_{e}x^{(t)} + W_{e}h^{(t-1)} \right)
+\text{(Input Feature Vector) } e^{(t)} &= \sigma \left( b_{e} + U_{e}x^{(t)} + W_{e}h^{(t-1)} \right)
 \end{align}
 $$
