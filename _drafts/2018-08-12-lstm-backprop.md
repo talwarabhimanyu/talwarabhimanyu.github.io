@@ -38,7 +38,11 @@ I have tried to use the same alphabets to denote various parameters as used in C
 
 Similar to the case of RNNs, I will break down the computation inside an LSTM into three parts:
 1. **Computation inside LSTM Units:** I will cover this in detail in this post.
-2. **Computatoin at the Affine Layer:** This layer applies an Affine Transformation to the 'hidden-state' $$h^{(t)}$$ at each time-step $$t$$, to produce a vector $$\theta^{(t)}$$ of length $$V$$ (the size of our Vocabulary).
+2. **Computatoin at the Affine Layer:** This layer applies an Affine Transformation to the 'hidden-state' $$h^{(t)}$$ at each time-step $$t$$, to produce a vector $$\theta^{(t)}$$ of length $$V$$ (the size of our Vocabulary). The formula below describes the computation:
+
+$$
+$$
+
 3. **Computation at the Softmax Layer:** At each time-step, the vector $$\theta^{(t)}$$ is used to compute a probability distribution over our Vocabulary of $$V$$ words.
 
 I have discussed the Affine and Softmax computations in my blog post on RNNs. The same discussion holds for LSTMs as well and so I will not be talking about those layers here. 
@@ -51,7 +55,7 @@ The LSTM Unit at time-step $$t$$ takes as inputs:
 
 _Note: The numbers $$D$$ and $$d$$ are hyperparameters._
 
-A feature which distinguishes LSTMs from RNNs is the presence of three 'Gates' - $$g^{(t)}$$ (_input_), $$s^{(t)}$$ (_internal state_) and $$q^{(t)}$$ (_output_). These are simply multiplicative factors (value of each $$\in \space [0,1]$$) which 'control' how much of the input $$x^{(t)}$$ and previous internal state $$s^{(t-1)}$$ can be used by the LSTM Unit at time-step $$t$$ for computation, and also how much of the hidden-state vector $$h^{(t)}$$ will be sent as output from this Unit. How this 'control' is exercised by the Gates will become clear from the following equations:
+A feature which distinguishes LSTMs from RNNs is the presence of three 'Gates' - $$g^{(t)}$$ (_input_), $$f^{(t)}$$ (_forget_) and $$q^{(t)}$$ (_output_). The value of each of these Gates lies in the range $$[0, \space 1]$$. In an LSTM Unit, we multiply these Gate values with the input feature vector ($$e^{(t)}$$), previous internal state ($$s^{(t-1)}$$), and $$tanh$$ of the next internal state ($$tanh(s^{(t)})$$), to determine how much these three items will contribute towards our computation.
 
 Let's first look at how the hidden-state $$h$$ and internal-state $$s$$ are computed at time-step $$t$$:
 
