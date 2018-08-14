@@ -12,14 +12,15 @@ In this blog post:
 ## Introduction
 In my [last post on Sequence Modelling](https://talwarabhimanyu.github.io/blog/2018/07/31/rnn-backprop), I derived the equations required for backpropogation through an RNN, and used those equations to implement [an RNN in Python](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning%20from%20Scratch/RNN%20from%20Scratch/RNN%20from%20Scratch.ipynb) (without using PyTorch or Tensorflow). Through that post I demonstrated two tricks which make backprop through a network with 'tied up weights' easier to comprehend - use of 'dummy variables' and 'accumulation of gradients'. **In this post I intend to look at another neural network architecture known as an LSTM (Long Short-Term Memory), which builds upon RNNs, and overcomes the issue of vanishing gradients faced by RNNs.**
 
-The mathematics used is not dissimilar from what is required for RNNs (although you will see a lot more alphabets and subscripts because there are a lot more parameters than in an RNN). That said, one has to be careful about the flow of 'influence' from various nodes in the network to the network's loss (I will explain this below). This need to be careful arises from the introduction of an 'internal state' variable in LSTMs. This 'internal state' is actually what will help us overcome the issue of vanishing gradients. 
+The mathematics used is not dissimilar from what is required for RNNs (although you will see a lot more alphabets and subscripts because there are a lot more parameters than in an RNN). That said, one has to be careful about the flow of 'influence' from various nodes in the network to the network's loss (I will explain this below). It is easy to miss out on a 'path' in the network through which 'influence' flows (I speak from personal experience!) 
 
-It is due to this complication that I thought LSTMs deserve a new blog post. I will urge you to read my [post on RNNs](https://talwarabhimanyu.github.io/blog/2018/07/31/rnn-backprop) before proceeding because it introduces some key tricks which I will reuse for LSTMs. I will assume that the reader is familiar with LSTMs. Chris Olah's [blog post](http://colah.github.io/posts/2015-08-Understanding-LSTMs/) offers a very intuitive explanation of why LSTMs are structured the way they are.
+I strongly suggest you read my [post on RNNs](https://talwarabhimanyu.github.io/blog/2018/07/31/rnn-backprop) before proceeding because it introduces some key tricks which I will reuse in this post. I will assume that the reader is familiar with LSTMs. Chris Olah's [blog post](http://colah.github.io/posts/2015-08-Understanding-LSTMs/) offers a very intuitive explanation of why LSTMs are structured the way they are.
 
 ## Terminology
-To process a sequence of length $$T$$, an LSTM uses $$T$$ copies of a Basic Unit. Each Unit uses the same set of parameters (weights and biases). E.g. say there is a 'root' version of a weight matrix $$W$$, then each LSTM Unit uses this same version, and any changes to the 'root' are reflected in the weights uses by each Unit. We say the parameters are 'tied together' across Units.
+To process a sequence of length $$T$$, an LSTM uses $$T$$ copies of a Basic Unit (henceforth referred to as just a Unit). Each Unit uses the same set of parameters (weights and biases). One way to understand this is that there is a 'root' version of a weight matrix $$W$$, and each Unit uses this same version. Any changes to the 'root' are reflected in the matrix $$W$$ used by each Unit. We sometimes say that the parameters are 'tied together' across Units.
 
 **Figure: Structure of an LSTM Network (showing a single LSTM Unit)**
+
 Note:
 * Variables in blue color are the parameters of the network. We need to learn these parameters through training on data.
 * Scroll below for equations that govern the computation inside each of the four rectangular boxes in the diagram.
@@ -36,9 +37,11 @@ I have tried to use the same alphabets to denote various parameters as used in C
 * Superscript $$Tr$$, such as in $$W_f^{Tr}$$, implies Transpose of the matrix $$W_f$$.
 
 Similar to the case of RNNs, I will break down the computation inside an LSTM into three parts:
-1. Computation inside the LSTM Units, which is what I will cover in detail in this blog post.
-2. Computatoin at the Affine Layer, which takes the 'hidden-state' $$h^{(t)}$$ at each time-step $$t$$ as input, and applies an Affine transformation to produce a vector $$\theta^{(t)}$$ of length $$V$$ (the size of our Vocabulary). This layer is no different from the one I discussed in my blog post on RNNs and I will not discuss it further in this post.
-3. Computation at the Softmax Layer, where at each time-step, the vetor $$\theta^{(t)}$$ is used to compute a probability distribution over our Vocabulary of $$V$$ words. Again, this is no different from what I discussed for RNNs, and I will not discuss it further in this post.  
+1. **Computation inside LSTM Units:** I will cover this in detail in this post.
+2. **Computatoin at the Affine Layer:** This layer applies an Affine Transformation to the 'hidden-state' $$h^{(t)}$$ at each time-step $$t$$, to produce a vector $$\theta^{(t)}$$ of length $$V$$ (the size of our Vocabulary).
+3. **Computation at the Softmax Layer:** At each time-step, the vector $$\theta^{(t)}$$ is used to compute a probability distribution over our Vocabulary of $$V$$ words.
+
+I have discussed the Affine and Softmax computations in my blog post on RNNs. The same discussion holds for LSTMs as well and so I will not be talking about those layers here. 
 
 ### LSTM Unit Computation
 The LSTM Unit at time-step $$t$$ takes as inputs:
