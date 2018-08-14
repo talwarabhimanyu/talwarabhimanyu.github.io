@@ -6,8 +6,8 @@ tags: sequence-modeling lstm backprop-maths
 ---
 ## TL;DR
 In this blog post:
-[1] I derive equations for backpropogation through an LSTM.
-[2] I create an LSTM model in Python (without using Pytorch or Tensorflow).
+1. I derive equations for backpropogation through an LSTM.
+2. I create an LSTM model in Python (without using Pytorch or Tensorflow).
 
 ## Introduction
 In my [last post on Sequence Modelling](https://talwarabhimanyu.github.io/blog/2018/07/31/rnn-backprop), I derived the equations required for backpropogation through an RNN, and used those equations to implement [an RNN in Python](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning%20from%20Scratch/RNN%20from%20Scratch/RNN%20from%20Scratch.ipynb) (without using PyTorch or Tensorflow). Through that post I demonstrated two tricks which make backprop through a network with 'tied up weights' easier to comprehend - use of 'dummy variables' and 'accumulation of gradients'. **In this post I intend to look at another neural network architecture known as an LSTM (Long Short-Term Memory), which builds upon RNNs, and manages to avoid the issue of vanishing gradients faced by RNNs.**
@@ -70,3 +70,16 @@ $$
 \text{(Input Feature Vector) } e^{(t)} &= \sigma \left( b_{e} + U_{e}x^{(t)} + W_{e}h^{(t-1)} \right)
 \end{align}
 $$
+
+The $$tanh$$ function, also known as the Hyperbolic Tangent, is defined as follows:
+
+$$
+tanh(x) = \frac {1 \space - \space e^{-2x}} {1 \space + \space e^{-2x}}
+$$
+
+Its derivative with respect to $$x$$ at a point, can be computed in terms of the value of $$tanh$$ at that point:
+
+$$
+tanh'(x) = (1 \space - \space tanh^{2}(x))
+$$
+
