@@ -37,11 +37,11 @@ A distinguishing feature of an LSTM vs. an RNN is the presence of three 'Gates' 
 Let's first look at how the hidden-state $$h$$ and internal-state $$s$$ are computed at time-step $$t$$:
 
 $$
-\underbrace{h^{(t)}}_{\text{hidden state}} = \underbrace{q^{(t)}}_{\text{output gate}} \circ tanh(\underbrace{s^{(t)}}_{\text{internal state}})
+\underbrace{h^{(t)}}_{\substack{\text{hidden} \\ \text{state}}} = \underbrace{q^{(t)}}_{\substack{\text{output} \\ \text{gate}}} \circ tanh(\underbrace{s^{(t)}}_{\substack{\text{internal} \\ \text{state}}})
 $$
 
 $$
-s^{(t)} = \underbrace{f^{(t)}}_{\text{forget gate}} \circ s^{(t-1)} + \underbrace{g^{(t)}}_{\text{input gate}} \circ \underbrace{e^{(t)}}_{\substack{\text{input feature} \\ \text{vector}}}
+s^{(t)} = \underbrace{f^{(t)}}_{\substack{\text{forget} \\ \text{gate}}} \circ s^{(t-1)} + \underbrace{g^{(t)}}_{\substack{\text{input} \\ \text{gate}}} \circ \underbrace{e^{(t)}}_{\substack{\text{input} \\ \text{feature} \\ \text{vector}}}
 $$
 
 Now let's look at how the input feature vector $$e^{(t)}$$ and the three gates are computed:
