@@ -41,11 +41,11 @@ $$
 $$
 
 $$
-s^{(t)} = \underbrace{f^{(t)}}_{\text{forget gate}} \circ s^{(t-1)} + \underbrace{g^{(t)}}_{\text{input gate}} \circ \underbrace{e^{(t)}}_{\text{input feature \n vector}}
+s^{(t)} = \underbrace{f^{(t)}}_{\text{forget gate}} \circ s^{(t-1)} + \underbrace{g^{(t)}}_{\text{input gate}} \circ \underbrace{e^{(t)}}_{\substack{\text{input feature} \\ \text{vector}}}
 $$
 
 Now let's look at how the input feature vector $$e^{(t)}$$ and the three gates are computed:
 
 $$
-f^{(t)} = \sigma \left( b_{f} + U_{f}x^{(t)} + W_{f}h^{(t-1)} \right)
+\text{(Forget Gate) \space} f^{(t)} = \sigma \left( b_{f} + U_{f}x^{(t)} + W_{f}h^{(t-1)} \right)
 $$
