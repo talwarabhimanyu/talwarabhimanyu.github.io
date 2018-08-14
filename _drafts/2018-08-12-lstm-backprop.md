@@ -7,7 +7,7 @@ tags: sequence-modeling lstm backprop-maths
 ## TL;DR
 In this blog post:
 1. I derive equations for backpropogation-through-time for an LSTM.
-2. I illustrate how NOT considering all paths of flow of influence in an LSTM, can botch up our chain-rule application. 
+2. I illustrate how NOT considering all paths of influence flow in an LSTM, can botch up our chain-rule application. 
 3. I create an LSTM model in Python (without using Pytorch or Tensorflow).
 
 ## Introduction
@@ -68,14 +68,14 @@ $$
 **GOAL:** We want to find the gradient of $$J$$ with respect to each and every element of parameter matrices and vectors. For the sake of length of this post, I will only demonstrate all the maths required to calculate gradients w.r.t $$W_f$$, but I believe that after reading this, you will be able to apply the same concepts for other parameters. You can always refer to my [Jupyter Notebook](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning%20from%20Scratch/LSTM%20from%20Scratch/LSTM%20from%20Scratch.ipynb) to understand how rest of the gradients should be calculated.
 
 ### LSTM Unit Computation
-The LSTM Unit at time-step $$t$$ takes as inputs:
-* $$x^{(t)}$$, a vector of dimensions $$d \times 1$$, which represents the $$t^{th}$$ 'word' in a sequence of length $$T$$, and
-* $$h^{(t-1)}$$, a vector of dimensions $$D \times 1$$, which is the output of the previous LSTM Unit, and is referred to as a 'hidden-state' vector.
-* $$s^{(t-1)}$$, a vector of dimensions $$D \times 1$$, which is the output of the previous LSTM Unit, and is referred to as an 'internal-state' vector.
+The LSTM Unit at time-step $$k$$ takes as inputs:
+* $$x^{(k)}$$, a vector of dimensions $$d \times 1$$, which represents the $$t^{th}$$ 'word' in a sequence of length $$T$$, and
+* $$h^{(k-1)}$$, a vector of dimensions $$D \times 1$$, which is the output of the previous LSTM Unit, and is referred to as a 'hidden-state' vector.
+* $$s^{(k-1)}$$, a vector of dimensions $$D \times 1$$, which is the output of the previous LSTM Unit, and is referred to as an 'internal-state' vector.
 
 _Note: The numbers $$D$$ and $$d$$ are hyperparameters._
 
-**A feature which distinguishes LSTMs from RNNs is the presence of three 'Gates' - $$g^{(t)}$$ (_input_), $$f^{(t)}$$ (_forget_) and $$q^{(t)}$$ (_output_).** The value of each of these Gates lies in the range $$[0, \space 1]$$, and it determines how much the input $$x^{(t)}}$$, the previous internal-state $$s^{(t-1)}$$ and the next internal-state $$s^{(t)}$$ will contribute towards our computation. **These Gates act like knobs, where 0 implies no contribution from the variable controlled by a knob, and 1 implies full contribution.** The equations below will make this clearer.
+**A feature which distinguishes LSTMs from RNNs is the presence of three 'Gates' - $$g^{(k)}$$ (_input_), $$f^{(k)}$$ (_forget_) and $$q^{(k)}$$ (_output_).** The value of each of these Gates lies in the range $$[0, \space 1]$$, and it determines how much the input $$x^{(k)}$$, the previous internal-state $$s^{(k-1)}$$ and the next internal-state $$s^{(k)}$$ will contribute towards our computation. **These Gates act like knobs, where 0 implies no contribution from the variable controlled by a knob, and 1 implies full contribution.** The equations below will make this clearer.
 
 Let's look at how the hidden-state $$h$$ and internal-state $$s$$ are computed at time-step $$t$$:
 
@@ -91,13 +91,13 @@ Now let's look at how the input feature vector $$e^{(t)}$$ and the three gates a
 
 $$
 \begin{align}
-\text{(Forget Gate) } f^{(t)} &= \sigma \left( b_{f} + U_{f}x^{(t)} + W_{f}h^{(t-1)} \right) \tag{2.1}
+\text{(Forget Gate) } f^{(t)} &= \sigma \left( \underbrace{b_{f} + U_{f}x^{(t)} + W_{f}h^{(t-1)}}_{z_f} \right) \tag{2.1}
 \\
-\text{(Input Gate) } g^{(t)} &= \sigma \left( b_{g} + U_{g}x^{(t)} + W_{g}h^{(t-1)} \right) \tag{2.2}
+\text{(Input Gate) } g^{(t)} &= \sigma \left( \underbrace{b_{g} + U_{g}x^{(t)} + W_{g}h^{(t-1)}}_{z_g} \right) \tag{2.2}
 \\
-\text{(Output Gate) } q^{(t)} &= \sigma \left( b_{q} + U_{q}x^{(t)} + W_{q}h^{(t-1)} \right) \tag{2.3}
+\text{(Output Gate) } q^{(t)} &= \sigma \left( \underbrace{b_{q} + U_{q}x^{(t)} + W_{q}h^{(t-1)}}_{z_q} \right) \tag{2.3}
 \\
-\text{(Input Feature Vector) } e^{(t)} &= \sigma \left( b_{e} + U_{e}x^{(t)} + W_{e}h^{(t-1)} \right) \tag{2.4}
+\text{(Input Feature Vector) } e^{(t)} &= \sigma \left( \underbrace{b_{e} + U_{e}x^{(t)} + W_{e}h^{(t-1)}}_{z_e} \right) \tag{2.4}
 \end{align}
 $$
 
@@ -144,4 +144,14 @@ $$
 $$
 
 The second quantity in this expression is straighforward to compute using $$Eq. 2.1$$:
+
+$$
+\begin{align}
+\frac {\partial f_{[p]}^{(k)}} {\partial W_{f[i,j]}^{(k)}} &=
+\begin{cases}
+0, & \text{p $\ne$ i} \\[2ex]
+\sigma'(z_{f[i]}^{(k)}) h_{[j]}^{(k-1)}, & \text{p = i} \tag{xx2}
+\end{cases}
+\end{align}
+$$
 
