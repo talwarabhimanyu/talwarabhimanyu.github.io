@@ -190,7 +190,7 @@ Notice how similar $$Eq. yy$$ is to $$Eq. 5.2$$ from my blog post on RNNs (I rep
 
 $$ \bbox[yellow,5px,border:2px solid red]
 {
-\text{(RNN Eq. 5.2) } \frac {\partial J^{(t)}} {\partial W_{h}^{(k)}} = (\gamma_{t}^{(k)} \circ  \underbrace{\sigma' (z^{(k)})}_{\text{Local}}) \times (\underbrace{h^{(k-1)}}_{\text{Local}})^{Tr}
+\text{(RNN Eq. 5.2) } \frac {\partial J^{(t)}} {\partial W_{h}^{(k)}} = (\gamma_{t}^{(k)} \circ  \underbrace{\sigma' (z^{(k)})}_{\text{Local}}) (\underbrace{h^{(k-1)}}_{\text{Local}})^{Tr}
 }
 $$
 
@@ -203,5 +203,29 @@ In the case of RNNs, once we know the value of $$\gamma_{t}^{(k)}$$, to calculat
 
 This works slightly differently in the case of LSTMs. In the diagram below, the influence of $$s^{(k-1)}$$ on loss $$J^{(k)}$$, flows via $$s^{(k)}$$, through edge 1 and through edges 2 & 3. But observe that influence of $$s^{(k-1)}$$ can also flow through a path comprising edges 2 & 4, and that this path bypasses $$s^{(k)}$$ altogether! This suggests that our invariant for LSTMs has to include something in addition to $$\delta_{t}^{(k)}$$. One candidate for that something is $$\gamma_{t}^{(k-1)}$$. 
 
+Figure: Comparison of Paths of Influence in RNNs and LSTMs
 
 ![RNN vs LSTM](/images/RNN vs LSTM.png)
+
+This insight enables us to fram Clame 2, which is slightly different from what I had claimed for RNNs in my previous blog post.
+
+**Claim 2: At time-step $$k$$, given $$\gamma_{t}^{(k-1)}$$ and $$\delta_{t}^{(k)}$$, we can compute $$\delta_{t}^{(k-1)}$$ using only locally available information (i.e. information which was cached during the forward-pass through time-step $$k$$).**
+
+**Proof:** We want to capture all paths of influence between $$s^{(k-1)}$$ and $$J^{(t)}$$. But we also do not want to _double-count_ any flow of influence! We are looking to combine the flow of influence of $$s^{(k-1)}$$ via two paths - one passing through $$s^{(k)}$$ and one through $$h^{(k-1)}$$. How do we combine these influences? Can we simply add them?
+
+
+The answer is No. And that's because there is some flow between these two paths via edge 3 in the diagram above. A way out of this to reuse our concept of 'dummy variables'. We pretend that there are two versions of $$s^{(k-1)}$$:
+* $$s_{a}^{(k-1)}$$, whose influence flows only via edge 1.
+* $$s_{b}^{(k-1)}$$, whose influence flows only via edges 2 and 3.
+
+The figure below shows how paths of influence look like after applying 'dummy variables'.
+
+Figure: Isolating paths of influence via Dummy Variables
+![Dummy Variables](/images/Dummy Variables.png)
+
+We can now say:
+
+$$
+\frac {\partial J^{(t)}} {\partial s^{(k-1)}} = \underbrace{\frac {\partial J^{(t)}} {\partial s_{a}^{(k-1)}}}_{\text{Eq. zz1}} + \underbrace{\frac {\partial J^{(t)}} {\partial s_{b}^{(k-1)}}}_{\text{Eq. zz2}} \tag{Eq. zz}
+$$
+
