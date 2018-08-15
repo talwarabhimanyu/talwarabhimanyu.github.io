@@ -231,7 +231,13 @@ $$
 
 $$
 \begin{align}
-\frac {\partial J^{(t)}} {\partial s_{a[i]}^{(k-1)}} &= \sum_{p=1}^{D} \frac {\partial J^{(t)}} {\partial s_{[p]}^{(k)}} \times \frac {\partial s_{[p]}^{(k)}} {\partial s_{a[i]}^{(k-1)}}  
+\frac {\partial J^{(t)}} {\partial s_{a[i]}^{(k-1)}} &= \sum_{p=1}^{D} \frac {\partial J^{(t)}} {\partial s_{[p]}^{(k)}} \times \frac {\partial s_{[p]}^{(k)}} {\partial s_{a[i]}^{(k-1)}} \\[2ex]
+&= \delta_{t[i]}^{(k)} f^{(k)}_{[i]} \tag{zz1}
 \end{align}
 $$
 
+$$
+\begin{align}
+\frac {\partial J^{(t)}} {\partial s_{b[i]}^{(k-1)}} &= \sum_{p=1}^{D} \frac {\partial J^{(t)}} {\partial h_{[p]}^{(k-1)}} \times \frac {\partial h_{[p]}^{(k-1)}} {\partial s_{b[i]}^{(k-1)}} \tag{zz2} \\[2ex]
+\end{align}
+$$
