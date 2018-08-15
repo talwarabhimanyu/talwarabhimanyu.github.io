@@ -184,30 +184,32 @@ $$ \bbox[yellow,9px,border:2px solid red]
 }
 $$
 
-This expression proves Claim 1 - three of the quantities required for computing this expression are available 'locally' from the cache stored during forward pass through time-step $$k$$. The only unknown now is $$\delta_{t}^{(k)}$$. Also, in order to compute gradient of the overall loss $$J$$ w.r.t $$W_f^{(k)}$$, we need the values of $$\delta_{t}^{(k)}$$ for all values of $$t \in [k, k+1, \cdots, T-1, T]$$.
+The quantities marked as 'Local' in the expression are available from the cache which was stored during the forward pass through time-step $$k$$. The only unknown now is $$\delta_{t}^{(k)}$$. Separately, in order to compute gradient of the overall loss $$J$$ w.r.t $$W_f^{(k)}$$, we will need the values of $$\delta_{t}^{(k)}$$ for all values of $$t \in [k, k+1, \cdots, T-1, T]$$.
 
-Notice how similar $$Eq. yy$$ is to $$Eq. 5.2$$ from my blog post on RNNs (I reproduce that equation below), with the quantity $$\delta_{t}^{(k)}$$ seemingly assuming the role which $$\gamma_{t}^{(k)}$$ played for RNNs.
+Notice the similarity between $$Eq. yy$$ and $$Eq. 5.2$$ from my blog post on RNNs (I reproduce that equation below). The quantity $$\delta_{t}^{(k)}$$ seems to have assumed the role which $$\gamma_{t}^{(k)}$$ played for RNNs.
 
 $$ \bbox[yellow,5px,border:2px solid red]
 {
-\text{(RNN Eq. 5.2) } \frac {\partial J^{(t)}} {\partial W_{h}^{(k)}} = (\gamma_{t}^{(k)} \circ  \underbrace{\sigma' (z^{(k)})}_{\text{Local}}) (\underbrace{h^{(k-1)}}_{\text{Local}})^{Tr}
+\text{(RNN Eq. 5.2) } \frac {\partial J^{(t)}} {\partial W_{h}^{(k)}} = \left( \gamma_{t}^{(k)} \circ  \underbrace{\sigma' (z^{(k)})}_{\text{Local}} \right) (\underbrace{h^{(k-1)}}_{\text{Local}})^{Tr}
 }
 $$
 
 So far we haven't done anything too different from what we did for RNNs. Let us encounter a key point of difference now.
 
-**In the case of RNNs, we had found an invariant - given the value of $$\gamma_{t}^{(k)}$$ (which equals $$\frac {\partial J^{(t)}} {\partial h^{(k)}}$$) at time-step $$k$$, we could use it to compute $$\gamma_{t}^{(k-1)}$$, and pass it on to time-step $$k-1$$. We then applied $$RNN Eq. 5.2$$ on these received values of $$\gamma_{t}^{(k)}$$s to compute gradients. Does a similar invariant exist for $$\delta_{t}^{(k)}$$ in the case of LSTMs?** Yes, let's find out what it is. 
+**Invariant for $$\gamma_{t}^{(k)}$$ in RNNs:** During backpropogation, given the value of $$\gamma_{t}^{(k)}$$ (i.e. $$\frac {\partial J^{(t)}} {\partial h^{(k)}}$$) at time-step $$k$$, we could use it to compute $$\gamma_{t}^{(k-1)}$$, and pass it on to time-step $$k-1$$. We could then apply $$RNN Eq. 5.2$$ on $$\gamma_{t}^{(k)}$$s to compute gradients. 
 
-### _All_ Paths of Influence are Important
+**Does a similar invariant exist for $$\delta_{t}^{(k)}$$ in the case of LSTMs?** Yes it does. Let's see how that invariant is different from that in the case of RNNs.
+
+### All Paths of Influence are Important
 In the case of RNNs, once we know the value of $$\gamma_{t}^{(k)}$$, to calculate $$\gamma_{t}^{(k-1)}$$ we only need to worry about the path between $$h^{(k-1)}$$ and $$h^{(k)}$$. That's because any impact which $$h^{(k-1)}$$ can have on the loss $$J^{(t)}$$, will always happen through a path on which $$h^{(k)}$$ lies. Say all routes between two cities A and C, must pass through city B. You want to compute the distance between A and C. Now if I tell you that the distance between B and C is 10 miles, all you need to figure out is the distance between A and B.
 
 This works slightly differently in the case of LSTMs. In the diagram below, the influence of $$s^{(k-1)}$$ on loss $$J^{(k)}$$, flows via $$s^{(k)}$$, through edge 1 and through edges 2 & 3. But observe that influence of $$s^{(k-1)}$$ can also flow through a path comprising edges 2 & 4, and that this path bypasses $$s^{(k)}$$ altogether! This suggests that our invariant for LSTMs has to include something in addition to $$\delta_{t}^{(k)}$$. One candidate for that something is $$\gamma_{t}^{(k-1)}$$. 
 
-Figure: Comparison of Paths of Influence in RNNs and LSTMs
+**Figure: Comparison of Paths of Influence in RNNs and LSTMs**
 
 ![RNN vs LSTM](/images/RNN vs LSTM.png)
 
-This insight enables us to fram Clame 2, which is slightly different from what I had claimed for RNNs in my previous blog post.
+This insight enables us to frame Claim 2, which is slightly different from what I had claimed for RNNs in my previous blog post.
 
 **Claim 2: At time-step $$k$$, given $$\gamma_{t}^{(k-1)}$$ and $$\delta_{t}^{(k)}$$, we can compute $$\delta_{t}^{(k-1)}$$ using only locally available information (i.e. information which was cached during the forward-pass through time-step $$k$$).**
 
