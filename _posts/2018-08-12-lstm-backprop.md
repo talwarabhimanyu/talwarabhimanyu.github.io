@@ -7,13 +7,15 @@ tags: sequence-modeling lstm backprop-maths
 ## TL;DR
 In this blog post:
 1. I derive equations for backpropogation-through-time for an LSTM.
-2. I illustrate how NOT considering all paths of influence flow in an LSTM, can botch up our chain-rule application. 
-3. I create an LSTM model in Python (without using Pytorch or Tensorflow).
+2. I illustrate how to apply chain-rule for an LSTM, taking into account multiple paths of influence flow, and connections between those paths. 
+3. I create an LSTM model in Python (without using Pytorch or Tensorflow): [click here](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning%20from%20Scratch/LSTM%20from%20Scratch/LSTM%20from%20Scratch.ipynb) to view the Notebook.
 
 ## Introduction
-In my [last post on Sequence Modelling](https://talwarabhimanyu.github.io/blog/2018/07/31/rnn-backprop), I derived the equations required for backpropogation through an RNN, and used those equations to implement [an RNN in Python](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning%20from%20Scratch/RNN%20from%20Scratch/RNN%20from%20Scratch.ipynb) (without using PyTorch or Tensorflow). Through that post I demonstrated two tricks which make backprop through a network with 'tied up weights' easier to comprehend - use of 'dummy variables' and 'accumulation of gradients'. **In this post I intend to look at another neural network architecture known as an LSTM (Long Short-Term Memory), which builds upon RNNs, and overcomes the issue of vanishing gradients faced by RNNs.**
+In my [last post on Recurrent Neural Networks (RNNs)](https://talwarabhimanyu.github.io/blog/2018/07/31/rnn-backprop), I derived equations for backpropogation-through-time (BPTT), and used those equations to implement [an RNN in Python](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning%20from%20Scratch/RNN%20from%20Scratch/RNN%20from%20Scratch.ipynb) (without using PyTorch or Tensorflow). Through that post I demonstrated two tricks which make backprop through a network with 'tied up weights' easier to comprehend - use of 'dummy variables' and 'accumulation of gradients'. **In this post I intend to look at another neural network architecture known as an LSTM (Long Short-Term Memory), which builds upon RNNs, and overcomes the issue of vanishing gradients faced by RNNs.**
 
-The mathematics used is not dissimilar from what is required for RNNs (although you will see a lot more alphabets and subscripts because there are a lot more parameters than in an RNN). That said, one has to be careful about the flow of 'influence' from various nodes in the network to the network's loss (I will explain this below). It is easy to miss out on a 'path' in the network through which 'influence' flows (I speak from personal experience!) 
+The mathematics used is not dissimilar from what is required for RNNs (although you will see a lot more alphabets and subscripts because there are a lot more parameters than in an RNN). That said, one has to be careful about the 'flow of influence' from various nodes in the network to the network's loss. 
+
+Let me clarify what I mean by 'flow of influence'. Viewing a Neural Network as a Directed Acyclic Graph, if there exists a path from Node A to Node B, then a change in value of A will likely have an impact on B's value. In other words, 'influence can flow' from A to B along the path between them. While applying chain-rule, one should be careful enough to: (1) not exclude any paths of 'influence flow' from computation, and (2) not double-count the 'influence flow' between two nodes. 
 
 **I strongly suggest you read my [post on RNNs](https://talwarabhimanyu.github.io/blog/2018/07/31/rnn-backprop) before proceeding because it introduces some key tricks which I will reuse in this post. Also, I will frequently draw parallels (and highlight differences) between the results I proved for RNNs and the ones I prove here.** I will assume that the reader is familiar with LSTMs. Chris Olah's [blog post](http://colah.github.io/posts/2015-08-Understanding-LSTMs/) offers a very intuitive explanation of why LSTMs are structured the way they are.
 
@@ -75,9 +77,9 @@ The LSTM Unit at time-step $$k$$ takes as inputs:
 
 _Note: The numbers $$D$$ and $$d$$ are hyperparameters._
 
-**A feature which distinguishes LSTMs from RNNs is the presence of three 'Gates' - $$g^{(k)}$$ (_input_), $$f^{(k)}$$ (_forget_) and $$q^{(k)}$$ (_output_).** The value of each of these Gates lies in the range $$[0, \space 1]$$, and it determines how much the input $$x^{(k)}$$, the previous internal-state $$s^{(k-1)}$$ and the next internal-state $$s^{(k)}$$ will contribute towards our computation. **These Gates act like knobs, where 0 implies no contribution from the variable controlled by a knob, and 1 implies full contribution.** The equations below will make this clearer.
+**LSTM Gates:** A distinguishing feature of LSTMs (relative to RNNs) is the presence of three 'Gates' in each LSTM Unit. These Gates dampen the values of certain signals coming into the Unit as well as the Unit's output, through multiplication by some factor which lies between $$[0, \space 1]$$. There are three Gates: (1) INPUT, denoted by $$g^{(k)}$$, which dampens $$x^{(k)}$$, (2) FORGET ($$f^{(k)}$$), which dampens $$s^{(k-1)}$$, and (3) OUTPUT ($$q^{(k)}$$), which dampens $$h^{(k)}$$. Equations $$2.1, 2.2, \text{ & } 2.4$$ below specify the exact maths behind these Gates.
 
-Let's look at how the hidden-state $$h$$ and internal-state $$s$$ are computed at time-step $$t$$:
+Let's start by looking at how the hidden-state $$h$$ and internal-state $$s$$ are computed at time-step $$t$$:
 
 $$
 \underbrace{h^{(t)}}_{\substack{\text{hidden} \\ \text{state}}} = \underbrace{q^{(t)}}_{\substack{\text{output} \\ \text{gate}}} \circ tanh(\underbrace{s^{(t)}}_{\substack{\text{internal} \\ \text{state}}}) \tag{1.1}
