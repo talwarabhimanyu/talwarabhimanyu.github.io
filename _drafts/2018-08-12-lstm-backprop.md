@@ -135,7 +135,9 @@ Observe that our parameter of interest, $$W_f$$ appears only in one of the equat
 
 **We are basically tracing paths through which 'influence' could flow from our variable of interest to the value of loss for our LSTM! In this case, we've discovered that there is a path from $$W_f^{(k)}$$ to the loss quantity $$J^{(t)}$$, via $$f^{(k)}$$. Moreover, we have observed that there is NO PATH between $$W_f^{(k)}$$ and $$J^{(t)}$$ which avoids $$f^{(k)}$$.** Therefore, if we know the gradient of loss w.r.t. $$f^{(k)}$$, we can just restrict our task to understanding how 'influence' flows from $$W_f^{(k)}$$ to $$f^{(k)}$$, and we should be able to compute the gradient of loss w.r.t. $$W_f^{(k)}$$.
 
-Utilizing our knowledge of this one-and-only path (and using chain-rule to 'traverse' this path), we can now say:
+**Claim 1: At any given time-step $$k$$, if we know the value of $$\frac {\partial J^{(t)}} {\partial s^{(k)}}$$ (denoted by $$\delta_t^{(k)}$$ from here on), we can compute gradients w.r.t. the weight matrix $$\underline{for \space the \space k^{th} \space step}$$, i.e. $$\frac {\partial J^{(t)}} {\partial W_{f}^{(k)} }$$.**
+
+**Proof:** Utilizing our knowledge of the paths of influence from $$W_f$$ to $$J^{(t)}$$, and using chain-rule, we have:
 
 $$
 \begin{align}
