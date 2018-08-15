@@ -248,7 +248,7 @@ And the second path of influence:
 
 $$
 \begin{align}
-\frac {\partial J^{(t)}} {\partial s_{b[i]}^{(k-1)}} &= \sum_{p=1}^{D} \frac {\partial J^{(t)}} {\partial h_{[p]}^{(k-1)}} \times \frac {\partial h_{[p]}^{(k-1)}} {\partial s_{b[i]}^{(k-1)}} \tag{zz2} \\[2ex]
+\frac {\partial J^{(t)}} {\partial s_{b[i]}^{(k-1)}} &= \sum_{p=1}^{D} \underbrace{\frac {\partial J^{(t)}} {\partial h_{[p]}^{(k-1)}}}_{\gamma_{[p]t}^{(k)}} \times \underbrace{\frac {\partial h_{[p]}^{(k-1)}} {\partial s_{b[i]}^{(k-1)}}}_{\text{Eq. zz21}} \tag{zz2} \\[2ex]
 \end{align}
 $$
 
@@ -258,7 +258,7 @@ $$
 \frac {\partial h_{[p]}^{(k-1)}} {\partial s_{b[i]}^{(k-1)}} =
 \begin{cases}
 0, & \text{p $\ne$ i} \\[2ex]
-q_{[i]}^{(k-1)} \times tanh'(s_{b[i]}^{(k-1)}), & \text{p = i}
+q_{[i]}^{(k-1)} \times tanh'(s_{b[i]}^{(k-1)}), & \text{p = i} \tag{zz21}
 \end{cases} 
 $$
 
