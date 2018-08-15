@@ -229,3 +229,9 @@ $$
 \frac {\partial J^{(t)}} {\partial s^{(k-1)}} = \underbrace{\frac {\partial J^{(t)}} {\partial s_{a}^{(k-1)}}}_{\text{Eq. zz1}} + \underbrace{\frac {\partial J^{(t)}} {\partial s_{b}^{(k-1)}}}_{\text{Eq. zz2}} \tag{Eq. zz}
 $$
 
+$$
+\begin{align}
+\frac {\partial J^{(t)}} {\partial s_{a[i]}^{(k-1)}} &= \sum_{p=1}^{D} \frac {\partial J^{(t)}} {\partial s_{[p]}^{(k)}} \times \frac {\partial s_{[p]}^{(k)}} {\partial s_{a[i]}^{(k-1)}}  
+\end{align}
+$$
+
