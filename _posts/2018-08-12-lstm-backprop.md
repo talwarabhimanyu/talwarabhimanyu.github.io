@@ -15,7 +15,7 @@ In my [last post on Sequence Modelling](https://talwarabhimanyu.github.io/blog/2
 
 The mathematics used is not dissimilar from what is required for RNNs (although you will see a lot more alphabets and subscripts because there are a lot more parameters than in an RNN). That said, one has to be careful about the flow of 'influence' from various nodes in the network to the network's loss (I will explain this below). It is easy to miss out on a 'path' in the network through which 'influence' flows (I speak from personal experience!) 
 
-I strongly suggest you read my [post on RNNs](https://talwarabhimanyu.github.io/blog/2018/07/31/rnn-backprop) before proceeding because it introduces some key tricks which I will reuse in this post. I will assume that the reader is familiar with LSTMs. Chris Olah's [blog post](http://colah.github.io/posts/2015-08-Understanding-LSTMs/) offers a very intuitive explanation of why LSTMs are structured the way they are.
+**I strongly suggest you read my [post on RNNs](https://talwarabhimanyu.github.io/blog/2018/07/31/rnn-backprop) before proceeding because it introduces some key tricks which I will reuse in this post. Also, I will frequently draw parallels (and highlight differences) between the results I proved for RNNs and the ones I prove here.** I will assume that the reader is familiar with LSTMs. Chris Olah's [blog post](http://colah.github.io/posts/2015-08-Understanding-LSTMs/) offers a very intuitive explanation of why LSTMs are structured the way they are.
 
 ## Terminology
 To process a sequence of length $$T$$, an LSTM uses $$T$$ copies of a Basic Unit (henceforth referred to as just a Unit). Each Unit uses the same set of parameters (weights and biases). One way to understand this is that there is a 'root' version of a weight matrix $$W$$, and each Unit uses this same version. Any changes to the 'root' are reflected in the matrix $$W$$ used by each Unit. We sometimes say that the parameters are 'tied together' across Units.
@@ -177,14 +177,23 @@ $$
 
 This can be expressed in matrix notation as follows:
 
-$$ \bbox[yellow,7px,border:2px solid red]
+$$ \bbox[yellow,9px,border:2px solid red]
 {
 \frac {\partial J^{(t)}} {\partial W_{f}^{(k)}} = \left( \underbrace{\frac {\partial J^{(t)}} {\partial s^{(k)}}}_{\delta_{t}^{k}} \circ \underbrace{\sigma'(z_{f}^{(k)})}_{\text{Local}} \circ \underbrace{s^{(k-1)}}_{\text{Local}} \right) \underbrace{h^{(k-1) \space Tr}}_{\text{Local}}
 \qquad (yy)
 }
 $$
 
-This expression proves Claim 1 - three of the quantities required for computing this expression are available 'locally' from the cache stored during forward pass through time-step $$k$$. The only unknown now is $$\delta_{t}^{(k)}$$.
+This expression proves Claim 1 - three of the quantities required for computing this expression are available 'locally' from the cache stored during forward pass through time-step $$k$$. The only unknown now is $$\delta_{t}^{(k)}$$. Also, in order to compute gradient of the overall loss $$J$$ w.r.t $$W_f^{(k)}$$, we need the values of $$\delta_{t}^{(k)}$$ for all values of $$t \in [k, k+1, \cdots, T-1, T]$$.
 
-Note how similar this expression is to $$Eq. 5.2$$ from my blog post on RNNs. So far we haven't done anything different from what we did for RNNs.
+Notice how similar this expression is to $$Eq. 5.2$$ from my blog post on RNNs, with the quantity $$\delta_{t}^{(k)}$$ seemingly assuming the role which $$\gamma_{t}^{(k)}$$ played for RNNs. I reproduce that equation below for comparison:
 
+$$
+\gamma_{t}^{(k-1)} = (W_{h}^{(k)})^{Tr} (\gamma_{t}^{(k)} \circ \sigma'(z_{}^{(k)})) \tag{RNN-5.2}
+$$
+
+So far we haven't done anything different from what we did for RNNs. Let us encounter a key point of difference now.
+
+**We found an invariant in the case of RNNs - given the value of $$\gamma_{t}^{(k)}$$ at time-step $$k$$, we could use it to compute $$\gamma_{t}^{(k-1)}$$, amd pass it on to time-step $$k-1$$. Using $$Eq. RNN-5.2$$ on these received values of $$\gamma_{t}^{(k)}$$s would allow us to compute the required gradients. Does a similar invariant exist for $$\delta_{t}^{(k)}$$ in the case of LSTMs?** There does, but it requires some more work. 
+
+### _ALL_ Paths of Influence are Important
