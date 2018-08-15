@@ -1,6 +1,6 @@
 ---
 layout: post
-title: (DRAFT) Build an LSTM from scratch in Python (+ backprop derivations!)
+title: Build an LSTM from scratch in Python (+ backprop derivations!)
 date: 2018-08-12
 tags: sequence-modeling lstm backprop-maths
 ---
