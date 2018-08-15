@@ -203,9 +203,11 @@ So far we haven't done anything too different from what we did for RNNs. Let us 
 ### All Paths of Influence are Important
 In the case of RNNs, given $$\gamma_{t}^{(k)}$$, in order to calculate $$\gamma_{t}^{(k-1)}$$, we only need to worry about the path between $$h^{(k-1)}$$ and $$h^{(k)}$$. That's because any flow of influence between $$h^{(k-1)}$$ and $$J^{(t)}$$, must go through $$h^{(k)}$$. Observe in the left column of the diagram below, that any path from $$h^{(k-1}$$ to $$J^{(t)}$$ (where $$t \geqslant k$$) must pass through $$h^{(k)}$$.
 
-The presence of a single node ($$h^{(k)}$$ through which all paths of influence from $$h^{(k-1)}$$ to $$J^{(t)}$$ must pass, is the reason our invariance involves a single quantity, which is $$\gamma_{t}^{(k)}$$. This works slightly differently in the case of LSTMs. 
+The presence of a single node ($$h^{(k)}$$) through which all paths of influence from $$h^{(k-1)}$$ to $$J^{(t)}$$ must pass, is the reason our invariance involves a single quantity, which is $$\gamma_{t}^{(k)}$$. This works slightly differently in the case of LSTMs. 
 
-In the diagram below, the influence of $$s^{(k-1)}$$ on loss $$J^{(k)}$$, flows via $$s^{(k)}$$, through $$Edge 1$$ and through $$Edges 2,3$$. But observe that influence of $$s^{(k-1)}$$ can also flow through a path comprising $$Edges 2,4$$, and that this path bypasses $$s^{(k)}$$ altogether! This suggests that our invariant for LSTMs has to include something in addition to $$\delta_{t}^{(k)}$$. One candidate for that something is $$\gamma_{t}^{(k-1)}$$. 
+In the diagram below, the influence of $$s^{(k-1)}$$ on loss $$J^{(k)}$$, flows via $$s^{(k)}$$, through $$Edge \space 1$$ and through $$Edges \space 2,3$$. But observe that influence of $$s^{(k-1)}$$ can also flow through a path comprising $$Edges \space 2,4$$, and that this path bypasses $$s^{(k)}$$ altogether! 
+
+**In short, we need to consider ALL paths of influence!** Our invariant for LSTMs has to include something in addition to $$\delta_{t}^{(k)}$$. One candidate for that something is $$\gamma_{t}^{(k-1)}$$. 
 
 **Figure: Comparison of Paths of Influence in RNNs and LSTMs**
 
@@ -215,7 +217,7 @@ This insight enables us to frame Claim 2, which is slightly different from what 
 
 **Claim 2: At time-step $$k$$, given $$\gamma_{t}^{(k-1)}$$ and $$\delta_{t}^{(k)}$$, we can compute $$\delta_{t}^{(k-1)}$$ using only locally available information (i.e. information which was cached during the forward-pass through time-step $$k$$).**
 
-**Proof:** We want to capture all paths of influence between $$s^{(k-1)}$$ and $$J^{(t)}$$. But we also do not want to _double-count_ any flow of influence! We are looking to combine the flow of influence of $$s^{(k-1)}$$ via two paths - one passing through $$s^{(k)}$$ and one through $$h^{(k-1)}$$. How do we combine these influences? Can we simply add them?
+**Proof:** We want to capture all paths of influence between $$s^{(k-1)}$$ and $$J^{(t)}$$. But we also do not want to _double-count_ any flow of influence! We are looking to combine the flow of influence of $$s^{(k-1)}$$ via two paths: one through $$s^{(k)}$$ and the other through $$h^{(k-1)}$$. How do we combine these influences? Can we simply add them?
 
 
 The answer is No. And that's because there is some flow between these two paths via edge 3 in the diagram above. A way out of this to reuse our concept of 'dummy variables'. We pretend that there are two versions of $$s^{(k-1)}$$:
@@ -224,14 +226,16 @@ The answer is No. And that's because there is some flow between these two paths 
 
 The figure below shows how paths of influence look like after applying 'dummy variables'.
 
-Figure: Isolating paths of influence via Dummy Variables
+**Figure: Isolating paths of influence via Dummy Variables**
 ![Dummy Variables](/images/Dummy Variables.png)
 
 We can now say:
 
 $$
-\frac {\partial J^{(t)}} {\partial s^{(k-1)}} = \underbrace{\frac {\partial J^{(t)}} {\partial s_{a}^{(k-1)}}}_{\text{Eq. zz1}} + \underbrace{\frac {\partial J^{(t)}} {\partial s_{b}^{(k-1)}}}_{\text{Eq. zz2}} \tag{Eq. zz}
+\frac {\partial J^{(t)}} {\partial s_{[i]}^{(k-1)}} = \underbrace{\frac {\partial J^{(t)}} {\partial s_{a[i]}^{(k-1)}}}_{\text{Eq. zz1}} + \underbrace{\frac {\partial J^{(t)}} {\partial s_{b[i]}^{(k-1)}}}_{\text{Eq. zz2}} \tag{Eq. zz}
 $$
+
+Let us consider the first path of influence:
 
 $$
 \begin{align}
@@ -240,8 +244,32 @@ $$
 \end{align}
 $$
 
+And the second path of influence:
+
 $$
 \begin{align}
 \frac {\partial J^{(t)}} {\partial s_{b[i]}^{(k-1)}} &= \sum_{p=1}^{D} \frac {\partial J^{(t)}} {\partial h_{[p]}^{(k-1)}} \times \frac {\partial h_{[p]}^{(k-1)}} {\partial s_{b[i]}^{(k-1)}} \tag{zz2} \\[2ex]
 \end{align}
+$$
+
+The first quantity on the right hand side is simply the $$p^{th}$$ element of $$\gamma_{t}^{(k-1)}$$. We can use $$Eq. 1.1$$ to calculate the simple derivative required for the second quantity:
+
+$$
+\frac {\partial h_{[p]}^{(k-1)}} {\partial s_{b[i]}^{(k-1)}} =
+\begin{cases}
+0, & \text{p $\ne$ i} \\[2ex]
+q_{[i]}^{(k-1)} \times tanh'(s_{b[i]}^{(k-1)}), & \text{p = i}
+\end{cases} 
+$$
+
+Substituting this result in $$Eq. zz2$$, we get:
+
+$$
+\frac {\partial J^{(t)}} {\partial s_{b[i]}^{(k-1)}} = \gamma_{t[i]^{(k-1)} \times  q_{[i]}^{(k-1)} \times tanh'(s_{b[i]}^{(k-1)}) \tag{zz2}
+$$
+ 
+Substituting $$Eq. zz1$$ and $$Eq. zz2$$ in $$Eq. zz1$$, we finally get:
+
+$$
+\frac {\partial J^{(t)}} {\partial s_{[i]}^{(k-1)}} = \gamma_{t[i]^{(k-1)} \times  q_{[i]}^{(k-1)} \times tanh'(s_{b[i]}^{(k-1)}) +  \delta_{t[i]}^{(k)} f^{(k)}_{[i]}
 $$
