@@ -186,16 +186,18 @@ $$
 
 This expression proves Claim 1 - three of the quantities required for computing this expression are available 'locally' from the cache stored during forward pass through time-step $$k$$. The only unknown now is $$\delta_{t}^{(k)}$$. Also, in order to compute gradient of the overall loss $$J$$ w.r.t $$W_f^{(k)}$$, we need the values of $$\delta_{t}^{(k)}$$ for all values of $$t \in [k, k+1, \cdots, T-1, T]$$.
 
-Notice how similar this expression is to $$Eq. 5.2$$ from my blog post on RNNs, with the quantity $$\delta_{t}^{(k)}$$ seemingly assuming the role which $$\gamma_{t}^{(k)}$$ played for RNNs. I reproduce that equation below for comparison:
+Notice how similar $$Eq. yy$$ is to $$Eq. 5.2$$ from my blog post on RNNs (I reproduce that equation below), with the quantity $$\delta_{t}^{(k)}$$ seemingly assuming the role which $$\gamma_{t}^{(k)}$$ played for RNNs.
 
 $$ \bbox[yellow,5px,border:2px solid red]
 {
-\text{(RNN Eq. 5.2)} \frac {\partial J^{(t)}} {\partial W_{h}^{(k)}} = (\underbrace{\gamma_{t}^{(k)}}_{\text{???}} \circ  \underbrace{\sigma' (z^{(k)})}_{\text{Local}}) \times (\underbrace{h^{(k-1)}}_{\text{Local}})^{Tr}
+\text{(RNN Eq. 5.2)} \frac {\partial J^{(t)}} {\partial W_{h}^{(k)}} = (\gamma_{t}^{(k)} \circ  \underbrace{\sigma' (z^{(k)})}_{\text{Local}}) \times (\underbrace{h^{(k-1)}}_{\text{Local}})^{Tr}
 }
 $$
 
 So far we haven't done anything too different from what we did for RNNs. Let us encounter a key point of difference now.
 
-**In the case of RNNs, we had found an invariant - given the value of $$\gamma_{t}^{(k)}$$ at time-step $$k$$, we could use it to compute $$\gamma_{t}^{(k-1)}$$, amd pass it on to time-step $$k-1$$. Applying $$Eq. RNN-5.2$$ on these received values of $$\gamma_{t}^{(k)}$$s would allow us to compute the required gradients. Does a similar invariant exist for $$\delta_{t}^{(k)}$$ in the case of LSTMs?** There does, but it requires some more work. 
+**In the case of RNNs, we had found an invariant - given the value of $$\gamma_{t}^{(k)}$$ at time-step $$k$$, we could use it to compute $$\gamma_{t}^{(k-1)}$$, amd pass it on to time-step $$k-1$$. We then applied $$RNN Eq. 5.2$$ on these received values of $$\gamma_{t}^{(k)}$$s to compute gradients. Does a similar invariant exist for $$\delta_{t}^{(k)}$$ in the case of LSTMs?** Yes, let's find out what it is. 
 
 ### _ALL_ Paths of Influence are Important
+
+
