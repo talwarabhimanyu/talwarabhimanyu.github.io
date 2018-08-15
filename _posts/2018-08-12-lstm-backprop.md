@@ -175,12 +175,12 @@ $$
 
 This can be expressed in matrix notation as follows:
 
-$$ \bbox[yellow,5px,border:2px solid red]
+$$ \bbox[yellow,7px,border:2px solid red]
 {
-\frac {\partial J^{(t)}} {\partial W_{f}^{(k)}} = \left( \underbrace{\frac {\partial J^{(t)}} {\partial s^{(k)}}}_{\delta_{t}^{k}} \circ \underbrace{\sigma'(z_{f}^{(k)})}_{\text{Local}} \circ \underbrace{s^{(k-1)}}_{\text{Local}} \right) \underbrace{h^{(k-1)}_{\text{Local}} \space Tr}
+\frac {\partial J^{(t)}} {\partial W_{f}^{(k)}} = \left( \underbrace{\frac {\partial J^{(t)}} {\partial s^{(k)}}}_{\delta_{t}^{k}} \circ \underbrace{\sigma'(z_{f}^{(k)})}_{\text{Local}} \circ \underbrace{s^{(k-1)}}_{\text{Local}} \right) \underbrace{h^{(k-1) \space Tr}}_{\text{Local}}
 \qquad (yy)
 }
 $$
 
-We have now kind of answered the first big picture question - from $$Eq. yy$$, we can tell which quantities are required at time-step $$k$$ to compute gradients of loss w.r.t $$W_f^{(k)}$$. All quantities marked as 'Local' in the expression are available from the cache stored for time-step $$k$$ during the forward pass.
+We have now answered the first big picture question - from $$Eq. yy$$, we can tell which quantities are required at time-step $$k$$ to compute gradients of loss w.r.t $$W_f^{(k)}$$. All quantities marked as 'Local' in the expression are available from the cache stored for time-step $$k$$ during the forward pass. Note how similar this expression is to $$Eq. 5.2$$ from my blog post on RNNs.
 
