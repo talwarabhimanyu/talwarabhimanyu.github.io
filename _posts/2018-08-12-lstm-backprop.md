@@ -188,12 +188,14 @@ This expression proves Claim 1 - three of the quantities required for computing 
 
 Notice how similar this expression is to $$Eq. 5.2$$ from my blog post on RNNs, with the quantity $$\delta_{t}^{(k)}$$ seemingly assuming the role which $$\gamma_{t}^{(k)}$$ played for RNNs. I reproduce that equation below for comparison:
 
-$$
-\gamma_{t}^{(k-1)} = (W_{h}^{(k)})^{Tr} (\gamma_{t}^{(k)} \circ \sigma'(z_{}^{(k)})) \tag{RNN-5.2}
+$$ \bbox[yellow,5px,border:2px solid red]
+{
+\text{(RNN Eq. 5.2)} \frac {\partial J^{(t)}} {\partial W_{h}^{(k)}} = (\underbrace{\gamma_{t}^{(k)}}_{\text{???}} \circ  \underbrace{\sigma' (z^{(k)})}_{\text{Local}}) \times (\underbrace{h^{(k-1)}}_{\text{Local}})^{Tr}
+}
 $$
 
-So far we haven't done anything different from what we did for RNNs. Let us encounter a key point of difference now.
+So far we haven't done anything too different from what we did for RNNs. Let us encounter a key point of difference now.
 
-**We found an invariant in the case of RNNs - given the value of $$\gamma_{t}^{(k)}$$ at time-step $$k$$, we could use it to compute $$\gamma_{t}^{(k-1)}$$, amd pass it on to time-step $$k-1$$. Using $$Eq. RNN-5.2$$ on these received values of $$\gamma_{t}^{(k)}$$s would allow us to compute the required gradients. Does a similar invariant exist for $$\delta_{t}^{(k)}$$ in the case of LSTMs?** There does, but it requires some more work. 
+**In the case of RNNs, we had found an invariant - given the value of $$\gamma_{t}^{(k)}$$ at time-step $$k$$, we could use it to compute $$\gamma_{t}^{(k-1)}$$, amd pass it on to time-step $$k-1$$. Applying $$Eq. RNN-5.2$$ on these received values of $$\gamma_{t}^{(k)}$$s would allow us to compute the required gradients. Does a similar invariant exist for $$\delta_{t}^{(k)}$$ in the case of LSTMs?** There does, but it requires some more work. 
 
 ### _ALL_ Paths of Influence are Important
