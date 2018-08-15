@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Build an LSTM from scratch in Python (+ backprop derivations!)
+title: (DRAFT) Build an LSTM from scratch in Python (+ backprop derivations!)
 date: 2018-08-12
 tags: sequence-modeling lstm backprop-maths
 ---
@@ -204,3 +204,4 @@ In the case of RNNs, once we know the value of $$\gamma_{t}^{(k)}$$, to calculat
 This works slightly differently in the case of LSTMs. In the diagram below, the influence of $$s^{(k-1)}$$ on loss $$J^{(k)}$$, flows via $$s^{(k)}$$, through edge 1 and through edges 2 & 3. But observe that influence of $$s^{(k-1)}$$ can also flow through a path comprising edges 2 & 4, and that this path bypasses $$s^{(k)}$$ altogether! This suggests that our invariant for LSTMs has to include something in addition to $$\delta_{t}^{(k)}$$. One candidate for that something is $$\gamma_{t}^{(k-1)}$$. 
 
 
+![RNN vs LSTM](/images/RNN vs LSTM.png)
