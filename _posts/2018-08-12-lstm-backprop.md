@@ -135,9 +135,9 @@ Observe that our parameter of interest, $$W_f$$ appears only in one of the equat
 
 **We are basically tracing paths through which 'influence' could flow from our variable of interest to the value of loss for our LSTM! In this case, we've discovered that there is a path from $$W_f^{(k)}$$ to the loss quantity $$J^{(t)}$$, via $$f^{(k)}$$. Moreover, we have observed that there is NO PATH between $$W_f^{(k)}$$ and $$J^{(t)}$$ which avoids $$f^{(k)}$$.** Therefore, if we know the gradient of loss w.r.t. $$f^{(k)}$$, we can just restrict our task to understanding how 'influence' flows from $$W_f^{(k)}$$ to $$f^{(k)}$$, and we should be able to compute the gradient of loss w.r.t. $$W_f^{(k)}$$.
 
-**Claim 1: At any given time-step $$k$$, if we know the value of $$\frac {\partial J^{(t)}} {\partial s^{(k)}}$$ (denoted by $$\delta_t^{(k)}$$ from here on), we can compute gradients w.r.t. the weight matrix $$\underline{for \space the \space k^{th} \space step}$$, i.e. $$\frac {\partial J^{(t)}} {\partial W_{f}^{(k)} }$$.**
+**Claim 1: At any given time-step $$k$$, if we know the value of $$\frac {\partial J^{(t)}} {\partial s^{(k)}}$$ (denoted by $$\delta_t^{(k)}$$ from here on), we can compute gradients w.r.t. the weight matrix $$W_f$$ $$\underline{for \space the \space k^{th} \space step}$$, i.e. $$\frac {\partial J^{(t)}} {\partial W_{f}^{(k)} }$$.**
 
-**Proof:** Utilizing our knowledge of the paths of influence from $$W_f$$ to $$J^{(t)}$$, and using chain-rule, we have:
+**Proof:** Utilizing our knowledge of the paths of influence from $$W_f^{(k)}$$ to $$J^{(t)}$$, and using chain-rule, we have:
 
 $$
 \begin{align}
@@ -184,5 +184,7 @@ $$ \bbox[yellow,7px,border:2px solid red]
 }
 $$
 
-We have now answered the first big picture question - from $$Eq. yy$$, we can tell which quantities are required at time-step $$k$$ to compute gradients of loss w.r.t $$W_f^{(k)}$$. All quantities marked as 'Local' in the expression are available from the cache stored for time-step $$k$$ during the forward pass. Note how similar this expression is to $$Eq. 5.2$$ from my blog post on RNNs.
+This expression proves Claim 1 - three of the quantities required for computing this expression are available 'locally' from the cache stored during forward pass through time-step $$k$$. The only unknown now is $$\delta_{t}^{(k)}$$.
+
+Note how similar this expression is to $$Eq. 5.2$$ from my blog post on RNNs. So far we haven't done anything different from what we did for RNNs.
 
