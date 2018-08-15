@@ -179,7 +179,7 @@ This can be expressed in matrix notation as follows:
 
 $$ \bbox[yellow,9px,border:2px solid red]
 {
-\frac {\partial J^{(t)}} {\partial W_{f}^{(k)}} = \left( \underbrace{\frac {\partial J^{(t)}} {\partial s^{(k)}}}_{\delta_{t}^{k}} \circ \underbrace{\sigma'(z_{f}^{(k)})}_{\text{Local}} \circ \underbrace{s^{(k-1)}}_{\text{Local}} \right) \underbrace{h^{(k-1) \space Tr}}_{\text{Local}}
+\frac {\partial J^{(t)}} {\partial W_{f}^{(k)}} = \left( \underbrace{\frac {\partial J^{(t)}} {\partial s^{(k)}}}_{\delta_{t}^{k}} \circ \underbrace{\sigma'(z_{f}^{(k)})}_{\text{Local}} \circ \underbrace{s^{(k-1)}}_{\text{Local}} \right) (\underbrace{h^{(k-1)}}_{\text{Local}})^{Tr}
 \qquad (yy)
 }
 $$
@@ -196,14 +196,16 @@ $$
 
 So far we haven't done anything too different from what we did for RNNs. Let us encounter a key point of difference now.
 
-**Invariant for $$\gamma_{t}^{(k)}$$ in RNNs:** During backpropogation, given the value of $$\gamma_{t}^{(k)}$$ (i.e. $$\frac {\partial J^{(t)}} {\partial h^{(k)}}$$) at time-step $$k$$, we could use it to compute $$\gamma_{t}^{(k-1)}$$, and pass it on to time-step $$k-1$$. We could then apply $$RNN Eq. 5.2$$ on $$\gamma_{t}^{(k)}$$s to compute gradients. 
+**Invariant for $$\gamma_{t}^{(k)}$$ in RNNs:** During backpropogation, given the value of $$\gamma_{t}^{(k)}$$ (i.e. $$\frac {\partial J^{(t)}} {\partial h^{(k)}}$$) at time-step $$k$$, we could use it to compute $$\gamma_{t}^{(k-1)}$$ for use at time-step $$k-1$$. Repeated application of this invariant would provide us all the values of $$\gamma$$ required as inputs for $$RNN \space Eq. \space 5.2$$. 
 
-**Does a similar invariant exist for $$\delta_{t}^{(k)}$$ in the case of LSTMs?** Yes it does. Let's see how that invariant is different from that in the case of RNNs.
+**Does a similar invariant exist for $$\delta_{t}^{(k)}$$ in the case of LSTMs? YES!** Let's see how that invariant is different from that in the case of RNNs.
 
 ### All Paths of Influence are Important
-In the case of RNNs, once we know the value of $$\gamma_{t}^{(k)}$$, to calculate $$\gamma_{t}^{(k-1)}$$ we only need to worry about the path between $$h^{(k-1)}$$ and $$h^{(k)}$$. That's because any impact which $$h^{(k-1)}$$ can have on the loss $$J^{(t)}$$, will always happen through a path on which $$h^{(k)}$$ lies. Say all routes between two cities A and C, must pass through city B. You want to compute the distance between A and C. Now if I tell you that the distance between B and C is 10 miles, all you need to figure out is the distance between A and B.
+In the case of RNNs, given $$\gamma_{t}^{(k)}$$, in order to calculate $$\gamma_{t}^{(k-1)}$$, we only need to worry about the path between $$h^{(k-1)}$$ and $$h^{(k)}$$. That's because any flow of influence between $$h^{(k-1)}$$ and $$J^{(t)}$$, must go through $$h^{(k)}$$. Observe in the left column of the diagram below, that any path from $$h^{(k-1}$$ to $$J^{(t)}$$ (where $$t \geqslant k$$) must pass through $$h^{(k)}$$.
 
-This works slightly differently in the case of LSTMs. In the diagram below, the influence of $$s^{(k-1)}$$ on loss $$J^{(k)}$$, flows via $$s^{(k)}$$, through edge 1 and through edges 2 & 3. But observe that influence of $$s^{(k-1)}$$ can also flow through a path comprising edges 2 & 4, and that this path bypasses $$s^{(k)}$$ altogether! This suggests that our invariant for LSTMs has to include something in addition to $$\delta_{t}^{(k)}$$. One candidate for that something is $$\gamma_{t}^{(k-1)}$$. 
+The presence of a single node ($$h^{(k)}$$ through which all paths of influence from $$h^{(k-1)}$$ to $$J^{(t)}$$ must pass, is the reason our invariance involves a single quantity, which is $$\gamma_{t}^{(k)}$$. This works slightly differently in the case of LSTMs. 
+
+In the diagram below, the influence of $$s^{(k-1)}$$ on loss $$J^{(k)}$$, flows via $$s^{(k)}$$, through $$Edge 1$$ and through $$Edges 2,3$$. But observe that influence of $$s^{(k-1)}$$ can also flow through a path comprising $$Edges 2,4$$, and that this path bypasses $$s^{(k)}$$ altogether! This suggests that our invariant for LSTMs has to include something in addition to $$\delta_{t}^{(k)}$$. One candidate for that something is $$\gamma_{t}^{(k-1)}$$. 
 
 **Figure: Comparison of Paths of Influence in RNNs and LSTMs**
 
