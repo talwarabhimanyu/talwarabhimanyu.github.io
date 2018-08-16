@@ -7,7 +7,7 @@ tags: sequence-modeling lstm backprop-maths
 ## TL;DR
 In this blog post:
 1. I derive equations for Backpropogation-Through-Time (BPTT) for an LSTM.
-2. I illustrate application of chain-rule for an LSTM, accounting for (1) all paths of 'influence flow', and (2) avoiding double-counting of paths. 
+2. I illustrate proper application of chain-rule, accounting for (1) all paths of 'influence flow', & (2) avoiding double-counting of paths. 
 3. I create an LSTM model in Python (without using Pytorch or Tensorflow): [click here](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning%20from%20Scratch/LSTM%20from%20Scratch/LSTM%20from%20Scratch.ipynb) to view the Notebook.
 
 ## Introduction
@@ -273,5 +273,16 @@ $$
 Substituting $$Eq. zz1$$ and $$Eq. zz2$$ in $$Eq. zz1$$, we finally get:
 
 $$
-\frac {\partial J^{(t)}} {\partial s_{[i]}^{(k-1)}} = \gamma_{t[i]}^{(k-1)} \times  q_{[i]}^{(k-1)} \times tanh'(s_{b[i]}^{(k-1)}) +  \delta_{t[i]}^{(k)} f^{(k)}_{[i]}
+\frac {\partial J^{(t)}} {\partial s_{[i]}^{(k-1)}} = \gamma_{t[i]}^{(k-1)} \times  q_{[i]}^{(k-1)} \times tanh'(s_{[i]}^{(k-1)}) +  \delta_{t[i]}^{(k)} \times f^{(k)}_{[i]}
 $$
+
+Putting this in matrix form:
+
+$$ \bbox[yellow,5px,border: 2px solid red]
+{
+\frac {\partial J^{(t)}} {\partial s^{(k-1)}} = \gamma_{t}^{(k-1)} \circ  q^{(k-1)} \circ tanh'(s^{(k-1)}) +  \delta_{t}^{(k)} \circ f^{(k)}
+}
+$$
+
+
+
