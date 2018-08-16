@@ -334,12 +334,10 @@ At this point, I recommend you do not read any further unless you've looked at m
 **Let me explain what is happening at time-step $$T-1$$, in this order:**
 
 We receive from time-step $$T$$:
-
 1. $$\gamma_{T}^{(T-1)}$$, which was computed at step $$T$$ using $$Eq. 8.1$$
 2. $$f^{(T)} \circ \delta_{T}^{(T)}$$, which was computed at step $$T$$.
 
 We compute at time-step $$T-1$$:
-
 1. $$\gamma_{T-1}^{(T-1)}$$ and $$\delta_{T-1}^{(T-1)}$$ using the Initial Recursion Conditions.
 2. $$\gamma_{T-1}^{(T-2)}$$ using $$Eq. 8.1$$.
 3. $$\delta_{T}^{(T-1)}$$ using $$Eq. 7.1$$.
@@ -349,6 +347,7 @@ We pass on to time-step $$T-2$$:
 1. Sum of $$\gamma_{T-1}^{(T-2)}$$ and $$\gamma_{T}^{(T-2)}$$. 
 2. Sum of $$\left( f^{(T-1)} \circ \delta_{T-1}^{(T-1)} \right)$$ and $$\left( f^{(T-1)} \circ \delta_{T}^{(T-1)} \right)$$.
 
+Note how we are passing sums of quantities (such as $$\gamma_{T-1}^{(T-2)}$$ and $$\gamma_{T}^{(T-2)}$$) above instead of passing them individually. As I explained in detali in my post on RNN, this works because the equations which we are going to apply on these sums only contain Disitributive Operators (matrix multiplication and element-wise multiplication).
 
 **Table: Accumulation of $$\gamma_{t}^{(k)}$$ and $$\delta_{t}^{(k)}$$ for $$k \in [0,t], \space t \in [0,T]$$**
 
@@ -361,3 +360,7 @@ T-1 & \gamma_{T-1}^{(T-1)}, \delta_{T-1}^{(T-1)} & \gamma_{T}^{(T-1)}, \delta_{T
 \end{array}
 $$
 
+**Observe that in the last column of this Table, at each time-step $$k$$ we are accumulating gradient of $$J^{(t)}$$ w.r.t $$W_{f}^{(k)}$$ for all $$t \in [k,\space k+1, \cdots, T-1, \space T]$$.**
+
+## Conclusion
+The methodology of BPTT for an LSTM is very similar to that for an RNN. Although, I believe the calculation is more prone to mistakes stemming from incorrect application of the chain-rule. I did make those mistakes initially and learnt something from them, and then decided to put what I learnt into this blog post. I hope this helped you and if you spot any errors, please spell them out in the comments below or reach out to me [via LinkedIn](https://www.linkedin.com/in/abhimanyu-talwar-7353519/). 
