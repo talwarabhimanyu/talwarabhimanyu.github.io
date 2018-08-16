@@ -275,3 +275,12 @@ Substituting $$Eq. zz1$$ and $$Eq. zz2$$ in $$Eq. zz1$$, we finally get:
 $$
 \frac {\partial J^{(t)}} {\partial s_{[i]}^{(k-1)}} = \gamma_{t[i]}^{(k-1)} \times  q_{[i]}^{(k-1)} \times tanh'(s_{b[i]}^{(k-1)}) +  \delta_{t[i]}^{(k)} f^{(k)}_{[i]}
 $$
+
+Putting this in matrix form:
+
+$$
+\frac {\partial J^{(t)}} {\partial s_{}^{(k-1)}} = \gamma_{t[i]}^{(k-1)} \times  q_{[i]}^{(k-1)} \times tanh'(s_{b[i]}^{(k-1)}) +  \delta_{t[i]}^{(k)} f^{(k)}_{[i]}
+$$
+
+
+
