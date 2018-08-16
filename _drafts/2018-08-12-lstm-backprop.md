@@ -331,7 +331,8 @@ We now we have pretty much everything we need (in $$Eqs. 6.2, \space 7.1, \space
 
 At this point, I recommend you do not read any further unless you've looked at my [post on RNNs](https://talwarabhimanyu.github.io/blog/2018/07/31/rnn-backprop) where I describe how gradient accumulation works. If you've understood how gradient accumulation worked for RNNs, the following table will begin to make sense.
 
-**Table 1: Accumulation of $$\gamma_{t}^{(k)} \space \forall k,t$$ **
+**Table 1: Accumulation of $$\gamma_{t}^{(k)} \space \forall k \in [0,t], \space t \in [0,T]$$**
+
 Note: Table 1 is simply application of $$Eq. 8.1$$ at each time-step. 
 
 $$
