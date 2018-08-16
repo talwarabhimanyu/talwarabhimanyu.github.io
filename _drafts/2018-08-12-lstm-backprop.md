@@ -7,7 +7,7 @@ tags: sequence-modeling lstm backprop-maths
 ## TL;DR
 In this blog post:
 1. I derive equations for Backpropogation-Through-Time (BPTT) for an LSTM.
-2. I illustrate application of chain-rule for an LSTM, accounting for (1) all paths of 'influence flow', and (2) avoiding double-counting of paths. 
+2. I illustrate proper application of chain-rule, accounting for (1) all paths of 'influence flow', & (2) avoiding double-counting of paths. 
 3. I create an LSTM model in Python (without using Pytorch or Tensorflow): [click here](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning%20from%20Scratch/LSTM%20from%20Scratch/LSTM%20from%20Scratch.ipynb) to view the Notebook.
 
 ## Introduction
