@@ -353,12 +353,11 @@ We pass on to time-step $$T-2$$:
 **Table: Accumulation of $$\gamma_{t}^{(k)}$$ and $$\delta_{t}^{(k)}$$ for $$k \in [0,t], \space t \in [0,T]$$**
 
 $$
-\begin{array}{c|ccc|ccc|ccc}
-\text{Time Step} & \text{Compute} & \text{Current} & \text{Time Step} & \text{To} & \text{Previous} & \text{Time Step} & \text{Gradients} & & \text{Accumulated}\\
+\begin{array}{c|cc|cc|cc}
+\text{Time Step} & \text{At Current} & \text{Time Step} & \text{To Previous} & \text{Time Step} & \text{Gradients} & \text{Accumulated}\\
 \hline
-T & \gamma_T^{(T)}, \delta_T^{(T)} & & & \gamma_T^{(T-1)}, f^{(T)}\delta_T^{(T)} & & & \frac {\partial J^{(T)}} {\partial W_f^{(T)}} & & \\[2ex]
-T-1 & \gamma_{T-1}^{(T-1)}, \delta_{T-1}^{(T-1)} & \gamma_{T}^{(T-1)}, \delta_{T}^{(T-1)} & & \gamma_{T-1}^{(T-2)}, f^{(T-1)} \circ \delta_{T-1}^{(T-1)} & \gamma_{T}^{(T-2)}, f^{(T-1)} \circ \delta_{T}^{(T-1)}  & & \frac {\partial J^{(T-1)}} {\partial W_f^{(T-1)}}  & \frac {\partial J^{(T)}} {\partial W_f^{(T-1)}} & \\[2ex]
-T-2 & \gamma_{T-2}^{(T-2)}, \delta_{T-2}^{(T-2)} & \gamma_{T-1}^{(T-2)}, \delta_{T-1}^{(T-2)}  & \gamma_{T}^{(T-2)}, \delta_{T}^{(T-2)} & \gamma_{T-2}^{(T-3)} & \gamma_{T-1}^{(T-3)} & \gamma_{T}^{(T-3)} & \frac {\partial J^{(T-2)}} {\partial W_f^{(T-2)}} & \frac {\partial J^{(T-1)}} {\partial W_f^{(T-2)}} & \frac {\partial J^{(T)}} {\partial W_f^{(T-2)}} \\
+T & \gamma_T^{(T)}, \delta_T^{(T)} & & \gamma_T^{(T-1)}, \left(f^{(T)} \circ \delta_T^{(T)}\right) & & \frac {\partial J^{(T)}} {\partial W_f^{(T)}} & \\[2ex]
+T-1 & \gamma_{T-1}^{(T-1)}, \delta_{T-1}^{(T-1)} & \gamma_{T}^{(T-1)}, \delta_{T}^{(T-1)} & \gamma_{T-1}^{(T-2)}, \left(f^{(T-1)} \circ \delta_{T-1}^{(T-1)}\right) & \gamma_{T}^{(T-2)}, \left(f^{(T-1)} \circ \delta_{T}^{(T-1)}\right) & \frac {\partial J^{(T-1)}} {\partial W_f^{(T-1)}}  & \frac {\partial J^{(T)}} {\partial W_f^{(T-1)}} \\[2ex]
 \end{array}
 $$
 
