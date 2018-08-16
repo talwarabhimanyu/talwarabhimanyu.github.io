@@ -236,7 +236,7 @@ The figure below shows how paths of influence look like after applying 'dummy va
 We can now say:
 
 $$
-\frac {\partial J^{(t)}} {\partial s_{[i]}^{(k-1)}} = \underbrace{\frac {\partial J^{(t)}} {\partial s_{a[i]}^{(k-1)}}}_{\text{Eq. 7.0.1}} + \underbrace{\frac {\partial J^{(t)}} {\partial s_{b[i]}^{(k-1)}}}_{\text{Eq. 7.0.2}} \tag{Eq. 7.0}
+\frac {\partial J^{(t)}} {\partial s_{[i]}^{(k-1)}} = \underbrace{\frac {\partial J^{(t)}} {\partial s_{a[i]}^{(k-1)}}}_{\text{Eq. 7.0.1}} + \underbrace{\frac {\partial J^{(t)}} {\partial s_{b[i]}^{(k-1)}}}_{\text{Eq. 7.0.2}} \tag{7.0}
 $$
 
 Let us consider the first path of influence:
@@ -244,7 +244,7 @@ Let us consider the first path of influence:
 $$
 \begin{align}
 \frac {\partial J^{(t)}} {\partial s_{a[i]}^{(k-1)}} &= \sum_{p=1}^{D} \frac {\partial J^{(t)}} {\partial s_{[p]}^{(k)}} \times \frac {\partial s_{[p]}^{(k)}} {\partial s_{a[i]}^{(k-1)}} \\[2ex]
-&= \delta_{t[i]}^{(k)} f^{(k)}_{[i]} \tag{zz1}
+&= \delta_{t[i]}^{(k)} f^{(k)}_{[i]} \tag{7.0.1}
 \end{align}
 $$
 
@@ -252,7 +252,7 @@ And the second path of influence:
 
 $$
 \begin{align}
-\frac {\partial J^{(t)}} {\partial s_{b[i]}^{(k-1)}} &= \sum_{p=1}^{D} \underbrace{\frac {\partial J^{(t)}} {\partial h_{[p]}^{(k-1)}}}_{\gamma_{[p]t}^{(k)}} \times \underbrace{\frac {\partial h_{[p]}^{(k-1)}} {\partial s_{b[i]}^{(k-1)}}}_{\text{Eq. zz21}} \tag{zz2} \\[2ex]
+\frac {\partial J^{(t)}} {\partial s_{b[i]}^{(k-1)}} &= \sum_{p=1}^{D} \underbrace{\frac {\partial J^{(t)}} {\partial h_{[p]}^{(k-1)}}}_{\gamma_{[p]t}^{(k)}} \times \underbrace{\frac {\partial h_{[p]}^{(k-1)}} {\partial s_{b[i]}^{(k-1)}}}_{\text{Eq. 7.0.2.1}} \tag{7.0.2} \\[2ex]
 \end{align}
 $$
 
@@ -262,17 +262,17 @@ $$
 \frac {\partial h_{[p]}^{(k-1)}} {\partial s_{b[i]}^{(k-1)}} =
 \begin{cases}
 0, & \text{p $\ne$ i} \\[2ex]
-q_{[i]}^{(k-1)} \times tanh'(s_{b[i]}^{(k-1)}), & \text{p = i} \tag{zz21}
+q_{[i]}^{(k-1)} \times tanh'(s_{b[i]}^{(k-1)}), & \text{p = i} \tag{7.0.2.1}
 \end{cases} 
 $$
 
-Substituting this result in $$Eq. zz2$$, we get:
+Substituting this result in $$Eq. 7.0.2$$, we get:
 
 $$
-\frac {\partial J^{(t)}} {\partial s_{b[i]}^{(k-1)}} = \gamma_{t[i]}^{(k-1)} \times  q_{[i]}^{(k-1)} \times tanh'(s_{b[i]}^{(k-1)}) \tag{zz2}
+\frac {\partial J^{(t)}} {\partial s_{b[i]}^{(k-1)}} = \gamma_{t[i]}^{(k-1)} \times  q_{[i]}^{(k-1)} \times tanh'(s_{b[i]}^{(k-1)})
 $$
  
-Substituting $$Eq. zz1$$ and $$Eq. zz2$$ in $$Eq. zz1$$, we finally get:
+Substituting $$Eq. 7.0.1$$ and $$Eq. 7.0.2$$ in $$Eq. 7.0$$, we finally get:
 
 $$
 \frac {\partial J^{(t)}} {\partial s_{[i]}^{(k-1)}} = \gamma_{t[i]}^{(k-1)} \times  q_{[i]}^{(k-1)} \times tanh'(s_{[i]}^{(k-1)}) +  \delta_{t[i]}^{(k)} \times f^{(k)}_{[i]}
@@ -283,15 +283,15 @@ Expressing this in matrix form:
 $$ \bbox[yellow,5px,border: 2px solid red]
 {
 \underbrace{\frac {\partial J^{(t)}} {\partial s^{(k-1)}}}_{\delta_{t}^{(k-1)}} = \gamma_{t}^{(k-1)} \circ  q^{(k-1)} \circ tanh'(s^{(k-1)}) +  \delta_{t}^{(k)} \circ f^{(k)}
-\qquad (zzz)
+\qquad (7.1)
 }
 $$
 
 Let me take a moment to piece together what we've got so far:
-1. In $$Eq. yy$$, we derived an expression to calculate gradient of loss $$J^{(t)}$$ in terms of locally available variables and one $$\delta_{t}^{(k)}$$.
-2. In $$Eq. zzz$$, we've derived a way to recursively calculated $$\delta_{t}^{(k-1)}$$ using $$\delta_{t}^{(k)}$$ and $$\gamma_{t}^{(k-1)}$$ (which can also be computed in a similar recursive manner - see below). 
+1. In $$Eq. 6.2$$, we derived an expression to calculate gradient of loss $$J^{(t)}$$ in terms of locally available variables and one $$\delta_{t}^{(k)}$$.
+2. In $$Eq. 7.1$$, we've derived a way to recursively calculated $$\delta_{t}^{(k-1)}$$ using $$\delta_{t}^{(k)}$$ and $$\gamma_{t}^{(k-1)}$$ (which can also be computed in a similar recursive manner - see below). 
 
-**Using $$Eq. yy$$ and $$Eq. zzz$$ in conjunction, we should now be able to calculate gradient of $$J^{(t)}$$ w.r.t $$W_{f}^{(k)}$$.** 
+**Using $$Eq. 6.2$$ and $$Eq. 7.1$$ in conjunction, we should now be able to calculate gradient of $$J^{(t)}$$ w.r.t $$W_{f}^{(k)}$$.** 
 
 We can derive a recursive expression for $$\gamma_{t}^{(k)}$$ in a manner similar to our derivation for $$\delta_{t}^{(k)}$$ above. I provide the expression below (if you would like to know about its derivation, let me know via comments below).
 
@@ -303,10 +303,11 @@ $$ \bbox[yellow,5px, border: 2px solid red]
 &+ (W_{g}^{(k)})^{Tr} \left( \delta_{t}^{(k)} \circ e^{(k)} \circ \sigma'(z_{g}^{(k)}) \right) \\[2ex]
 &+ (W_{q}^{(k)})^{Tr} \left( \gamma_{t}^{(k)} \circ tanh(s^{(k)}) \circ \sigma'(z_{q}^{(k)}) \right)
 \end{align}
+\qquad (8.1)
 }
 $$
 
-**Initial Conditions for Recursions:** We have derived recursive expressions for $$\delta_{t}^{(k)}$$ and $$\gamma_{t}^{(k)}$$. Now we need to derive expressions for $$\delta_{t}^{(t)}$$ and $$\gamma_{t}^{(t)}$$ so that we can begin to apply $$Eq. $$ and $$Eq. $$ recursively. These are rather simple to compute.
+**Initial Conditions for Recursions:** We have derived recursive expressions for $$\delta_{t}^{(k)}$$ and $$\gamma_{t}^{(k)}$$. Now we need to derive expressions for $$\delta_{t}^{(t)}$$ and $$\gamma_{t}^{(t)}$$ so that we can begin to apply $$Eq. 7.1$$ and $$Eq. 8.1$$ recursively. These are rather simple to compute.
 
 
 
