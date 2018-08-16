@@ -287,6 +287,19 @@ $$
 
 Let me take a moment to piece together what we've got so far:
 1. In $$Eq. yy$$, we derived an expression to calculate gradient of loss $$J^{(t)}$$ in terms of locally available variables and one $$\delta_{t}^{(k)}.
-2. In $$Eq. zzz$$, we've derived a way to recursively calculated $$\delta_{t}^{(k-1)} using \delta_{t}^{(k)} and \gamma_{t}^{(k-1)} (which can also be computed in a similar recursive manner - I will share an expression for it shortly). 
-**Using $$Eq. yy$$ and $$Eq. zzz$$ in conjunction, we should now be able to calculate gradient of J^{(t)} w.r.t $$W_{f}^{(k)}$$. 
+2. In $$Eq. zzz$$, we've derived a way to recursively calculated $$\delta_{t}^{(k-1)} using \delta_{t}^{(k)} and \gamma_{t}^{(k-1)} (which can also be computed in a similar recursive manner - see below). 
+**Using $$Eq. yy$$ and $$Eq. zzz$$ in conjunction, we should now be able to calculate gradient of J^{(t)} w.r.t $$W_{f}^{(k)}$$.** 
+
+We can derive a recursive expression for $$\gamma_{t}^{(k)}$$ in a manner similar to our derivation for $$\delta_{t}^{(k)}$$ above. I provide the expression below (let me know via comments below, if you would like to know more about deriving this result).
+
+$$ \bbox[yellow,5px, border: 2px solid red]
+{
+\begin{align}
+\frac {\partial J^{(t)}} {\partial h^{(k-1)}} &= (W_{f}^{(k)})^{Tr} \left( \delta_{t}^{(k)} \circ s^{(k-1)} \circ \sigma'(z_{f}^{(k)}) \right) \\[2ex]
+&+ (W_{e}^{(k)})^{Tr} \left( \delta_{t}^{(k)} \circ g^{(k)} \circ \sigma'(z_{e}^{(k)}) \right) \\[2ex]
+&+ (W_{g}^{(k)})^{Tr} \left( \delta_{t}^{(k)} \circ e^{(k)} \circ \sigma'(z_{g}^{(k)}) \right) \\[2ex]
+&+ (W_{q}^{(k)})^{Tr} \left( \gamma_{t}^{(k)} \circ tanh(s^{(k)}) \circ \sigma'(z_{q}^{(k)}) \right)
+\end{align}
+}
+$$
 
