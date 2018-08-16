@@ -175,7 +175,7 @@ Substitute $$Eq. 6.1.1$$ and $$Eq. 6.1.2$$ in $$Eq. 6.1$$ to get:
 
 $$
 \begin{align}
-\frac {\partial J^{(t)}} {\partial W_{f[i,j]}^{(k)}} &= \frac {\partial J^{(t)}} {\partial s_{[i]}^{(k)}} \times \sigma'(z_{f[i]}^{(k)}) \times s_{[i]}^{(k-1)} \times h_{[j]}^{(k-1)}
+\frac {\partial J^{(t)}} {\partial W_{f[i,j]}^{(k)}} &= \underbrace{\frac {\partial J^{(t)}} {\partial s_{[i]}^{(k)}}}_{\delta_{t[i]}^{(k)}} \times \sigma'(z_{f[i]}^{(k)}) \times s_{[i]}^{(k-1)} \times h_{[j]}^{(k-1)}
 \end{align}
 $$
 
@@ -183,7 +183,7 @@ This can be expressed in matrix notation as follows:
 
 $$ \bbox[yellow,9px,border:2px solid red]
 {
-\frac {\partial J^{(t)}} {\partial W_{f}^{(k)}} = \left( \underbrace{\frac {\partial J^{(t)}} {\partial s^{(k)}}}_{\delta_{t}^{k}} \circ \underbrace{\sigma'(z_{f}^{(k)})}_{\text{Local}} \circ \underbrace{s^{(k-1)}}_{\text{Local}} \right) (\underbrace{h^{(k-1)}}_{\text{Local}})^{Tr}
+\frac {\partial J^{(t)}} {\partial W_{f}^{(k)}} = \left( \underbrace{\delta_{t}^{k}}_{???} \circ \underbrace{\sigma'(z_{f}^{(k)})}_{\text{Local}} \circ \underbrace{s^{(k-1)}}_{\text{Local}} \right) (\underbrace{h^{(k-1)}}_{\text{Local}})^{Tr}
 \qquad (6.2)
 }
 $$
