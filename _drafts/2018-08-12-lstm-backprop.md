@@ -316,7 +316,7 @@ Assuming we have calculated $$\gamma_{t}^{(t)}$$, we apply chain-rule to get:
 $$
 \begin{align}
 \underbrace{\frac {\partial J^{(t)}} {\partial s_{[i]}^{(t)}}}_{\delta_{t[i]}^{(t)}} &= \sum_{p=1}^{D} \frac {\partial J^{(t)}} {\partial h_{[p]}^{(t)}} \times \frac {\partial h_{[p]}^{(t)}} {\partial s_{[i]}^{(t)}} \\[2ex]
-&= \gamma_{t[i]}^{(t)} \times \underbrace{q_{[i]}^{(t)} \times tanh'(s_{[i]}^{(t)})}_{\text{Call it c_[i]^{(t)}}} 
+&= \gamma_{t[i]}^{(t)} \times \underbrace{q_{[i]}^{(t)} \times tanh'(s_{[i]}^{(t)})}_{\text{Call it $c_{[i]}^{(t)}$}} 
 \end{align}
 $$
 
@@ -340,7 +340,7 @@ $$
 \text{Time Step} & \text{Compute} & \text{Current} & \text{Time Step} & \text{To} & \text{Previous} & \text{Time Step} & \text{Gradients} & & \text{Accumulated}\\
 \hline
 T & \gamma_T^{(T)}, \delta_T^{(T)} & & & \gamma_T^{(T-1)}, f^{(T)}\delta_T^{(T)} & & & \frac {\partial J^{(T)}} {\partial W_f^{(T)}} & & \\[2ex]
-T-1 & \gamma_{T-1}^{(T-1)} & \gamma_{T}^{(T-1)} & & \gamma_{T-1}^{(T-2)} & \gamma_{T}^{(T-2)} & & \frac {\partial J^{(T-1)}} {\partial W_h^{(T-1)}}  & \frac {\partial J^{(T)}} {\partial W_h^{(T-1)}} & \\[2ex]
+T-1 & \gamma_{T-1}^{(T-1)}, \delta_{T-1}^{(T-1)} & \gamma_{T}^{(T-1)}, \delta_{T}^{(T-1)} & & \gamma_{T-1}^{(T-2)} & \gamma_{T}^{(T-2)} & & \frac {\partial J^{(T-1)}} {\partial W_h^{(T-1)}}  & \frac {\partial J^{(T)}} {\partial W_h^{(T-1)}} & \\[2ex]
 T-2 & \gamma_{T-2}^{(T-2)} & \gamma_{T-1}^{(T-2)} & \gamma_{T}^{(T-2)} & \gamma_{T-2}^{(T-3)} & \gamma_{T-1}^{(T-3)} & \gamma_{T}^{(T-3)} & \frac {\partial J^{(T-2)}} {\partial W_h^{(T-2)}} & \frac {\partial J^{(T-1)}} {\partial W_h^{(T-2)}} & \frac {\partial J^{(T)}} {\partial W_h^{(T-2)}} \\
 \end{array}
 $$
