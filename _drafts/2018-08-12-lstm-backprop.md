@@ -331,11 +331,23 @@ We now we have pretty much everything we need (in $$Eqs. 6.2, \space 7.1, \space
 
 At this point, I recommend you do not read any further unless you've looked at my [post on RNNs](https://talwarabhimanyu.github.io/blog/2018/07/31/rnn-backprop) where I describe how gradient accumulation works. If you've understood how gradient accumulation worked for RNNs, the following table will begin to make sense.
 
-Let me explain what is happening at say time-step $$T-1$$:
-1. We compute $$\gamma_{T-1}^{(T-1)}$$ using the Initial Recursion Conditions.
-2. Note that $$\gamma_{T}^{(T-1)}$$ was computed at step $$T$$ using $$Eq. 8.1$$, and passed on to step $$T-1$$.
-3. The quantity $$f^{(T)} \circ \delta_{T}^{(T)} was also computed at step $$T$$, and passed on to step $$T-1$$.
-4. We compute $$\delta_{T}^{(T-1)}$$ using the quantities computed at step $$T-1$$/received from step $$T$$, via $$Eq. 7.1$$.
+Let me explain what is happening at say time-step $$T-1$$, in this order:
+
+_We receive from time-step $$T$$:_
+
+1. $$\gamma_{T}^{(T-1)}$$, which was computed at step $$T$$ using $$Eq. 8.1$$
+2. $$f^{(T)} \circ \delta_{T}^{(T)}$$, which was computed at step $$T$$.
+
+_We compute at time-step $$T-1$$:_
+1. $$\gamma_{T-1}^{(T-1)}$$ and $$\delta_{T-1}^{(T-1)}$$ using the Initial Recursion Conditions.
+2. $$\gamma_{T-1}^{(T-2)}$$ using $$Eq. 8.1$$.
+3. $$\delta_{T}^{(T-1)}$$ using $$Eq. 7.1$$.
+4. $$\frac {\partial J^{(T-1)}} {\partial W_{f}^{(T-1)}}$$ and $$\frac {\partial J^{(T-1)}} {\partial W_{f}^{(T-1)}}$$ using $$Eq. 6.2$$. 
+
+_We pass on to time-step $$T-2$$:_
+1. Sum of $$\gamma_{T-1}^{(T-2)}$$ and $$\gamma_{T}^{(T-2)}$$. 
+2. Sum of $$f^{(T-1)} \circ \delta_{T-1}^{(T-1)}$$ and $$$f^{(T-1)} \circ \delta_{T}^{(T-1)}$$.
+
 
 **Table: Accumulation of $$\gamma_{t}^{(k)}$$ and $$\delta_{t}^{(k)}$$ for $$k \in [0,t], \space t \in [0,T]$$**
 
