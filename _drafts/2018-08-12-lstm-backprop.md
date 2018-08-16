@@ -276,13 +276,17 @@ $$
 \frac {\partial J^{(t)}} {\partial s_{[i]}^{(k-1)}} = \gamma_{t[i]}^{(k-1)} \times  q_{[i]}^{(k-1)} \times tanh'(s_{[i]}^{(k-1)}) +  \delta_{t[i]}^{(k)} \times f^{(k)}_{[i]}
 $$
 
-Putting this in matrix form:
+Expressing this in matrix form:
 
 $$ \bbox[yellow,5px,border: 2px solid red]
 {
 \frac {\partial J^{(t)}} {\partial s^{(k-1)}} = \gamma_{t}^{(k-1)} \circ  q^{(k-1)} \circ tanh'(s^{(k-1)}) +  \delta_{t}^{(k)} \circ f^{(k)}
+\qquad (zzz)
 }
 $$
 
-
+Let me take a moment to piece together what we've got so far:
+1. In $$Eq. yy$$, we derived an expression to calculate gradient of loss $$J^{(t)}$$ in terms of locally available variables and one $$\delta_{t}^{(k)}.
+2. In $$Eq. zzz$$, we've derived a way to recursively calculated $$\delta_{t}^{(k-1)} using \delta_{t}^{(k)} and \gamma_{t}^{(k-1)} (which can also be computed in a similar recursive manner - I will share an expression for it shortly). 
+**Using $$Eq. yy$$ and $$Eq. zzz$$ in conjunction, we should now be able to calculate gradient of J^{(t)} w.r.t $$W_{f}^{(k)}$$. 
 
