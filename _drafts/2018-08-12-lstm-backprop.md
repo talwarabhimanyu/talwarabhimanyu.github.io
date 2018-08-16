@@ -347,7 +347,7 @@ We compute at time-step $$T-1$$:
 
 We pass on to time-step $$T-2$$:
 1. Sum of $$\gamma_{T-1}^{(T-2)}$$ and $$\gamma_{T}^{(T-2)}$$. 
-2. Sum of $$f^{(T-1)} \circ \delta_{T-1}^{(T-1)}$$ and $$$f^{(T-1)} \circ \delta_{T}^{(T-1)}$$.
+2. Sum of $$\left( f^{(T-1)} \circ \delta_{T-1}^{(T-1)} \right)$$ and $$\left( f^{(T-1)} \circ \delta_{T}^{(T-1)} \right)$$.
 
 
 **Table: Accumulation of $$\gamma_{t}^{(k)}$$ and $$\delta_{t}^{(k)}$$ for $$k \in [0,t], \space t \in [0,T]$$**
