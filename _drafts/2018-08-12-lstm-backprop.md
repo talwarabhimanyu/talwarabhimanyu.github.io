@@ -331,20 +331,21 @@ We now we have pretty much everything we need (in $$Eqs. 6.2, \space 7.1, \space
 
 At this point, I recommend you do not read any further unless you've looked at my [post on RNNs](https://talwarabhimanyu.github.io/blog/2018/07/31/rnn-backprop) where I describe how gradient accumulation works. If you've understood how gradient accumulation worked for RNNs, the following table will begin to make sense.
 
-Let me explain what is happening at say time-step $$T-1$$, in this order:
+**Let me explain what is happening at time-step $$T-1$$, in this order:**
 
-_We receive from time-step $$T$$:_
+We receive from time-step $$T$$:
 
 1. $$\gamma_{T}^{(T-1)}$$, which was computed at step $$T$$ using $$Eq. 8.1$$
 2. $$f^{(T)} \circ \delta_{T}^{(T)}$$, which was computed at step $$T$$.
 
-_We compute at time-step $$T-1$$:_
+We compute at time-step $$T-1$$:
+
 1. $$\gamma_{T-1}^{(T-1)}$$ and $$\delta_{T-1}^{(T-1)}$$ using the Initial Recursion Conditions.
 2. $$\gamma_{T-1}^{(T-2)}$$ using $$Eq. 8.1$$.
 3. $$\delta_{T}^{(T-1)}$$ using $$Eq. 7.1$$.
 4. $$\frac {\partial J^{(T-1)}} {\partial W_{f}^{(T-1)}}$$ and $$\frac {\partial J^{(T-1)}} {\partial W_{f}^{(T-1)}}$$ using $$Eq. 6.2$$. 
 
-_We pass on to time-step $$T-2$$:_
+We pass on to time-step $$T-2$$:
 1. Sum of $$\gamma_{T-1}^{(T-2)}$$ and $$\gamma_{T}^{(T-2)}$$. 
 2. Sum of $$f^{(T-1)} \circ \delta_{T-1}^{(T-1)}$$ and $$$f^{(T-1)} \circ \delta_{T}^{(T-1)}$$.
 
@@ -357,7 +358,7 @@ $$
 \hline
 T & \gamma_T^{(T)}, \delta_T^{(T)} & & & \gamma_T^{(T-1)}, f^{(T)}\delta_T^{(T)} & & & \frac {\partial J^{(T)}} {\partial W_f^{(T)}} & & \\[2ex]
 T-1 & \gamma_{T-1}^{(T-1)}, \delta_{T-1}^{(T-1)} & \gamma_{T}^{(T-1)}, \delta_{T}^{(T-1)} & & \gamma_{T-1}^{(T-2)} & \gamma_{T}^{(T-2)} & & \frac {\partial J^{(T-1)}} {\partial W_f^{(T-1)}}  & \frac {\partial J^{(T)}} {\partial W_f^{(T-1)}} & \\[2ex]
-T-2 & \gamma_{T-2}^{(T-2)} & \gamma_{T-1}^{(T-2)} & \gamma_{T}^{(T-2)} & \gamma_{T-2}^{(T-3)} & \gamma_{T-1}^{(T-3)} & \gamma_{T}^{(T-3)} & \frac {\partial J^{(T-2)}} {\partial W_h^{(T-2)}} & \frac {\partial J^{(T-1)}} {\partial W_h^{(T-2)}} & \frac {\partial J^{(T)}} {\partial W_h^{(T-2)}} \\
+T-2 & \gamma_{T-2}^{(T-2)} & \gamma_{T-1}^{(T-2)} & \gamma_{T}^{(T-2)} & \gamma_{T-2}^{(T-3)} & \gamma_{T-1}^{(T-3)} & \gamma_{T}^{(T-3)} & \frac {\partial J^{(T-2)}} {\partial W_f^{(T-2)}} & \frac {\partial J^{(T-1)}} {\partial W_f^{(T-2)}} & \frac {\partial J^{(T)}} {\partial W_f^{(T-2)}} \\
 \end{array}
 $$
 
