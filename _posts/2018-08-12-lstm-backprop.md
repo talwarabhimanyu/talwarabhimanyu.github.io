@@ -315,7 +315,18 @@ Assuming we have calculated $$\gamma_{t}^{(t)}$$, we apply chain-rule to get:
 
 $$
 \begin{align}
-\frac {\partial J^{(t)}} {\partial s_{[i]}^{(t)}} &= \sum_{p=1}^{D} \frac {\partial J^{(t)}} {\partial h_{[p]}^{(t)}} \times \frac {\partial h_{[p]}^{(t)}} {\partial s_{[i]}^{(t)}} \\[2ex]
-&= \gamma_{t[i]}^{(t)} \times q_{[i]}^{(t)} \times tanh'(s_{[i]}^{(t)}) 
+\underbrace{\frac {\partial J^{(t)}} {\partial s_{[i]}^{(t)}}}_{\delta_{t[i]}^{(t)}} &= \sum_{p=1}^{D} \frac {\partial J^{(t)}} {\partial h_{[p]}^{(t)}} \times \frac {\partial h_{[p]}^{(t)}} {\partial s_{[i]}^{(t)}} \\[2ex]
+&= \gamma_{t[i]}^{(t)} \times \underbrace{q_{[i]}^{(t)} \times tanh'(s_{[i]}^{(t)})}_{\text{Call it c_[i]^{(t)}}} 
 \end{align}
 $$
+
+In matrix notation:
+
+$$
+\delta_{t}^{(t)} = \gamma_{t}^{(t)} \circ c^{(t)} \tag{9.0}
+$$
+
+## Accumulating Gradients for LSTMs
+We now we have pretty much everything we need (in $$Eqs. 6.2, \space 7.1, \space 8.1$$ along with the intial recursion conditions) to backprop through time for an LSTM and find gradients of $$J^{(t)}$$ w.r.t $$W_{f}^{(k)}$$ for $$k \in [0, t]$$. But we need to do this for all values of $$t \in [0, T]$$. This is where 'accumulation of gradients' will help us out.
+
+At this point, I recommend you do not read any further unless you've looked at my [post on RNNs](https://talwarabhimanyu.github.io/blog/2018/07/31/rnn-backprop) where I describe how gradient accumulation works.
