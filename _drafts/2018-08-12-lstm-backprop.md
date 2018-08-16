@@ -317,5 +317,5 @@ $$
 \begin{align}
 \frac {\partial J^{(t)}} {\partial s_{[i]}^{(t)}} &= \sum_{p=1}^{D} \frac {\partial J^{(t)}} {\partial h_{[p]}^{(t)}} \times \frac {\partial h_{[p]}^{(t)}} {\partial s_{[i]}^{(t)}} \\[2ex]
 &= \gamma_{t[i]}^{(t)} \times q_{[i]}^{(t)} \times tanh'(s_{[i]}^{(t)}) 
-\end{align?
+\end{align}
 $$
