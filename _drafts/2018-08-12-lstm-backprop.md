@@ -331,7 +331,7 @@ We now we have pretty much everything we need (in $$Eqs. 6.2, \space 7.1, \space
 
 At this point, I recommend you do not read any further unless you've looked at my [post on RNNs](https://talwarabhimanyu.github.io/blog/2018/07/31/rnn-backprop) where I describe how gradient accumulation works. If you've understood how gradient accumulation worked for RNNs, the following table will begin to make sense.
 
-**Table 1: Accumulation of $$\gamma_{t}^{(k)} \space \forall k \in [0,t], \space t \in [0,T]$$**
+**Table 1: Accumulation of $$\gamma_{t}^{(k)} \space for \space k \in [0,t], \space t \in [0,T]$$**
 
 Note: Table 1 is simply application of $$Eq. 8.1$$ at each time-step. 
 
@@ -339,7 +339,7 @@ $$
 \begin{array}{c|ccc|ccc|ccc}
 \text{Time Step} & \text{Compute} & \text{Current} & \text{Time Step} & \text{To} & \text{Previous} & \text{Time Step} & \text{Gradients} & & \text{Accumulated}\\
 \hline
-T & \gamma_T^{(T)} & & & \gamma_T^{(T-1)} & & & \frac {\partial J^{(T)}} {\partial W_h^{(T)}} & & \\[2ex]
+T & \gamma_T^{(T)}, \delta_T^{(T)} & & & \gamma_T^{(T-1)}, f^{(T)}\delta_T^{(T)} & & & \frac {\partial J^{(T)}} {\partial W_f^{(T)}} & & \\[2ex]
 T-1 & \gamma_{T-1}^{(T-1)} & \gamma_{T}^{(T-1)} & & \gamma_{T-1}^{(T-2)} & \gamma_{T}^{(T-2)} & & \frac {\partial J^{(T-1)}} {\partial W_h^{(T-1)}}  & \frac {\partial J^{(T)}} {\partial W_h^{(T-1)}} & \\[2ex]
 T-2 & \gamma_{T-2}^{(T-2)} & \gamma_{T-1}^{(T-2)} & \gamma_{T}^{(T-2)} & \gamma_{T-2}^{(T-3)} & \gamma_{T-1}^{(T-3)} & \gamma_{T}^{(T-3)} & \frac {\partial J^{(T-2)}} {\partial W_h^{(T-2)}} & \frac {\partial J^{(T-1)}} {\partial W_h^{(T-2)}} & \frac {\partial J^{(T)}} {\partial W_h^{(T-2)}} \\
 \end{array}
