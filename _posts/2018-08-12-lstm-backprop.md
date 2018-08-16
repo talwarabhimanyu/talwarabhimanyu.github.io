@@ -357,8 +357,8 @@ $$
 \text{Time Step} & \text{Compute} & \text{Current} & \text{Time Step} & \text{To} & \text{Previous} & \text{Time Step} & \text{Gradients} & & \text{Accumulated}\\
 \hline
 T & \gamma_T^{(T)}, \delta_T^{(T)} & & & \gamma_T^{(T-1)}, f^{(T)}\delta_T^{(T)} & & & \frac {\partial J^{(T)}} {\partial W_f^{(T)}} & & \\[2ex]
-T-1 & \gamma_{T-1}^{(T-1)}, \delta_{T-1}^{(T-1)} & \gamma_{T}^{(T-1)}, \delta_{T}^{(T-1)} & & \gamma_{T-1}^{(T-2)} & \gamma_{T}^{(T-2)} & & \frac {\partial J^{(T-1)}} {\partial W_f^{(T-1)}}  & \frac {\partial J^{(T)}} {\partial W_f^{(T-1)}} & \\[2ex]
-T-2 & \gamma_{T-2}^{(T-2)} & \gamma_{T-1}^{(T-2)} & \gamma_{T}^{(T-2)} & \gamma_{T-2}^{(T-3)} & \gamma_{T-1}^{(T-3)} & \gamma_{T}^{(T-3)} & \frac {\partial J^{(T-2)}} {\partial W_f^{(T-2)}} & \frac {\partial J^{(T-1)}} {\partial W_f^{(T-2)}} & \frac {\partial J^{(T)}} {\partial W_f^{(T-2)}} \\
+T-1 & \gamma_{T-1}^{(T-1)}, \delta_{T-1}^{(T-1)} & \gamma_{T}^{(T-1)}, \delta_{T}^{(T-1)} & & \gamma_{T-1}^{(T-2)}, f^{(T-1)} \circ \delta_{T-1}^{(T-1)} & \gamma_{T}^{(T-2)}, f^{(T-1)} \circ \delta_{T}^{(T-1)}  & & \frac {\partial J^{(T-1)}} {\partial W_f^{(T-1)}}  & \frac {\partial J^{(T)}} {\partial W_f^{(T-1)}} & \\[2ex]
+T-2 & \gamma_{T-2}^{(T-2)}, \delta_{T-2}^{(T-2)} & \gamma_{T-1}^{(T-2)}, \delta_{T-1}^{(T-2)}  & \gamma_{T}^{(T-2)}, \delta_{T}^{(T-2)} & \gamma_{T-2}^{(T-3)} & \gamma_{T-1}^{(T-3)} & \gamma_{T}^{(T-3)} & \frac {\partial J^{(T-2)}} {\partial W_f^{(T-2)}} & \frac {\partial J^{(T-1)}} {\partial W_f^{(T-2)}} & \frac {\partial J^{(T)}} {\partial W_f^{(T-2)}} \\
 \end{array}
 $$
 
