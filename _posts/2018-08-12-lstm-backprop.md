@@ -39,18 +39,20 @@ I have tried to use the same alphabets to denote various parameters as used in C
 * The symbols $$\times$$ and $$\circ$$ refer to scalar and element-wise multiplication respectively. In absence of a symbol, assume matrix multiplication.
 * Superscript $$Tr$$, such as in $$W_f^{Tr}$$, implies Transpose of the matrix $$W_f$$.
 
-Similar to the case of RNNs, I will break down the computation inside an LSTM into three parts:
-1. **LSTM Units:** I will cover this in detail in this post.
-2. **Affine Layer:** This layer applies an Affine Transformation to the 'hidden-state' $$h^{(t)}$$ at each time-step $$t$$, to produce a vector $$\theta^{(t)}$$ of length $$V$$ (the size of our Vocabulary). The formula below describes the computation ($$U$$ and $$b$$ are model parameters):
+Similar to the case of RNNs, I will break down the computation inside an LSTM into three parts: (1) LSTM Units, (2) Affine Layer, and (3) Softmax Layer. I will cover the computation for LSTM Units in detail in this post. For the sake of completeness, I describe the other two parts briefly below (you may refer to my previous post on RNNs for details).
+
+### Affine Layer 
+This layer applies an Affine Transformation to the 'hidden-state' $$h^{(t)}$$ at each time-step $$t$$, to produce a vector $$\theta^{(t)}$$ of length $$V$$ (the size of our Vocabulary). The formula below describes the computation ($$U$$ and $$b$$ are model parameters):
 
 $$
-\theta^{(t)} = Uh^{(t)} + b
+\theta^{(t)} = Uh^{(t)} + b \tag{3.0}
 $$
 
-3. **Softmax Layer:** At each time-step, the vector $$\theta^{(t)}$$ is used to compute a probability distribution over our Vocabulary of $$V$$ words. The formula below describes this:
+### Softmax Layer:
+At each time-step, the vector $$\theta^{(t)}$$ is used to compute a probability distribution over our Vocabulary of $$V$$ words. The formula below describes this:
 
 $$
-\hat{y}^{(t)}_{[i]} = \frac {e^{\theta^{(t)}_{[i]}}} {\sum_{j=0}^{V-1} e^{\theta^{(t)}_{[i]}}} \tag{3.1}
+\hat{y}^{(t)}_{[i]} = \frac {e^{\theta^{(t)}_{[i]}}} {\sum_{j=0}^{V-1} e^{\theta^{(t)}_{[i]}}} \tag{4.0}
 $$
 
 I have discussed the Affine and Softmax computations in my blog post on RNNs. The same discussion holds for LSTMs as well and so I will not be talking about those layers here. 
@@ -58,13 +60,13 @@ I have discussed the Affine and Softmax computations in my blog post on RNNs. Th
 The loss attributed to this time-step, $$J^{(t)}$$ is given by:
 
 $$
-J^{(t)} = -\sum_{i=0}^{V-1} y^{(t)}_{[i]} log \hat{y}^{(t)}_{[i]} \tag{3.2}
+J^{(t)} = -\sum_{i=0}^{V-1} y^{(t)}_{[i]} log \hat{y}^{(t)}_{[i]} \tag{5.0}
 $$
 
 The vector $$y^{(t)}$$ is a one-hot vector with the same dimensions as that of $$\hat{y}^{t}$$ - it contains a $$1$$ at the index of the 'true' next-word for time-step $$t$$. And finally, the overall loss for our LSTM is the sum of losses contributed by each time-step:
 
 $$
-J = \sum_{t=1}^{T} J^{(t)} \tag{3.3}
+J = \sum_{t=1}^{T} J^{(t)} \tag{5.1}
 $$
 
 **GOAL:** We want to find the gradient of $$J$$ with respect to each and every element of parameter matrices and vectors. For the sake of length of this post, I will only demonstrate all the maths required to calculate gradients w.r.t $$W_f$$, but I believe that after reading this, you will be able to apply the same concepts for other parameters. You can always refer to my [Jupyter Notebook](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning%20from%20Scratch/LSTM%20from%20Scratch/LSTM%20from%20Scratch.ipynb) to understand how rest of the gradients should be calculated.
@@ -122,7 +124,7 @@ $$
 \begin{align}
 \frac {\partial J^{(t)}} {\partial W_{f [i,j]}} &=  \sum_{k=1}^{T} \frac {\partial J^{(t)}} {\partial W_{f [i,j]}^{(k)}} \times \underbrace{\frac {\partial W_{f [i,j]}^{(k)}} {\partial W_{f[i,j]}}}_{Equals \space 1.} \\
 \\
-&=  \sum_{k=1}^{T} \frac {\partial J^{(t)}} {\partial W_{f [i,j]}^{(k)}} \tag{xx}\\
+&=  \sum_{k=1}^{T} \frac {\partial J^{(t)}} {\partial W_{f [i,j]}^{(k)}} \tag{6.0}\\
 \end{align}
 $$
 
@@ -143,7 +145,7 @@ Observe that our parameter of interest, $$W_f$$ appears only in one of the equat
 
 $$
 \begin{align}
-\frac {\partial J^{(t)}} {\partial W_{f[i,j]}^{(k)}} &= \sum_{p=1}^{D} \underbrace{\frac {\partial J^{(t)}} {\partial f_{[p]}^{(k)}}}_{\text{Eq. xx1}} \times \underbrace{\frac {\partial f_{[p]}^{(k)}} {\partial W_{f[i,j]}^{(k)}} }_{\text{Eq. xx2}}  \tag{xx}
+\frac {\partial J^{(t)}} {\partial W_{f[i,j]}^{(k)}} &= \sum_{p=1}^{D} \underbrace{\frac {\partial J^{(t)}} {\partial f_{[p]}^{(k)}}}_{\text{Eq. 6.1.1}} \times \underbrace{\frac {\partial f_{[p]}^{(k)}} {\partial W_{f[i,j]}^{(k)}} }_{\text{Eq. 6.1.2}}  \tag{6.1}
 \\
 \end{align}
 $$
@@ -155,7 +157,7 @@ $$
 \frac {\partial f_{[p]}^{(k)}} {\partial W_{f[i,j]}^{(k)}} &=
 \begin{cases}
 0, & \text{p $\ne$ i} \\[2ex]
-\sigma'(z_{f[i]}^{(k)}) \times h_{[j]}^{(k-1)}, & \text{p = i} \tag{xx2}
+\sigma'(z_{f[i]}^{(k)}) \times h_{[j]}^{(k-1)}, & \text{p = i} \tag{6.1.2}
 \end{cases}
 \end{align}
 $$
@@ -165,11 +167,11 @@ To compute the first quantity on the right-hand-side of $$Eq. xx$$, we trace pat
 $$
 \begin{align}
 \frac {\partial J^{(t)}} {\partial f_{[p]}^{(k)}} &= \sum_{m=1}^{D} \frac {\partial J^{(t)}} {\partial s_{[m]}^{(k)}} \times \frac {\partial s_{[m]}^{(k)}} {\partial f_{[p]}^{(k)}} \\[2ex]
-&= \frac {\partial J^{(t)}} {\partial s_{[p]}^{(k)}} \times s_{[p]}^{(k-1)} \tag{xx1} 
+&= \frac {\partial J^{(t)}} {\partial s_{[p]}^{(k)}} \times s_{[p]}^{(k-1)} \tag{6.1.1} 
 \end{align}
 $$
 
-Substitute $$Eq. xx1$$ and $$Eq. xx2$$ in $$Eq. xx$$ to get:
+Substitute $$Eq. 6.1.1$$ and $$Eq. 6.1.2$$ in $$Eq. 6.1$$ to get:
 
 $$
 \begin{align}
@@ -182,13 +184,13 @@ This can be expressed in matrix notation as follows:
 $$ \bbox[yellow,9px,border:2px solid red]
 {
 \frac {\partial J^{(t)}} {\partial W_{f}^{(k)}} = \left( \underbrace{\frac {\partial J^{(t)}} {\partial s^{(k)}}}_{\delta_{t}^{k}} \circ \underbrace{\sigma'(z_{f}^{(k)})}_{\text{Local}} \circ \underbrace{s^{(k-1)}}_{\text{Local}} \right) (\underbrace{h^{(k-1)}}_{\text{Local}})^{Tr}
-\qquad (yy)
+\qquad (6.2)
 }
 $$
 
 The quantities marked as 'Local' in the expression are available from the cache which was stored during the forward pass through time-step $$k$$. The only unknown now is $$\delta_{t}^{(k)}$$. Separately, in order to compute gradient of the overall loss $$J$$ w.r.t $$W_f^{(k)}$$, we will need the values of $$\delta_{t}^{(k)}$$ for all values of $$t \in [k, k+1, \cdots, T-1, T]$$.
 
-Notice the similarity between $$Eq. yy$$ and $$Eq. 5.2$$ from my blog post on RNNs (I reproduce that equation below). The quantity $$\delta_{t}^{(k)}$$ seems to have assumed the role which $$\gamma_{t}^{(k)}$$ played for RNNs.
+Notice the similarity between $$Eq. 6.2$$ and $$Eq. 5.2$$ from my blog post on RNNs (I reproduce that equation below). The quantity $$\delta_{t}^{(k)}$$ seems to have assumed the role which $$\gamma_{t}^{(k)}$$ played for RNNs.
 
 $$ \bbox[yellow,5px,border:2px solid red]
 {
@@ -234,7 +236,7 @@ The figure below shows how paths of influence look like after applying 'dummy va
 We can now say:
 
 $$
-\frac {\partial J^{(t)}} {\partial s_{[i]}^{(k-1)}} = \underbrace{\frac {\partial J^{(t)}} {\partial s_{a[i]}^{(k-1)}}}_{\text{Eq. zz1}} + \underbrace{\frac {\partial J^{(t)}} {\partial s_{b[i]}^{(k-1)}}}_{\text{Eq. zz2}} \tag{Eq. zz}
+\frac {\partial J^{(t)}} {\partial s_{[i]}^{(k-1)}} = \underbrace{\frac {\partial J^{(t)}} {\partial s_{a[i]}^{(k-1)}}}_{\text{Eq. 7.0.1}} + \underbrace{\frac {\partial J^{(t)}} {\partial s_{b[i]}^{(k-1)}}}_{\text{Eq. 7.0.2}} \tag{Eq. 7.0}
 $$
 
 Let us consider the first path of influence:
@@ -286,9 +288,10 @@ $$ \bbox[yellow,5px,border: 2px solid red]
 $$
 
 Let me take a moment to piece together what we've got so far:
-1. In $$Eq. yy$$, we derived an expression to calculate gradient of loss $$J^{(t)}$$ in terms of locally available variables and one $$\delta_{t}^{(k)}.
+1. In $$Eq. yy$$, we derived an expression to calculate gradient of loss $$J^{(t)}$$ in terms of locally available variables and one $$\delta_{t}^{(k)}$$.
 2. In $$Eq. zzz$$, we've derived a way to recursively calculated $$\delta_{t}^{(k-1)}$$ using $$\delta_{t}^{(k)}$$ and $$\gamma_{t}^{(k-1)}$$ (which can also be computed in a similar recursive manner - see below). 
-**Using $$Eq. yy$$ and $$Eq. zzz$$ in conjunction, we should now be able to calculate gradient of J^{(t)} w.r.t $$W_{f}^{(k)}$$.** 
+
+**Using $$Eq. yy$$ and $$Eq. zzz$$ in conjunction, we should now be able to calculate gradient of $$J^{(t)}$$ w.r.t $$W_{f}^{(k)}$$.** 
 
 We can derive a recursive expression for $$\gamma_{t}^{(k)}$$ in a manner similar to our derivation for $$\delta_{t}^{(k)}$$ above. I provide the expression below (if you would like to know about its derivation, let me know via comments below).
 
@@ -302,4 +305,8 @@ $$ \bbox[yellow,5px, border: 2px solid red]
 \end{align}
 }
 $$
+
+**Initial Conditions for Recursions:** We have derived recursive expressions for $$\delta_{t}^{(k)}$$ and $$\gamma_{t}^{(k)}$$. Now we need to derive expressions for $$\delta_{t}^{(t)}$$ and $$\gamma_{t}^{(t)}$$ so that we can begin to apply $$Eq. $$ and $$Eq. $$ recursively. These are rather simple to compute.
+
+
 
