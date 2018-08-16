@@ -233,7 +233,7 @@ The figure below shows how paths of influence look like after applying 'dummy va
 **Figure: Isolating paths of influence via Dummy Variables**
 ![Dummy Variables](/images/Dummy Variables.png)
 
-We can now say:
+We can now express gradient w.r.t $$s^{(k-1)}$$ as the sum of gradients w.r.t the dummy variables $$s_{a}^{(k-1)}$$ and $$s_{a}^{(k-1)}$$:
 
 $$
 \frac {\partial J^{(t)}} {\partial s_{[i]}^{(k-1)}} = \underbrace{\frac {\partial J^{(t)}} {\partial s_{a[i]}^{(k-1)}}}_{\text{Eq. 7.0.1}} + \underbrace{\frac {\partial J^{(t)}} {\partial s_{b[i]}^{(k-1)}}}_{\text{Eq. 7.0.2}} \tag{7.0}
@@ -309,5 +309,13 @@ $$
 
 **Initial Conditions for Recursions:** We have derived recursive expressions for $$\delta_{t}^{(k)}$$ and $$\gamma_{t}^{(k)}$$. Now we need to derive expressions for $$\delta_{t}^{(t)}$$ and $$\gamma_{t}^{(t)}$$ so that we can begin to apply $$Eq. 7.1$$ and $$Eq. 8.1$$ recursively. These are rather simple to compute.
 
+The quantity $$h^{(t)}$$ is connected to $$J^{(t)}$$ via the Affine Layer followed by the Softmax Layer (see $$Eq. 3.0, \space 4.0, \space 4.0$$). We can compute $$\gamma_{t}^{(t)}$$ by backpropogating through these layers.
 
+Assuming we have calculated $$\gamma_{t}^{(t)}$$, we apply chain-rule to get:
 
+$$
+\begin{align}
+\frac {\partial J^{(t)}} {\partial s_{[i]}^{(t)}} &= \sum_{p=1}^{D} \frac {\partial J^{(t)}} {\partial h_{[p]}^{(t)}} \times {\partial h_{[p]}^{(t)}} {\partial s_{[i]}^{(t)}} \\[2ex]
+&= \gamma_{t[i]}^{(t)} \times q_{[i]}^{(t)} \times tanh'(s_{[i]}^{(t)}) 
+\end{align?
+$$
