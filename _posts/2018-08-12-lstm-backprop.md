@@ -275,14 +275,14 @@ $$
 Substituting $$Eq. 7.0.1$$ and $$Eq. 7.0.2$$ in $$Eq. 7.0$$, we finally get:
 
 $$
-\frac {\partial J^{(t)}} {\partial s_{[i]}^{(k-1)}} = \gamma_{t[i]}^{(k-1)} \times  q_{[i]}^{(k-1)} \times tanh'(s_{[i]}^{(k-1)}) +  \delta_{t[i]}^{(k)} \times f^{(k)}_{[i]}
+\underbrace{\frac {\partial J^{(t)}} {\partial s_{[i]}^{(k-1)}}}_{\delta_{t[i]}^{(k-1)}} = \gamma_{t[i]}^{(k-1)} \times  q_{[i]}^{(k-1)} \times tanh'(s_{[i]}^{(k-1)}) +  \delta_{t[i]}^{(k)} \times f^{(k)}_{[i]}
 $$
 
 Expressing this in matrix form:
 
 $$ \bbox[yellow,5px,border: 2px solid red]
 {
-\underbrace{\frac {\partial J^{(t)}} {\partial s^{(k-1)}}}_{\delta_{t}^{(k-1)}} = \gamma_{t}^{(k-1)} \circ  q^{(k-1)} \circ tanh'(s^{(k-1)}) +  \delta_{t}^{(k)} \circ f^{(k)}
+\delta_{t}^{(k-1)} = \gamma_{t}^{(k-1)} \circ  q^{(k-1)} \circ tanh'(s^{(k-1)}) +  \delta_{t}^{(k)} \circ f^{(k)}
 \qquad (7.1)
 }
 $$
@@ -293,12 +293,12 @@ Let me take a moment to piece together what we've got so far:
 
 **Using $$Eq. 6.2$$ and $$Eq. 7.1$$ in conjunction, we should now be able to calculate gradient of $$J^{(t)}$$ w.r.t $$W_{f}^{(k)}$$.** 
 
-We can derive a recursive expression for $$\gamma_{t}^{(k)}$$ in a manner similar to our derivation for $$\delta_{t}^{(k)}$$ above. I provide the expression below (if you would like to know about its derivation, let me know via comments below).
+We can derive a recursive expression for $$\gamma_{t}^{(k)}$$ (i.e. $$\frac {\partial J^{(t)}} {\partial h^{(k-1)}}$$) in a manner similar to our derivation for $$\delta_{t}^{(k)}$$ above. I provide the expression below (if you would like to know about its derivation, let me know via comments below).
 
 $$ \bbox[yellow,5px, border: 2px solid red]
 {
 \begin{align}
-\underbrace{\frac {\partial J^{(t)}} {\partial h^{(k-1)}}}_{\gamma_{t}^{(k-1)}} &= (W_{f}^{(k)})^{Tr} \left( \delta_{t}^{(k)} \circ s^{(k-1)} \circ \sigma'(z_{f}^{(k)}) \right) \\[2ex]
+\gamma_{t}^{(k-1)} &= (W_{f}^{(k)})^{Tr} \left( \delta_{t}^{(k)} \circ s^{(k-1)} \circ \sigma'(z_{f}^{(k)}) \right) \\[2ex]
 &+ (W_{e}^{(k)})^{Tr} \left( \delta_{t}^{(k)} \circ g^{(k)} \circ \sigma'(z_{e}^{(k)}) \right) \\[2ex]
 &+ (W_{g}^{(k)})^{Tr} \left( \delta_{t}^{(k)} \circ e^{(k)} \circ \sigma'(z_{g}^{(k)}) \right) \\[2ex]
 &+ (W_{q}^{(k)})^{Tr} \left( \gamma_{t}^{(k)} \circ tanh(s^{(k)}) \circ \sigma'(z_{q}^{(k)}) \right)
