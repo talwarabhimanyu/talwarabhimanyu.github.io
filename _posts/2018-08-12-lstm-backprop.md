@@ -7,8 +7,8 @@ tags: sequence-modeling lstm backprop-maths
 ## TL;DR
 In this blog post:
 1. I derive equations for Backpropogation-Through-Time (BPTT) for an LSTM.
-2. I illustrate proper application of chain-rule, accounting for (1) all paths of 'influence flow', & (2) avoiding double-counting of paths. 
-3. I create an LSTM model in Python (without using Pytorch or Tensorflow): [click here](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning%20from%20Scratch/LSTM%20from%20Scratch/LSTM%20from%20Scratch.ipynb) to view the Notebook.
+2. I illustrate proper application of chain-rule: (1) traversing all paths of 'influence flow', & (2) avoiding double-counting of paths. 
+3. I create an LSTM model in Python (using just Numpy/Random libraries): [click here](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning%20from%20Scratch/LSTM%20from%20Scratch/LSTM%20from%20Scratch.ipynb) to view the Notebook.
 
 ## Introduction
 In my [last post on Recurrent Neural Networks (RNNs)](https://talwarabhimanyu.github.io/blog/2018/07/31/rnn-backprop), I derived equations for backpropogation-through-time (BPTT), and used those equations to implement [an RNN in Python](https://github.com/talwarabhimanyu/Learning-by-Coding/blob/master/Deep%20Learning%20from%20Scratch/RNN%20from%20Scratch/RNN%20from%20Scratch.ipynb) (without using PyTorch or Tensorflow). Through that post I demonstrated two tricks which make backprop through a network with 'tied up weights' easier to comprehend - use of 'dummy variables' and 'accumulation of gradients'. **In this post I intend to look at another neural network architecture known as an LSTM (Long Short-Term Memory), which builds upon RNNs, and overcomes the issue of vanishing gradients faced by RNNs.**
@@ -79,7 +79,7 @@ The LSTM Unit at time-step $$k$$ takes as inputs:
 
 _Note: The numbers $$D$$ and $$d$$ are hyperparameters._
 
-**LSTM Gates:** A distinguishing feature of LSTMs (relative to RNNs) is the presence of three 'Gates' in each LSTM Unit. These Gates dampen the values of certain signals coming into and going out of the Unit, through multiplication by some factor which lies between $$[0, \space 1]$$. There are three Gates: (1) **INPUT**, denoted by $$g^{(k)}$$, which dampens $$x^{(k)}$$, (2) **FORGET** ($$f^{(k)}$$), which dampens $$s^{(k-1)}$$, and (3) **OUTPUT** ($$q^{(k)}$$), which dampens $$h^{(k)}$$. Equations $$2.1, 2.2, \text{ & } 2.4$$ below specify the exact maths behind these Gates.
+**LSTM Gates:** A distinguishing feature of LSTMs (relative to RNNs) is the presence of three 'Gates' in each LSTM Unit. These Gates dampen the values of certain signals coming into and going out of the Unit, through multiplication by some factor which lies between $$[0, \space 1]$$. There are three Gates: (1) **INPUT**, denoted by $$g^{(k)}$$, which dampens $$x^{(k)}$$, (2) **FORGET** ($$f^{(k)}$$), which dampens $$s^{(k-1)}$$, and (3) **OUTPUT** ($$q^{(k)}$$), which dampens $$h^{(k)}$$. Equations $$2.1, 2.2, 2.3$$ below specify the exact maths behind these Gates.
 
 Let's start by looking at how the hidden-state $$h$$ and internal-state $$s$$ are computed at time-step $$t$$:
 
