@@ -164,7 +164,7 @@ $$
 \end{align}
 $$
 
-To compute the first quantity on the right-hand-side of $$Eq. xx$$, we trace paths of influence from $$f^{(k)}$$ towards loss $$J^{(t)}$$, and observe from $$Eq. 1.2$$ that such a path MUST pass through $$s^{(k)}$$. We use this insight to say:
+To compute the first quantity on the right-hand-side of $$Eq. 6.1$$, we trace paths of influence from $$f^{(k)}$$ towards loss $$J^{(t)}$$, and observe from $$Eq. 1.2$$ that such a path MUST pass through $$s^{(k)}$$. We use this insight to say:
 
 $$
 \begin{align}
