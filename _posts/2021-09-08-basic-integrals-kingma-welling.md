@@ -10,7 +10,7 @@ $$
 \text{ELBO}(x; \theta, \phi) = \underbrace{\mathbb{E}_{q_\phi(z|x)}\left[\log p(x|z;\theta)\right]}_{\text{Expected} \\ \text{Reconstruction} \\ \text{Error}} - D_{KL}\left(q_\phi(z|x) || p_\theta(z)\right)
 $$
 
-While we use Monte Carlo to estimate the Expected Reconstruction Error, we can analytically compute the KL Divergence term when the prior $$p_\theta(z)$$ and the variational distribution $$q_\phi(z\|x^{(i)})$$ are Gaussians with a diagonal covariance structure. We want to compute $$D_{KL}\left(q_\phi(z\|x) || p_\theta(z)\right)$$ where $$p_\theta(z) = \mathcal{N}(z; 0, \mathbf{I})$$ and $$q_\phi(z\|x^{(i)}) = \mathcal{N}(z; \mu^{(i)}, \sigma^{(i)2})$$. Let $$J$$ be the dimensionality of $$z$$. Then:
+While we use Monte Carlo to estimate the Expected Reconstruction Error, we can analytically compute the KL Divergence term when the prior $$p_\theta(z)$$ and the variational distribution $$q_\phi(z\|x^{(i)})$$ are Gaussians with a diagonal covariance structure. We want to compute $$D_{KL}\left(q_\phi(z\|x) \|\| p_\theta(z)\right)$$ where $$p_\theta(z) = \mathcal{N}(z; 0, \mathbf{I})$$ and $$q_\phi(z\|x^{(i)}) = \mathcal{N}(z; \mu^{(i)}, \sigma^{(i)2})$$. Let $$J$$ be the dimensionality of $$z$$. Then:
 
 $$
 \int q_\phi(z|x^{(i)}) \log p_\theta(z)dz = \int \mathcal{N}(z; \mu^{(i)}, \sigma^{(i)2}) \log \mathcal{N}(z; 0, \mathbf{I}) dz \\
