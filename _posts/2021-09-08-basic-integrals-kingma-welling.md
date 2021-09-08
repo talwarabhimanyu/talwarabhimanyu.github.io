@@ -1,4 +1,4 @@
---
+---
 layout: post
 title: Basic Integrals from Kingma, Welling (2013)
 date: 2021-09-08
