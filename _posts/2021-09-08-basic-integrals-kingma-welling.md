@@ -39,3 +39,4 @@ $$
 = \frac{1}{2}\sum_{j=1}^J\left(1 + \log \sigma_j^{(i)2} - \sigma_j^{(i)2} - \mu_j^{(i)2}\right)
 $$
 
+Q.E.D
