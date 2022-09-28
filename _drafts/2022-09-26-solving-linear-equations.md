@@ -20,5 +20,16 @@ If $$A$$ is full-rank, i.e. it is invertible, the solution is unique, $$x = A^{-
 2. $$y \in \mathcal{A}(C)$$, in which case there exist multiple solutions. As $$A$$ is not full-rank, $$\mathcal{N}(A) \neq \Phi$$, and so if $$x_p$$ is some solution to this system, then $$x_p + x_n, x_n \in \mathcal{N}(A)$$ is also a solution (because $$y = Ax_p = Ax_p + 0 = Ax_p + Ax_n = A(x_n + x_p)$$). Taking the sane example as in 1. above, if $$A = \begin{bmatrix} 1 & 1 \\ 2 & 2 \end{bmatrix}$$, then $$\mathcal{N}(A) = \left\{\begin{bmatrix} -c \\ c\end{bmatrix} \forall c \in \mathbb{R}\right\}$$ and there are infinitely many solutions.
 
 ## $$A$$ is skinny ($$m > n$$)
+Such a system of linear equations is called _overdetermined_. Prof. Boyd mentions in the lecture notes that such a system cannot be solved for most values of $$y$$. One way to intuitively reason this is to note that the $$n$$ columns of $$A$$ span a low dimensional subspace (of dimension at most $$n$$) in $$\mathbb{R}^m$$. The chance that a random vector $$y \in \mathbb{R}^m$$ lies in the low-dimensional $$\mathcal{C}(A)$$ is slim. Speaking even more loosely, there are way too many constraints (the $$m$$ equations) that the $$n$$ dimensional vector $$x$$ has to satisfy.
+
+
+In the case where $$y \notin \mathcal{C}(A)$$, no solution to the linear system exists. We can find an approximate solution however. _One possible approximation_ is to find some $$\hat{x} \in \mathbb{R}^n$$ such that the Euclidean distance between $$A\hat{x}$$ and $$y$$ is minimized. Note that $$A\hat{x} \in \mathcal{C}(A)$$, and we want it to be closest to $$y$$ compared to any other point in $$\mathcal{C}(A)$$. Geometrically, such an $$A\hat{x}$$ is the projection of $$y$$ on $$\mathcal{C}(A)$$. This means the error vector $$y - A\hat{x}$$ is orthogonal to $$\mathcal{C}(A)$$ and so $$(y - A\hat{x}) \in \mathcal{N}(A^T)$$. So:
+
+$$
+\begin{align}
+A^T(y - A\hat{x}) &= 0 \\
+\implies \hat{x} &= (A^TA)^{-1}A^Ty
+\end{align}
+$$
 
 ## $$A$$ is fat ($$m < n$$)
