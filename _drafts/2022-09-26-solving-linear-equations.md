@@ -34,4 +34,6 @@ A^T(y - A\hat{x}) &= 0 \\
 \end{align}
 $$
 
+This formula assumes that $$A$$ has full column rank, i.e. $$\text{rank}(A) = n$$. Only then will the matrix $$A^TA$$ be invertible (see point 3 in the Appendix of [my blog post on SVD](https://talwarabhimanyu.github.io/blog/2020/07/10/svd2) for a proof).
+
 ## $$A$$ is fat ($$m < n$$)
