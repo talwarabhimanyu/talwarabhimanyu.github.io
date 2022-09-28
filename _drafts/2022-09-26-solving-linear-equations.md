@@ -34,6 +34,24 @@ A^T(y - A\hat{x}) &= 0 \\
 \end{align}
 $$
 
-This formula assumes that $$A$$ has full column rank, i.e. $$\text{rank}(A) = n$$. Only then will the matrix $$A^TA$$ be invertible (see point 3 in the Appendix of [my blog post on SVD](https://talwarabhimanyu.github.io/blog/2020/07/10/svd2) for a proof).
+This formula assumes that $$A$$ has full column rank, i.e. $$\text{rank}(A) = n$$. Only then will the matrix $$A^TA$$ be invertible (see point 3 in the Appendix of [my blog post on SVD](https://talwarabhimanyu.github.io/blog/2020/07/10/svd2) for a proof). 
+
+
+What happens if $$A$$ is not full-rank? We only consider the case when $$y \in \mathcal{C}(A)$$ (otherwise there is no solution). Consider the example below (I've deliberately chosen the value so that we can just eyeball and make observations easily). We note that $$A$$ is not full-column rank (because columns 1 and 3 are the same). We also note that $$y \in \mathcal{C}(A)$$ - it's easy to find a linear combination of columns which sums to $$y$$, e.g. $$1*c_1 + 2*c_2 + 0*c_3$$, and in fact the combination weights $$[1, 2, 0]$$ are a solution to this system. We can come up with more such combinations easily, e.g. $$0.5*c_1 + 2*c_2 + 0.5*c_3$$.
+
+$$
+\begin{align}
+A &= \begin{bmatrix} 
+	1 & 0 & 1 \\ 
+	0 & 1 & 0 \\
+	0 & 0 & 0 \\
+	0 & 0 & 0
+ \end{bmatrix} \\
+y &= \begin{bmatrix}
+	1 \\ 2 \\ 0 \\ 0
+\end{align}
+$$
 
 ## $$A$$ is fat ($$m < n$$)
+
+Such a system is called _underdetermined_.
