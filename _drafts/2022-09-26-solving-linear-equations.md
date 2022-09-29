@@ -37,20 +37,18 @@ $$
 This formula assumes that $$A$$ has full column rank, i.e. $$\text{rank}(A) = n$$. Only then will the matrix $$A^TA$$ be invertible (see point 3 in the Appendix of [my blog post on SVD](https://talwarabhimanyu.github.io/blog/2020/07/10/svd2) for a proof). 
 
 
-What happens if $$A$$ is not full-rank? We only consider the case when $$y \in \mathcal{C}(A)$$ (otherwise there is no solution). Consider the example below (I've deliberately chosen the value so that we can just eyeball and make observations easily). We note that $$A$$ is not full-column rank (because columns 1 and 3 are the same). We also note that $$y \in \mathcal{C}(A)$$ - it's easy to find a linear combination of columns which sums to $$y$$, e.g. $$1*c_1 + 2*c_2 + 0*c_3$$, and in fact the combination weights $$[1, 2, 0]$$ are a solution to this system. We can come up with more such combinations easily, e.g. $$0.5*c_1 + 2*c_2 + 0.5*c_3$$. Finally note that the null-set is of the form $$\{\begin{bmatrix} -k \\ k\end{bmatrix} \forall k \in \mathbb{R}\}$$. If $$x_p$$ is a solution, then any member of the set $$x_p + x_n | x_n \in \mathcal{N}(A)$$ is also a solution.
+What happens if $$A$$ is not full-rank? We only consider the case when $$y \in \mathcal{C}(A)$$ (otherwise there is no solution). Consider the example below (I've deliberately chosen the value so that we can just eyeball and make observations easily). We note that $$A$$ is not full-column rank (because columns 1 and 3 are the same). We also note that $$y \in \mathcal{C}(A)$$ - it's easy to find a linear combination of columns which sums to $$y$$, e.g. $$1*c_1 + 2*c_2 + 0*c_3$$, and in fact the combination weights $$[1, 2, 0]$$ are a solution to this system. We can come up with more such combinations easily, e.g. $$0.5*c_1 + 2*c_2 + 0.5*c_3$$. Finally note that the null-set is of the form $$\{\begin{bmatrix} -k \\ k\end{bmatrix} \forall k \in \mathbb{R}\}$$. If $$x_p$$ is a solution, then any member of the set $$x_p + x_n \| x_n \in \mathcal{N}(A)$$ is also a solution.
 
 $$
-\begin{align}
-A &= \begin{bmatrix} 
+A = \begin{bmatrix} 
 	1 & 0 & 1 \\ 
 	0 & 1 & 0 \\
 	0 & 0 & 0 \\
 	0 & 0 & 0
-\end{bmatrix} \\
-y &= \begin{bmatrix}
+\end{bmatrix}
+y = \begin{bmatrix}
 	1 \\ 2 \\ 0 \\ 0
 \end{bmatrix}
-\end{align}
 $$
 
 **A general comment on non-full-rank skinny matrices is that if $$y$$ is in the column space of $$A$$, then infinitely many solutions exist.** First, there is definitely _a_ solution (also referred to as the "particular" solution) - weights of the linear combination of columns which sums to $$y$$. Next, the null-space is non-empty - this is because $$\text{rank}(A) < n$$ and so there exists some non-zero linear combination of columns which sums to 0. Finally, the particular solution plus any vector from the null-space is one of the inifinitely many solutions.
