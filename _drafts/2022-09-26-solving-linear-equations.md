@@ -50,6 +50,7 @@ A &= \begin{bmatrix}
 y &= \begin{bmatrix}
 	1 \\ 2 \\ 0 \\ 0
 \end{align}
+$$
 
 **A general comment on non-full-rank skinny matrices is that if $$y$$ is in the column space of $$A$$, then infinitely many solutions exist.** First, there is definitely _a_ solution (also referred to as the "particular" solution) - weights of the linear combination of columns which sums to $$y$$. Next, the null-space is non-empty - this is because $$\text{rank}(A) < n$$ and so there exists some non-zero linear combination of columns which sums to 0. Finally, the particular solution plus any vector from the null-space is one of the inifinitely many solutions.
 $$
