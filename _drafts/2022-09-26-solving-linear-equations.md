@@ -46,9 +46,10 @@ A &= \begin{bmatrix}
 	0 & 1 & 0 \\
 	0 & 0 & 0 \\
 	0 & 0 & 0
- \end{bmatrix} \\
+\end{bmatrix} \\
 y &= \begin{bmatrix}
 	1 \\ 2 \\ 0 \\ 0
+\end{bmatrix}
 \end{align}
 $$
 
