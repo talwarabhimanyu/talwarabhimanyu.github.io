@@ -97,12 +97,12 @@ ul.posts li {
 }
 
 .flex-left {
-  flex: 50%;
+  flex: 25%;
   padding: 10px;
 }
 
 .flex-right {
-  flex: 50%;
+  flex: 40%;
   padding: 10px;
 }
 
