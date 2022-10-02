@@ -97,11 +97,13 @@ ul.posts li {
 }
 
 .flex-left {
-  flex: 0;
+  flex: 50%;
+  padding: 10px;
 }
 
 .flex-right {
-  flex: 1;
+  flex: 50%;
+  padding: 10px;
 }
 
 @media (max-width: 800px) {
