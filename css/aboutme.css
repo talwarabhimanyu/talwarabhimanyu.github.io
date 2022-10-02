@@ -91,14 +91,21 @@ ul.posts li {
   border: 3px solid orangered;
 }
 
-.wrapper {
+.flex-container {
   display: flex;
+  flex-wrap: wrap;
 }
 
-.left {
+.flex-left {
   flex: 0;
 }
 
-.right {
+.flex-right {
   flex: 1;
+}
+
+@media (max-width: 800px) {
+  .flex-right, .flex-left {
+    flex: 100%;
+  }
 }
