@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+	<html>
+		<head>
+			{% if site.tags != "" %}
+			  {% include collecttags.html %}
+			{% endif %}
+			<title>{{ page.title }}</title>
+			<!-- link to main stylesheet -->
+			<link rel="stylesheet" type="text/css" href="/css/aboutme.css">
+			<script type="text/javascript" async
+				src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+			</script>
+		</head>
+		<body>
+			<nav>
+	    		<ul>
+	        		<li><a href="/">Home</a></li>
+	        		<li><a href="/blog">Blog</a></li>
+	    		</ul>
+			</nav>
+			<div class="container">
+			
+			{{ content }}
+			
+			</div><!-- /.container -->
+			<footer>
+	    		<ul>
+	        		<li><a href="mailto:p10abhimanyut@iima.ac.in">email</a></li>
+	        		<li><a href="https://github.com/talwarabhimanyu">github.com/talwarabhimanyu</a></li>
+	        		<li><a href="https://sg.linkedin.com/in/abhimanyu-talwar-7353519">LinkedIn</a></li>
+				</ul>
+			</footer>
+		</body>
+	</html>
