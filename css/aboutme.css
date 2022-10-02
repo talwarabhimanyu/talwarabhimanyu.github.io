@@ -91,9 +91,14 @@ ul.posts li {
   border: 3px solid orangered;
 }
 
-.one {
-  float: left;
+.wrapper {
+  display: flex;
 }
 
-.two {
+.left {
+  flex: 0;
+}
+
+.right {
+  flex: 1;
 }
