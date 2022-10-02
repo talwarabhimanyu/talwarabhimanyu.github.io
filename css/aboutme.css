@@ -24,7 +24,8 @@ ul.posts li {
 
 /* Set a background color */
 body {
-  font-family: Helvetica, sans-serif;
+    margin: 60px auto;
+    width: 70%;
 }
 
 h2 {
