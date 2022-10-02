@@ -90,3 +90,12 @@ ul.posts li {
   left: -39px;
   border: 3px solid orangered;
 }
+
+.one {
+  width: 40%;
+  float: left;
+}
+
+.two {
+  width: 50%;
+}
