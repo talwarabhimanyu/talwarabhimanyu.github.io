@@ -11,7 +11,7 @@ Here are my references, to which I credit everything in this post (except the er
 1. Prof. Gilbert Strang's course on [Linear Algebra](https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/)
 2. Prof. Stephen Boyd's course [Introduction to Linear Dynamical Systems](https://ee263.stanford.edu/archive/)
 
-## Introduction
+# Introduction
 We have unknowns $$x \in \mathbb{R}^n$$ and observations $$y \in \mathbb{R}^m$$. We _know_ that these are related as $$y = Ax$$ for a given $$A \in \mathbb{R}^{m \times n}$$. We want to know the value of $$x$$. Let $$\mathcal{C}(A), \mathcal{R}(A), \mathcal{N}(A)$$ denote the column, row, null spaces respectively. Three cases arise depending on the shape of $$A$$:
 
 ## $$A$$ is square ($$m=n$$)
@@ -25,7 +25,7 @@ If $$A$$ is full-rank, i.e. it is invertible, the solution is unique, $$x = A^{-
 Such a system of linear equations is called _overdetermined_. Prof. Boyd mentions in the lecture notes that such a system cannot be solved for most values of $$y$$. One way to intuitively reason this is to note that the $$n$$ columns of $$A$$ span a low dimensional subspace (of dimension at most $$n$$) in $$\mathbb{R}^m$$. The chance that a random vector $$y \in \mathbb{R}^m$$ lies in the low-dimensional $$\mathcal{C}(A)$$ is slim. Speaking even more loosely, there are way too many constraints (the $$m$$ equations) that the $$n$$ dimensional vector $$x$$ has to satisfy.
 
 
-In the case where $$y \notin \mathcal{C}(A)$$, no solution to the linear system exists. We can find an approximate solution however. _One possible approximation_ is to find some $$\hat{x} \in \mathbb{R}^n$$ such that the Euclidean distance between $$A\hat{x}$$ and $$y$$ is minimized. Note that $$A\hat{x} \in \mathcal{C}(A)$$, and we want it to be closest to $$y$$ compared to any other point in $$\mathcal{C}(A)$$. Geometrically, such an $$A\hat{x}$$ is the projection of $$y$$ on $$\mathcal{C}(A)$$. This means the error vector $$y - A\hat{x}$$ is orthogonal to $$\mathcal{C}(A)$$ and so $$(y - A\hat{x}) \in \mathcal{N}(A^T)$$. So:
+In the case where $$y \notin \mathcal{C}(A)$$, no solution to the linear system exists. We can find an approximate solution however. _One possible approximation_ is to find some $$\hat{x} \in \mathbb{R}^n$$ such that the Euclidean distance between $$A\hat{x}$$ and $$y$$ is minimized. Note that $$A\hat{x} \in \mathcal{C}(A)$$, and we want it to be closest to $$y$$ compared to any other point in $$\mathcal{C}(A)$$. Geometrically, such an $$A\hat{x}$$ is the projection of $$y$$ on $$\mathcal{C}(A)$$. This means the error vector $$y - A\hat{x}$$ is orthogonal to $$\mathcal{C}(A)$$ and so $$(y - A\hat{x}) \in \mathcal{N}(A^T)$$ (see Appendix below for a proof). So:
 
 $$
 \begin{align}
@@ -57,3 +57,15 @@ $$
 ## $$A$$ is fat ($$m < n$$)
 
 Such a system is called _underdetermined_.
+
+# Appendix
+## $$y \in \mathcal{N}(A^T) \iff y \perp \mathcal{C}(A)$$
+I'll prove one direction of this result here (the direction which is useful for this blogpost). Let $$Ax \in \mathcal{C}(A)$$ and let $$y \perp \mathcal{C}(A)$$. Then we have:
+
+$$
+\begin{align}
+(Ax)^Ty &=0 \\
+\implies x^T(A^Ty) &= 0
+\end{align}
+Since this is true for any arbitrary $$x$$, we conclude that $$A^Ty = 0$$ and so $$y \in \mathcal{N}(A^T)$$.
+$$
