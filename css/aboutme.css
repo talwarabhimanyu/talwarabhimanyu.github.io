@@ -107,7 +107,10 @@ ul.posts li {
 }
 
 @media (max-width: 800px) {
-  .flex-right, .flex-left {
-    flex: 100%;
+  .flex-left {
+    flex: 15%;
+  }
+  .flex-right {
+    flex: 60%;
   }
 }
