@@ -108,14 +108,21 @@ ul.posts li {
 
 @media (max-width: 800px) {
   .flex-left {
-    flex: 15%;
+    flex: 100%;
   }
   .flex-right {
-    flex: 60%;
+    flex: 100%;
   }
   body {
-    margin: 30px auto;
+    margin: 15px auto;
     width: 90%;
   }
+  p {
+    font-size: 1.5em;
+    line-height: 1.4em;
+    color: #333;
+    text_align: justify;
+  }
+
 
 }
