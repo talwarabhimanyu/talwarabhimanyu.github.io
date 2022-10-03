@@ -63,7 +63,7 @@ ul.posts li {
   background: #FFFFFF;
   color: gray;
   border-radius: 8px;
-  max-width: 70%;
+  max-width: 80%;
 }
 
 /* Information about the timeline */
@@ -102,7 +102,7 @@ ul.posts li {
 }
 
 .flex-right {
-  flex: 40%;
+  flex: 50%;
   padding: 10px;
 }
 
