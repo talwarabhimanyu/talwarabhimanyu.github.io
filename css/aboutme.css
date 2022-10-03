@@ -113,4 +113,9 @@ ul.posts li {
   .flex-right {
     flex: 60%;
   }
+  body {
+    margin: 30px auto;
+    width: 90%;
+  }
+
 }
