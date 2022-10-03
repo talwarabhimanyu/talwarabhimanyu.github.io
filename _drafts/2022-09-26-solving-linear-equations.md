@@ -14,13 +14,6 @@ Here are my references, to which I credit everything in this post (except the er
 # Introduction
 We have unknowns $$x \in \mathbb{R}^n$$ and observations $$y \in \mathbb{R}^m$$. We _know_ that these are related as $$y = Ax$$ for a given $$A \in \mathbb{R}^{m \times n}$$. We want to know the value of $$x$$. Let $$\mathcal{C}(A), \mathcal{R}(A), \mathcal{N}(A)$$ denote the column, row, null spaces respectively. Three cases arise depending on the shape of $$A$$:
 
-## $$A$$ is square ($$m=n$$)
-If $$A$$ is full-rank, i.e. it is invertible, the solution is unique, $$x = A^{-1}y$$. If however, $$A$$ is not invertible, we have two cases:
-
-1. $$y \notin \mathcal{C}(A)$$, in which case there is no solution (because no $$x$$ exists such that $$y = Ax$$). If $$A = \begin{bmatrix} 1 & 1 \\ 2 & 2 \end{bmatrix}$$, then $$\mathcal{C}(A)$$ only contains vectors of the form $$\begin{bmatrix} k \\ 2k\end{bmatrix}$$ and so $$y$$ will have to be of this form, for a solution to exist.
-
-2. $$y \in \mathcal{A}(C)$$, in which case there exist multiple solutions. As $$A$$ is not full-rank, $$\mathcal{N}(A) \neq \Phi$$, and so if $$x_p$$ is some solution to this system, then $$x_p + x_n, x_n \in \mathcal{N}(A)$$ is also a solution (because $$y = Ax_p = Ax_p + 0 = Ax_p + Ax_n = A(x_n + x_p)$$). Taking the sane example as in 1. above, if $$A = \begin{bmatrix} 1 & 1 \\ 2 & 2 \end{bmatrix}$$, then $$\mathcal{N}(A) = \left\{\begin{bmatrix} -c \\ c\end{bmatrix} \forall c \in \mathbb{R}\right\}$$ and there are infinitely many solutions.
-
 ## $$A$$ is skinny ($$m > n$$)
 Such a system of linear equations is called _overdetermined_. Prof. Boyd mentions in the lecture notes that such a system cannot be solved for most values of $$y$$. One way to intuitively reason this is to note that the $$n$$ columns of $$A$$ span a low dimensional subspace (of dimension at most $$n$$) in $$\mathbb{R}^m$$. The chance that a random vector $$y \in \mathbb{R}^m$$ lies in the low-dimensional $$\mathcal{C}(A)$$ is slim. Speaking even more loosely, there are way too many constraints (the $$m$$ equations) that the $$n$$ dimensional vector $$x$$ has to satisfy.
 
@@ -51,8 +44,15 @@ y = \begin{bmatrix}
 \end{bmatrix}
 $$
 
-**A general comment on non-full-rank skinny matrices is that if $$y$$ is in the column space of $$A$$, then infinitely many solutions exist.** First, there is definitely _a_ solution (also referred to as the "particular" solution) - weights of the linear combination of columns which sums to $$y$$. Next, the null-space is non-empty - this is because $$\text{rank}(A) < n$$ and so there exists some non-zero linear combination of columns which sums to 0. Finally, the particular solution plus any vector from the null-space is one of the inifinitely many solutions.
+**A general comment on non-full-rank skinny matrices is that if $$y$$ is in the column space of $$A$$, then infinitely many solutions exist.** First, there is definitely _a_ solution (also referred to as the "particular" solution) - since $$y \in \mathcal{C}(A)$$, there exist coefficents $$w = (w_1,\cdots,w_n)^T$$ such that $$y = \sum_{i=1}^nw_i\mathbb{c}_i$$ and so $$\mathbb{w}$$ is a solution. Next, the null-space of $$A$$ is non-empty - this is because $$\text{rank}(A) < n$$ and so there exists some non-zero linear combination of columns which equals  0. Finally, the particular solution plus any vector from the null-space is one of the inifinitely many solutions.
 $$
+
+## $$A$$ is square ($$m=n$$)
+If $$A$$ is full-rank, i.e. it is invertible, the solution is unique, $$x = A^{-1}y$$. If however, $$A$$ is not invertible, we have two cases:
+
+1. $$y \notin \mathcal{C}(A)$$, in which case there is no solution (because no $$x$$ exists such that $$y = Ax$$). If $$A = \begin{bmatrix} 1 & 1 \\ 2 & 2 \end{bmatrix}$$, then $$\mathcal{C}(A)$$ only contains vectors of the form $$\begin{bmatrix} k \\ 2k\end{bmatrix}$$ and so $$y$$ will have to be of this form, for a solution to exist.
+
+2. $$y \in \mathcal{A}(C)$$, in which case there exist multiple solutions. As $$A$$ is not full-rank, $$\mathcal{N}(A) \neq \Phi$$, and so if $$x_p$$ is some solution to this system, then $$x_p + x_n, x_n \in \mathcal{N}(A)$$ is also a solution (because $$y = Ax_p = Ax_p + 0 = Ax_p + Ax_n = A(x_n + x_p)$$). Taking the sane example as in 1. above, if $$A = \begin{bmatrix} 1 & 1 \\ 2 & 2 \end{bmatrix}$$, then $$\mathcal{N}(A) = \left\{\begin{bmatrix} -c \\ c\end{bmatrix} \forall c \in \mathbb{R}\right\}$$ and there are infinitely many solutions.
 
 ## $$A$$ is fat ($$m < n$$)
 
