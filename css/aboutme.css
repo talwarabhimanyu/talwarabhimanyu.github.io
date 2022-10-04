@@ -126,3 +126,10 @@ ul.posts li {
 
 
 }
+
+.quickfin {
+  background: var(--primary-color);
+  margin: 20px auto;
+  padding: 20px;
+}
+
